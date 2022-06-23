@@ -1,4 +1,5 @@
 package tasks;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -7,15 +8,15 @@ public class Task {
     private final String title;
     private final String description;
     private final Date deadline;
-    private TaskType type;
     private final int ownerId;
+    private TaskType type;
 
     public Task(int id,
                 String title,
                 String description,
                 int ownerId,
                 Date date,
-                TaskType type){
+                TaskType type) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -40,12 +41,12 @@ public class Task {
         return description;
     }
 
-    public void setType(TaskType type){
-        this.type = type;
-    }
-
     public TaskType getType() {
         return type;
+    }
+
+    public void setType(TaskType type) {
+        this.type = type;
     }
 
     public int getOwnerId() {

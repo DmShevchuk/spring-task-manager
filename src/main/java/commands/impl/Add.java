@@ -10,6 +10,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Класс, реализующий функционал добавления задачи в список
+ **/
 public class Add implements Command {
     private final TaskManager taskManager;
     private final CommandLine commandLine;
@@ -53,6 +56,7 @@ public class Add implements Command {
         return "Task was added successfully!";
     }
 
+    // Парсинг id и ownerId из ввода пользователя
     private int parseInteger(String message) {
         while (true) {
             System.out.print(message);

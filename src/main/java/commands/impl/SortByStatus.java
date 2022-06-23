@@ -3,6 +3,9 @@ package commands.impl;
 import commands.Command;
 import tasks.TaskManager;
 
+/**
+ * Класс, реализующий функционал сортировки по статусу задачи
+ * */
 public class SortByStatus implements Command {
     private final TaskManager taskManager;
 

@@ -6,6 +6,9 @@ import tasks.TaskManager;
 import tasks.TaskType;
 import utils.CommandLine;
 
+/**
+ * Класс, реализующий функционал обновления статуса задачи
+ **/
 public class ChangeType implements Command {
     private final TaskManager taskManager;
     private final CommandLine commandLine;
@@ -30,7 +33,7 @@ public class ChangeType implements Command {
             }
         }
 
-        System.out.print("Enter new task status:");
+        System.out.print("Enter new task status (NEW is default status):");
         type = TaskType.getByString(commandLine.getLine());
 
         try {

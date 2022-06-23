@@ -6,7 +6,6 @@ import commands.impl.Show;
 import commands.impl.SortByStatus;
 import exceptions.IncorrectCommandException;
 import tasks.TaskManager;
-import users.UsersManager;
 import utils.CommandLine;
 
 import java.util.HashMap;
@@ -14,13 +13,11 @@ import java.util.Map;
 
 public class CommandFactory {
     private final TaskManager taskManager;
-    private final UsersManager usersManager;
     private final CommandLine commandLine;
     private final Map<String, Command> commandHashMap = new HashMap<>();
 
-    public CommandFactory(TaskManager taskManager, UsersManager usersManager, CommandLine commandLine) {
+    public CommandFactory(TaskManager taskManager, CommandLine commandLine) {
         this.taskManager = taskManager;
-        this.usersManager = usersManager;
         this.commandLine = commandLine;
         initCommandHashMap();
     }

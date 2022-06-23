@@ -4,36 +4,40 @@ import commands.Command;
 import commands.CommandFactory;
 import exceptions.IncorrectCommandException;
 import tasks.TaskManager;
-import users.UsersManager;
 
 import java.util.Scanner;
 
+/**
+ * Класс с бесконечным циклом для считывания ввода пользователя и вызова команд
+ * */
 public class CommandLine {
     private final Scanner scanner = new Scanner(System.in);
     private final TaskManager taskManager;
-    private final UsersManager usersManager;
 
-    public CommandLine(TaskManager taskManager, UsersManager usersManager){
+    public CommandLine(TaskManager taskManager) {
         this.taskManager = taskManager;
-        this.usersManager = usersManager;
     }
 
-    public void run(){
-        CommandFactory commandFactory = new CommandFactory(taskManager, usersManager, this);
-        System.out.print(">>");
-        while (scanner.hasNext()){
+    public void run() {
+        String userPrefix = ">>";
+
+        CommandFactory commandFactory = new CommandFactory(taskManager, this);
+        // Вывод префикса для пользовательского ввода
+        System.out.print(userPrefix);
+
+        while (scanner.hasNext()) {
             String line = getLine();
             try {
                 Command command = commandFactory.getCommand(line);
                 System.out.println(command.execute());
-            } catch (IncorrectCommandException e){
+            } catch (IncorrectCommandException e) {
                 System.out.println(e.getMessage());
             }
-            System.out.print(">>");
+            System.out.print(userPrefix);
         }
     }
 
-    public String getLine(){
+    public String getLine() {
         return scanner.nextLine().strip();
     }
 }
