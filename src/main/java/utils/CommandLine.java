@@ -1,30 +1,39 @@
+package utils;
+
 import commands.Command;
 import commands.CommandFactory;
 import exceptions.IncorrectCommandException;
 import tasks.TaskManager;
+import users.UsersManager;
 
 import java.util.Scanner;
 
-public class Console {
+public class CommandLine {
     private final Scanner scanner = new Scanner(System.in);
-    private final CommandFactory commandFactory;
     private final TaskManager taskManager;
+    private final UsersManager usersManager;
 
-    public Console(CommandFactory commandFactory, TaskManager taskManager){
-        this.commandFactory = commandFactory;
+    public CommandLine(TaskManager taskManager, UsersManager usersManager){
         this.taskManager = taskManager;
+        this.usersManager = usersManager;
     }
 
     public void run(){
-        System.out.println("Enter your instructions:");
+        CommandFactory commandFactory = new CommandFactory(taskManager, usersManager, this);
+        System.out.print(">>");
         while (scanner.hasNext()){
-            String line = scanner.nextLine();
+            String line = getLine();
             try {
                 Command command = commandFactory.getCommand(line);
                 System.out.println(command.execute());
             } catch (IncorrectCommandException e){
                 System.out.println(e.getMessage());
             }
+            System.out.print(">>");
         }
+    }
+
+    public String getLine(){
+        return scanner.nextLine().strip();
     }
 }

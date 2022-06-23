@@ -1,9 +1,10 @@
 import com.opencsv.exceptions.CsvException;
-import commands.CommandFactory;
 import tasks.Task;
 import tasks.TaskManager;
 import users.User;
 import users.UsersManager;
+import utils.CommandLine;
+import utils.ParserCSV;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +36,7 @@ public class App {
 
         UsersManager usersManager = new UsersManager(usr);
         TaskManager taskManager = new TaskManager(task);
-        CommandFactory commandFactory = new CommandFactory(taskManager, usersManager);
-        Console console = new Console(commandFactory, taskManager);
-        console.run();
+        CommandLine cmd = new CommandLine(taskManager, usersManager);
+        cmd.run();
     }
 }

@@ -4,46 +4,64 @@ import commands.Command;
 import tasks.Task;
 import tasks.TaskManager;
 import tasks.TaskType;
+import utils.CommandLine;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.Date;
 
 public class Add implements Command {
     private final TaskManager taskManager;
-    private String additionalArgs;
+    private final CommandLine commandLine;
 
-    public Add(TaskManager taskManager) {
+    public Add(TaskManager taskManager, CommandLine commandLine) {
         this.taskManager = taskManager;
-    }
-
-    public void setAdditionalArgs(String args){
-        this.additionalArgs = args;
+        this.commandLine = commandLine;
     }
 
     @Override
     public String execute() {
-        String[] line = additionalArgs.trim().split("\\s");
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-        System.out.println(additionalArgs);
-        try {
-            taskManager.add(new Task(
-                    // id
-                    Integer.parseInt(line[0].trim()),
-                    // title
-                    line[1].trim(),
-                    // description
-                    line[2].trim(),
-                    // owner id
-                    Integer.parseInt(line[3].trim()),
-                    // deadline
-                    formatter.parse(line[4].trim()),
-                    // task type
-                    TaskType.getByString(line[5].trim())
-            ));
-        }catch (IndexOutOfBoundsException | ClassCastException | ParseException e){
-            return "Unable to read string " + Arrays.toString(line) + "!";
+        int id, ownerId;
+        String title, description;
+        Date deadline;
+        TaskType type;
+
+        id = parseInteger("Enter task id:");
+        ownerId = parseInteger("Enter owner id:");
+
+        System.out.print("Enter task title:");
+        title = commandLine.getLine();
+
+        System.out.print("Enter task description:");
+        description = commandLine.getLine();
+
+        while (true) {
+            System.out.print("Enter deadline:");
+            String inputLine = commandLine.getLine();
+            try {
+                deadline = formatter.parse(inputLine);
+                break;
+            } catch (ParseException | NumberFormatException e) {
+                System.out.println("Unable to get id from '" + inputLine + "'!");
+            }
         }
+
+        System.out.println("Enter task type (NEW status is default): ");
+        type = TaskType.getByString(commandLine.getLine());
+        taskManager.add(new Task(id, title, description, ownerId, deadline, type));
         return "Task was added successfully!";
+    }
+
+    private int parseInteger(String message) {
+        while (true) {
+            System.out.print(message);
+            String inputLine = commandLine.getLine();
+            try {
+                return Integer.parseInt(inputLine);
+            } catch (NumberFormatException | ClassCastException e) {
+                System.out.println("Unable to get id from '" + inputLine + "'!");
+            }
+        }
     }
 }
