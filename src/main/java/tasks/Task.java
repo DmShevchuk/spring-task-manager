@@ -1,14 +1,45 @@
 package tasks;
 
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvDate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@NoArgsConstructor
 public class Task {
-    private final int id;
-    private final String title;
-    private final String description;
-    private final Date deadline;
-    private final int ownerId;
+    @Getter
+    @Setter
+    @CsvBindByPosition(position = 0, required = true)
+    private int id;
+
+    @Getter
+    @Setter
+    @CsvBindByPosition(position = 1, required = true)
+    private String title;
+
+    @Getter
+    @Setter
+    @CsvBindByPosition(position = 2, required = true)
+    private String description;
+
+    @Getter
+    @Setter
+    @CsvBindByPosition(position = 3, required = true)
+    private int ownerId;
+
+    @Getter
+    @Setter
+    @CsvBindByPosition(position = 4, required = true)
+    @CsvDate("dd.MM.yyyy")
+    private Date deadline;
+
+    @Getter
+    @Setter
+    @CsvBindByPosition(position = 5, required = true)
     private TaskType type;
 
     public Task(int id,
@@ -25,37 +56,10 @@ public class Task {
         this.ownerId = ownerId;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Date getDeadline() {
-        return deadline;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public TaskType getType() {
-        return type;
-    }
-
-    public void setType(TaskType type) {
-        this.type = type;
-    }
-
-    public int getOwnerId() {
-        return ownerId;
-    }
-
     @Override
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+
         return String.format("id=%d, title=%s, description=%s, deadline=%s, type=%s",
                 id, title, description, sdf.format(deadline), type.getTitle());
     }

@@ -1,11 +1,15 @@
 package commands;
 
-import commands.impl.Add;
-import commands.impl.ChangeType;
-import commands.impl.Show;
-import commands.impl.SortByStatus;
+import commands.impl.Exit;
+import commands.impl.Help;
+import commands.impl.Save;
+import commands.impl.tasks.*;
+import commands.impl.users.AddUser;
+import commands.impl.users.ClearUsers;
+import commands.impl.users.ShowUsers;
 import exceptions.IncorrectCommandException;
 import tasks.TaskManager;
+import users.UsersManager;
 import utils.CommandLine;
 
 import java.util.HashMap;
@@ -13,10 +17,12 @@ import java.util.Map;
 
 public class CommandFactory {
     private final TaskManager taskManager;
+    private final UsersManager usersManager;
     private final CommandLine commandLine;
     private final Map<String, Command> commandHashMap = new HashMap<>();
 
-    public CommandFactory(TaskManager taskManager, CommandLine commandLine) {
+    public CommandFactory(UsersManager usersManager, TaskManager taskManager, CommandLine commandLine) {
+        this.usersManager = usersManager;
         this.taskManager = taskManager;
         this.commandLine = commandLine;
         initCommandHashMap();
@@ -30,12 +36,29 @@ public class CommandFactory {
         throw new IncorrectCommandException("Unable to recognize command '" + line + "'!");
     }
 
-    public void initCommandHashMap() {
-        commandHashMap.put("add", new Add(taskManager, commandLine));
-        commandHashMap.put("change_type", new ChangeType(taskManager, commandLine));
-        commandHashMap.put("show", new Show(taskManager));
-        commandHashMap.put("sort", new SortByStatus(taskManager));
+    // Получение информации по всем командам имя: информация
+    private Map<String, String> getCommandsInfo(){
+        Map<String, String> infoMap = new HashMap<>();
+        for(String key: commandHashMap.keySet()){
+            infoMap.put(key, commandHashMap.get(key).getInfo());
+        }
+        return infoMap;
     }
 
-
+    // Установка всех доступных команд
+    private void initCommandHashMap() {
+        commandHashMap.put("add_task", new AddTask(taskManager, commandLine));
+        commandHashMap.put("change_type", new ChangeType(taskManager, commandLine));
+        commandHashMap.put("show_tasks", new ShowTasks(taskManager));
+        commandHashMap.put("sort_by_status", new SortByStatus(taskManager));
+        commandHashMap.put("clear_tasks", new ClearTasks(taskManager));
+        commandHashMap.put("delete_task_by_id", new DeleteTaskById());
+        commandHashMap.put("update_task_by_id", new UpdateTaskById());
+        commandHashMap.put("add_user", new AddUser());
+        commandHashMap.put("clear_users", new ClearUsers(usersManager));
+        commandHashMap.put("show_users", new ShowUsers());
+        commandHashMap.put("help", new Help(getCommandsInfo()));
+        commandHashMap.put("save", new Save(usersManager, taskManager));
+        commandHashMap.put("exit", new Exit());
+    }
 }

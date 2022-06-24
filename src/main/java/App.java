@@ -1,4 +1,3 @@
-import com.opencsv.exceptions.CsvException;
 import tasks.Task;
 import tasks.TaskManager;
 import users.User;
@@ -6,8 +5,6 @@ import users.UsersManager;
 import utils.CommandLine;
 import utils.ParserCSV;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,24 +14,24 @@ import java.util.List;
 
 public class App {
     public static void main(String[] args) {
-        String userFileName = "";
-        String taskFileName = "";
+        String userFileName = "C:\\Users\\dmitr\\IdeaProjects\\task_manager\\src\\main\\resources\\users.csv";
+        String taskFileName = "C:\\Users\\dmitr\\IdeaProjects\\task_manager\\src\\main\\resources\\tasks.csv";
 
-        try {
-            userFileName = new File(args[0]).getAbsolutePath();
-            taskFileName = new File(args[1]).getAbsolutePath();
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Enter file name for users and tasks!");
-            System.exit(0);
-        }
+//        try {
+//            userFileName = new File(args[0]).getAbsolutePath();
+//            taskFileName = new File(args[1]).getAbsolutePath();
+//        } catch (IndexOutOfBoundsException e) {
+//            System.out.println("Enter file name for users and tasks!");
+//            System.exit(0);
+//        }
 
         ParserCSV parserCSV = new ParserCSV();
         List<User> usr = new ArrayList<>();
         List<Task> task = new ArrayList<>();
         try {
-            usr = parserCSV.parseUser(userFileName);
-            task = parserCSV.parseTask(taskFileName);
-        } catch (IOException | CsvException e) {
+            usr = parserCSV.parseUsers(userFileName);
+            task = parserCSV.parseTasks(taskFileName);
+        } catch (Exception e) {
             System.out.println("Unable to read files with initial data!\n" + "Description: " + e.getMessage());
             System.exit(0);
         }
@@ -42,7 +39,7 @@ public class App {
         UsersManager usersManager = new UsersManager(usr);
         TaskManager taskManager = new TaskManager(task, usersManager);
 
-        CommandLine cmd = new CommandLine(taskManager);
+        CommandLine cmd = new CommandLine(usersManager, taskManager);
         cmd.run();
     }
 }

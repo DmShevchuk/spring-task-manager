@@ -1,4 +1,4 @@
-package commands.impl;
+package commands.impl.tasks;
 
 import commands.Command;
 import exceptions.IncorrectTaskIdException;
@@ -9,13 +9,15 @@ import utils.CommandLine;
 /**
  * Класс, реализующий функционал обновления статуса задачи
  **/
-public class ChangeType implements Command {
+public class ChangeType extends Command {
     private final TaskManager taskManager;
     private final CommandLine commandLine;
 
     public ChangeType(TaskManager taskManager, CommandLine commandLine) {
+        super("change_type", "|| change type of existing task", 0);
         this.taskManager = taskManager;
         this.commandLine = commandLine;
+
     }
 
     @Override

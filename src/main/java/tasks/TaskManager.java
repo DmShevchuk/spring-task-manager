@@ -1,6 +1,7 @@
 package tasks;
 
 import exceptions.IncorrectTaskIdException;
+import lombok.Getter;
 import users.UsersManager;
 
 import java.util.Comparator;
@@ -11,6 +12,7 @@ import java.util.List;
  * */
 
 public class TaskManager {
+    @Getter
     private final List<Task> taskCollection;
     private final UsersManager usersManager;
 
@@ -63,5 +65,9 @@ public class TaskManager {
             stringBuilder.append(task.toString()).append("\n");
         }
         return stringBuilder.toString();
+    }
+
+    public void clearCollection(){
+        this.taskCollection.clear();
     }
 }
