@@ -3,6 +3,7 @@ package users;
 import lombok.Getter;
 import tasks.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +28,24 @@ public class UsersManager {
         }
     }
 
+    public User getUserById(int id) {
+        for (User user : usersList) {
+            if (id == user.getId()) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public boolean isIdPresent(int id) {
+        for (User user : usersList) {
+            if (id == user.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addUser(User.UserBuilder user) {
         this.usersList.add(user.id(freeId).build());
     }
@@ -44,11 +63,18 @@ public class UsersManager {
         }
     }
 
-    public String showUsers(){
+    public String showUsers() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (User u: usersList){
+        for (User u : usersList) {
             stringBuilder.append(u).append("\n");
         }
         return stringBuilder.toString();
+    }
+
+    public void removeTaskFromUser(Task task, int userId) {
+        if (isIdPresent(userId)) {
+            User user = getUserById(userId);
+            user.removeTask(task);
+        }
     }
 }

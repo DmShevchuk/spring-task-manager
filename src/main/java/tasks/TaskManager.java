@@ -51,10 +51,13 @@ public class TaskManager {
 
     public void add(Task task) {
         taskCollection.add(task);
+        usersManager.addTaskToUser(task);
     }
 
     public void add(Task.TaskBuilder taskBuilder) {
-        taskCollection.add(taskBuilder.id(freeId).build());
+        Task task = taskBuilder.id(freeId).build();
+        taskCollection.add(task);
+        usersManager.addTaskToUser(task);
         freeId++;
     }
 
@@ -96,6 +99,7 @@ public class TaskManager {
                 break;
             }
         }
+        usersManager.removeTaskFromUser(task, task.getOwnerId());
         taskCollection.remove(task);
     }
 
@@ -107,5 +111,4 @@ public class TaskManager {
         }
         return null;
     }
-
 }

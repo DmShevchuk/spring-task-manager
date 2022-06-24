@@ -37,6 +37,11 @@ public class User {
         taskList.add(task);
     }
 
+    public void removeTask(Task task) {
+        taskList.remove(task);
+    }
+
+
     @Override
     public String toString() {
         return String.format("id=%d, name=%s, task quantity = %d", id, name, taskList.size());
