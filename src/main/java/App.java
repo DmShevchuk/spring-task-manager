@@ -5,6 +5,7 @@ import users.UsersManager;
 import utils.CommandLine;
 import utils.ParserCSV;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,16 +15,16 @@ import java.util.List;
 
 public class App {
     public static void main(String[] args) {
-        String userFileName = "C:\\Users\\dmitr\\IdeaProjects\\task_manager\\src\\main\\resources\\users.csv";
-        String taskFileName = "C:\\Users\\dmitr\\IdeaProjects\\task_manager\\src\\main\\resources\\tasks.csv";
+        String userFileName = "";
+        String taskFileName = "";
 
-//        try {
-//            userFileName = new File(args[0]).getAbsolutePath();
-//            taskFileName = new File(args[1]).getAbsolutePath();
-//        } catch (IndexOutOfBoundsException e) {
-//            System.out.println("Enter file name for users and tasks!");
-//            System.exit(0);
-//        }
+        try {
+            userFileName = new File(args[0]).getAbsolutePath();
+            taskFileName = new File(args[1]).getAbsolutePath();
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Enter file name for users and tasks!");
+            System.exit(0);
+        }
 
         ParserCSV parserCSV = new ParserCSV();
         List<User> usr = new ArrayList<>();
