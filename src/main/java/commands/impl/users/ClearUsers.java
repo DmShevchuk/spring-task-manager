@@ -14,6 +14,6 @@ public class ClearUsers extends Command {
     @Override
     public String execute() {
         usersManager.clearCollection();
-        return null;
+        return "Collection was cleared successfully!";
     }
 }

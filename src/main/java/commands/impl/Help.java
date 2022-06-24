@@ -5,6 +5,7 @@ import commands.Command;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeSet;
 
 public class Help extends Command {
     private final Map<String, String> infoMap;
@@ -30,7 +31,7 @@ public class Help extends Command {
         int spacesBetweenWords = maxLength.get().length() + spaceQuantity;
 
         StringBuilder string = new StringBuilder();
-        for (String key : infoMap.keySet()) {
+        for (String key : new TreeSet<String>(infoMap.keySet())) {
             // Указание количества пробелов между названием команды и её описанием
             String settings = "%-" + spacesBetweenWords + "s";
 

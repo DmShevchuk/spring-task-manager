@@ -2,6 +2,7 @@ package tasks;
 
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Builder
 @NoArgsConstructor
 public class Task {
     @Getter
@@ -60,7 +62,7 @@ public class Task {
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
-        return String.format("id=%d, title=%s, description=%s, deadline=%s, type=%s",
-                id, title, description, sdf.format(deadline), type.getTitle());
+        return String.format("id=%d, title=%s, description=%s, owner id = %d, deadline=%s, type=%s",
+                id, title, description, ownerId, sdf.format(deadline), type.getTitle());
     }
 }

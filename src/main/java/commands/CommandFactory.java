@@ -48,15 +48,14 @@ public class CommandFactory {
     // Установка всех доступных команд
     private void initCommandHashMap() {
         commandHashMap.put("add_task", new AddTask(taskManager, commandLine));
-        commandHashMap.put("change_type", new ChangeType(taskManager, commandLine));
+        commandHashMap.put("change_task_by_id", new ChangeTaskById(taskManager, commandLine));
         commandHashMap.put("show_tasks", new ShowTasks(taskManager));
         commandHashMap.put("sort_by_status", new SortByStatus(taskManager));
         commandHashMap.put("clear_tasks", new ClearTasks(taskManager));
-        commandHashMap.put("delete_task_by_id", new DeleteTaskById());
-        commandHashMap.put("update_task_by_id", new UpdateTaskById());
-        commandHashMap.put("add_user", new AddUser());
+        commandHashMap.put("delete_task_by_id", new DeleteTaskById(taskManager));
+        commandHashMap.put("add_user", new AddUser(usersManager, commandLine));
         commandHashMap.put("clear_users", new ClearUsers(usersManager));
-        commandHashMap.put("show_users", new ShowUsers());
+        commandHashMap.put("show_users", new ShowUsers(usersManager));
         commandHashMap.put("help", new Help(getCommandsInfo()));
         commandHashMap.put("save", new Save(usersManager, taskManager));
         commandHashMap.put("exit", new Exit());

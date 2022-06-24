@@ -2,6 +2,7 @@ package users;
 
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvIgnore;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,9 +11,11 @@ import tasks.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @NoArgsConstructor
 public class User {
     @Getter
+    @Setter
     @CsvBindByPosition(position = 0, required = true)
     private int id;
 
@@ -36,6 +39,6 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("id=%d, name=%s", id, name);
+        return String.format("id=%d, name=%s, task quantity = %d", id, name, taskList.size());
     }
 }
