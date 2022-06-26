@@ -3,6 +3,7 @@ package tasks;
 import lombok.Getter;
 import users.UsersManager;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -85,6 +86,10 @@ public class TaskManager {
             stringBuilder.append(task.toString()).append("\n");
         }
         return stringBuilder.toString();
+    }
+
+    public List<Task> getTasks() {
+        return List.copyOf(taskCollection);
     }
 
     public void clearCollection() {

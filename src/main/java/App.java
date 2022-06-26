@@ -22,7 +22,7 @@ public class App {
             userFileName = new File(args[0]).getAbsolutePath();
             taskFileName = new File(args[1]).getAbsolutePath();
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Enter file name for users and tasks!");
+            System.out.println("Specify file name for users and tasks: 'users_file.csv' 'tasks_file.csv'!");
             System.exit(0);
         }
 

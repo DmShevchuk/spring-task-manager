@@ -1,7 +1,11 @@
 package commands.impl.tasks;
 
 import commands.Command;
+import tasks.Task;
 import tasks.TaskManager;
+import utils.TaskTableView;
+
+import java.util.List;
 
 /**
  * Класс, реализующий функционал сортировки по статусу задачи
@@ -17,6 +21,11 @@ public class SortByStatus extends Command {
     @Override
     public String execute() {
         taskManager.sort();
-        return taskManager.showTask();
+        List<Task> lst = taskManager.getTasks();
+        if (lst.size() == 0) {
+            return "Collection is empty!";
+        }
+        return new TaskTableView(lst, List.of("id", "title", "description", "owner id", "deadline", "status"))
+                .printCollection();
     }
 }
