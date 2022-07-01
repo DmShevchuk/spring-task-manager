@@ -11,6 +11,9 @@ import repositories.UserRepo;
 
 import java.util.List;
 
+/**
+ * Класс для работы с базой данных и объектами класса {@link TaskEntity}
+ * */
 @Service
 @RequiredArgsConstructor
 public class TaskService {

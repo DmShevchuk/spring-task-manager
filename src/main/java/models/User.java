@@ -8,6 +8,9 @@ import lombok.Setter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Модель {@link User} для представления данных пользователю
+ * */
 @NoArgsConstructor
 @Getter
 @Setter

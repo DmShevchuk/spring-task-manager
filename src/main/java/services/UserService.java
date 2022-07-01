@@ -9,6 +9,10 @@ import repositories.UserRepo;
 
 import java.util.List;
 
+
+/**
+ * Класс для работы с базой данных и объектом класса {@link UserEntity}
+ * */
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -28,9 +32,7 @@ public class UserService {
         return userRepo.findById(id).get();
     }
 
-    public List<UserEntity> getAll(){
-        return userRepo.findAll();
-    }
+    public List<UserEntity> getAll(){return userRepo.findAll();}
 
     public Long delete(Long id) throws UserNotFoundException{
         if (userRepo.findById(id).isEmpty()){

@@ -8,6 +8,9 @@ import tasks.TaskType;
 
 import java.util.Date;
 
+/**
+ * Модель {@link TaskEntity} для представления данных пользователю
+ * */
 @NoArgsConstructor
 @Getter
 @Setter

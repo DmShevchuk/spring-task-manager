@@ -36,7 +36,7 @@ public class CommandFactory {
         throw new IncorrectCommandException("Unable to recognize command '" + line + "'!");
     }
 
-    // Получение информации по всем командам имя: информация
+    // Получение информации по всем командам в формате _имя_: _информация_
     private Map<String, String> getCommandsInfo(){
         Map<String, String> infoMap = new HashMap<>();
         for(String key: commandHashMap.keySet()){
