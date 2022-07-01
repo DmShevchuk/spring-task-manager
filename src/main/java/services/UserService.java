@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
 
     public UserEntity registration(UserEntity user) throws UserAlreadyExistsException{
         if (userRepo.findByName(user.getName()) != null){
