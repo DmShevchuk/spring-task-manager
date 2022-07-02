@@ -24,4 +24,13 @@ public class TaskFactory {
 
         return taskEntity;
     }
+
+    public TaskEntity updateTaskEntity(TaskEntity taskEntity, String[] fields) throws FieldParseException {
+        taskEntity.setTitle(inputParser.parseString(fields[1]));
+        taskEntity.setDescription(inputParser.parseString(fields[2]));
+        taskEntity.setDeadline(inputParser.parseDate(fields[3]));
+        taskEntity.setType(inputParser.parseTaskType(fields[4]));
+
+        return taskEntity;
+    }
 }

@@ -1,6 +1,7 @@
 package commands;
 
 import exceptions.CommandExecutionException;
+import exceptions.TaskNotFoundException;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotFoundException;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public abstract class Command {
         this.argsQuantity = argsQuantity;
     }
 
-    public abstract String execute() throws CommandExecutionException, UserNotFoundException, UserAlreadyExistsException;
+    public abstract String execute() throws CommandExecutionException, UserNotFoundException, UserAlreadyExistsException, TaskNotFoundException;
 
     protected String[] getArgsAsArray() {
         if ("".equals(arg)) {

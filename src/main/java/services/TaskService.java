@@ -29,12 +29,25 @@ public class TaskService {
         return taskRepo.save(task);
     }
 
-    public TaskEntity change(TaskEntity task) throws TaskNotFoundException{
-        if(!taskRepo.existsById(task.getId())){
-            throw new TaskNotFoundException(task.getId().toString());
+    public TaskEntity update(TaskEntity task){
+        return taskRepo.save(task);
+    }
+
+    public TaskEntity update(TaskEntity task, Long userId) throws UserNotFoundException{
+        if(userRepo.findById(userId).isEmpty()){
+            throw new UserNotFoundException(userId.toString());
+        }
+        UserEntity user = userRepo.findById(userId).get();
+        task.setUser(user);
+        return taskRepo.save(task);
+    }
+
+    public TaskEntity getById(Long id) throws TaskNotFoundException{
+        if(!taskRepo.existsById(id)){
+            throw new TaskNotFoundException(id.toString());
         }
 
-        return taskRepo.save(task);
+        return taskRepo.getReferenceById(id);
     }
 
     public List<TaskEntity> getAll(){
@@ -48,5 +61,10 @@ public class TaskService {
         taskRepo.deleteById(id);
         return id;
     }
+
+    public void deleteAll(){
+        taskRepo.deleteAll();
+    }
+
 
 }

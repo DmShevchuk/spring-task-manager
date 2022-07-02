@@ -39,6 +39,7 @@ public class ShowUsers extends Command {
 
         for (UserEntity userEntity: userEntityList) {
             totalString.append(User.toModel(userEntity));
+            totalString.append("<br/>");
         }
         return totalString.toString();
     }

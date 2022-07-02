@@ -1,39 +1,48 @@
 package commands.impl.tasks;
 
 import commands.Command;
-import exceptions.CommandExecutionException;
+import entities.TaskEntity;
+import exceptions.*;
+import models.Task;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import services.TaskService;
 import tasks.TaskFactory;
-import tasks.TaskManager;
+import utils.InputParser;
 
 /**
- * Класс, реализующий функционал обновления статуса задачи
+ * Класс, реализующий функционал обновления задачи
  **/
+@Component
 public class ChangeTaskById extends Command {
-    private final TaskManager taskManager;
+    private final TaskService taskService;
+    private final TaskFactory taskFactory;
 
-    public ChangeTaskById(TaskManager taskManager) {
-        super("change_task", "|| {id} change task", 1);
-        this.taskManager = taskManager;
+    @Autowired
+    public ChangeTaskById(TaskService taskService, TaskFactory taskFactory) {
+        super("change_task", "|| {id} change task", 6);
+        this.taskService = taskService;
+        this.taskFactory = taskFactory;
     }
 
     @Override
-    public String execute() throws CommandExecutionException {
-        int id;
-
-        try {
-            id = Integer.parseInt(arg);
-        } catch (NumberFormatException e) {
-            throw new CommandExecutionException("Unable to get id from '" + arg + "'!");
+    public String execute() throws CommandExecutionException, FieldParseException, TaskNotFoundException, UserNotFoundException {
+        String[] args = getArgsAsArray();
+        resetArgs();
+        if (args.length != argsQuantity) {
+            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
         }
+        InputParser inputParser = new InputParser();
 
-        if (!taskManager.isIdPresent(id)) {
-            throw new CommandExecutionException("Task with id=" + id + "does not exist!");
+        long taskId = inputParser.parseInteger(args[0]);
+
+        TaskEntity taskEntity = taskFactory.updateTaskEntity(taskService.getById(taskId), args);
+
+        Long userId = (long) inputParser.parseInteger(args[5]);
+
+        if (!userId.equals(taskEntity.getUser().getId())) {
+            return Task.toModel(taskService.update(taskEntity, userId)).toString();
         }
-
-        System.out.println("Task to change:\n" + taskManager.getById(id));
-
-        //taskManager.changeTask(new TaskFactory(commandLine).getTask().id(id).build());
-
-        return "Task successfully changed:\n" + taskManager.getById(id);
+        return Task.toModel(taskService.update(taskEntity)).toString();
     }
 }

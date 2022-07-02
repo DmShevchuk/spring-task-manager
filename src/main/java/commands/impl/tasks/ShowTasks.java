@@ -38,6 +38,7 @@ public class ShowTasks extends Command {
         StringBuilder totalString = new StringBuilder();
         for (TaskEntity taskEntity : taskEntityList) {
             totalString.append(Task.toModel(taskEntity));
+            totalString.append("<br/>");
         }
 
         resetArgs();

@@ -18,11 +18,11 @@ import java.util.List;
 public class UserService {
     private final UserRepo userRepo;
 
-    public UserEntity registration(UserEntity user) throws UserAlreadyExistsException{
+    public void registration(UserEntity user) throws UserAlreadyExistsException{
         if (userRepo.findByName(user.getName()) != null){
             throw new UserAlreadyExistsException(user.getName());
         }
-        return userRepo.save(user);
+        userRepo.save(user);
     }
 
     public UserEntity getOne(Long id) throws UserNotFoundException{
@@ -40,5 +40,9 @@ public class UserService {
         }
         userRepo.deleteById(id);
         return id;
+    }
+
+    public void deleteAll(){
+        userRepo.deleteAll();
     }
 }

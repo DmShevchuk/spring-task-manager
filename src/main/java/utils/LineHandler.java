@@ -31,7 +31,8 @@ public class LineHandler {
                 IncorrectArgsQuantityException |
                 FieldParseException|
                 UserNotFoundException|
-                UserAlreadyExistsException e) {
+                UserAlreadyExistsException |
+                TaskNotFoundException e) {
             return e.getMessage();
         }
     }

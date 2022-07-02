@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 /**
  * Модель {@link User} для представления данных пользователю
- * */
+ */
 @NoArgsConstructor
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class User {
     private String name;
     private List<Task> taskList;
 
-    public static User toModel(UserEntity userEntity){
+    public static User toModel(UserEntity userEntity) {
         User user = new User();
         user.setId(userEntity.getId());
         user.setName(userEntity.getName());
@@ -29,10 +29,15 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", taskList=" + taskList +
-                '}';
+        StringBuilder stringBuilder = new StringBuilder(String.format("User{id=%d, name=%s}<br/>", id, name));
+
+        if (taskList.size() > 0) {
+            stringBuilder.append("Task list:<br/>");
+            for (Task task : taskList) {
+                stringBuilder.append(task.toString());
+                stringBuilder.append("<br/>");
+            }
+        }
+        return stringBuilder.toString();
     }
 }
