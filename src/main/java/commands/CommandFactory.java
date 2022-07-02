@@ -1,5 +1,6 @@
 package commands;
 
+import commands.impl.Help;
 import commands.impl.tasks.*;
 import commands.impl.users.AddUser;
 import commands.impl.users.ClearUsers;
@@ -25,6 +26,7 @@ public class CommandFactory {
     private final DeleteTaskById deleteTaskById;
     private final DeleteUserById deleteUserById;
     private final SortByStatus sortByStatus;
+    private final Help help;
 
     @Autowired
     public CommandFactory(AddTask addTask,
@@ -36,7 +38,8 @@ public class CommandFactory {
                           ClearUsers clearUsers,
                           DeleteTaskById deleteTaskById,
                           DeleteUserById deleteUserById,
-                          SortByStatus sortByStatus) {
+                          SortByStatus sortByStatus,
+                          Help help) {
         this.addTask = addTask;
         this.addUser = addUser;
         this.showTasks = showTasks;
@@ -47,6 +50,7 @@ public class CommandFactory {
         this.deleteTaskById = deleteTaskById;
         this.deleteUserById = deleteUserById;
         this.sortByStatus = sortByStatus;
+        this.help = help;
         initCommandHashMap();
     }
 
@@ -80,6 +84,9 @@ public class CommandFactory {
         commandHashMap.put("delete_task_by_id", deleteTaskById);
         commandHashMap.put("delete_user_by_id", deleteUserById);
         commandHashMap.put("sort_by_status", sortByStatus);
-//        commandHashMap.put("help", new Help(getCommandsInfo()));
+        commandHashMap.put("help", help);
+
+
+        help.initializeInfoString(getCommandsInfo());
     }
 }

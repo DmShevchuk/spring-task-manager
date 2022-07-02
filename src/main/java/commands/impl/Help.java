@@ -1,20 +1,19 @@
 package commands.impl;
 
 import commands.Command;
+import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeSet;
 
+@Component
 public class Help extends Command {
-    private final Map<String, String> infoMap;
     private String infoString;
 
-    public Help(Map<String, String> infoMap) {
+    public Help() {
         super("help", "|| info about all commands", 0);
-        this.infoMap = infoMap;
-        initializeInfoString();
     }
 
     @Override
@@ -22,21 +21,18 @@ public class Help extends Command {
         return infoString;
     }
 
-    private void initializeInfoString() {
-        int spaceQuantity = 5;
+    public void initializeInfoString(Map<String, String> infoMap) {
+        int whiteSpaceQuantity = 5;
         // Получение названия самой длинной команды
         Optional<String> maxLength = infoMap.keySet().stream().max(Comparator.comparing(String::length));
 
         // Количество пробелов между названием команды и её описанием
-        int spacesBetweenWords = maxLength.get().length() + spaceQuantity;
-
+        int spacesBetweenWords = maxLength.get().length() + whiteSpaceQuantity;
         StringBuilder string = new StringBuilder();
-        for (String key : new TreeSet<String>(infoMap.keySet())) {
-            // Указание количества пробелов между названием команды и её описанием
-            String settings = "%-" + spacesBetweenWords + "s";
-
-            string.append(String.format(settings, key));
-            string.append(infoMap.get(key)).append("\n");
+        for (String key : new TreeSet<>(infoMap.keySet())) {
+            string.append(key)
+                    .append(infoMap.get(key))
+                    .append("<br/>");
         }
         infoString = string.toString();
     }
