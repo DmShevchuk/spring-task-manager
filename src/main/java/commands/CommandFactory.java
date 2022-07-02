@@ -1,10 +1,9 @@
 package commands;
 
-import commands.impl.tasks.AddTask;
-import commands.impl.tasks.ChangeTaskById;
-import commands.impl.tasks.ClearTasks;
-import commands.impl.tasks.ShowTasks;
+import commands.impl.tasks.*;
 import commands.impl.users.AddUser;
+import commands.impl.users.ClearUsers;
+import commands.impl.users.DeleteUserById;
 import commands.impl.users.ShowUsers;
 import exceptions.IncorrectCommandException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,9 @@ public class CommandFactory {
     private final ShowUsers showUsers;
     private final ChangeTaskById changeTaskById;
     private final ClearTasks clearTasks;
+    private final ClearUsers clearUsers;
+    private final DeleteTaskById deleteTaskById;
+    private final DeleteUserById deleteUserById;
 
     @Autowired
     public CommandFactory(AddTask addTask,
@@ -29,13 +31,19 @@ public class CommandFactory {
                           ShowTasks showTasks,
                           ShowUsers showUsers,
                           ChangeTaskById changeTaskById,
-                          ClearTasks clearTasks) {
+                          ClearTasks clearTasks,
+                          ClearUsers clearUsers,
+                          DeleteTaskById deleteTaskById,
+                          DeleteUserById deleteUserById) {
         this.addTask = addTask;
         this.addUser = addUser;
         this.showTasks = showTasks;
         this.showUsers = showUsers;
         this.changeTaskById = changeTaskById;
         this.clearTasks = clearTasks;
+        this.clearUsers = clearUsers;
+        this.deleteTaskById = deleteTaskById;
+        this.deleteUserById = deleteUserById;
         initCommandHashMap();
     }
 
@@ -65,9 +73,10 @@ public class CommandFactory {
         commandHashMap.put("show_users", showUsers);
         commandHashMap.put("change_task_by_id", changeTaskById);
         commandHashMap.put("clear_tasks", clearTasks);
-//        commandHashMap.put("sort_by_status", new SortByStatus(taskManager));
-//        commandHashMap.put("delete_task_by_id", new DeleteTaskById(taskManager));
-//        commandHashMap.put("clear_users", new ClearUsers(usersManager));
+        commandHashMap.put("clear_users", clearUsers);
+        commandHashMap.put("delete_task_by_id", deleteTaskById);
+        commandHashMap.put("delete_user_by_id", deleteUserById);
+        //        commandHashMap.put("sort_by_status", new SortByStatus(taskManager));
 //        commandHashMap.put("help", new Help(getCommandsInfo()));
     }
 }

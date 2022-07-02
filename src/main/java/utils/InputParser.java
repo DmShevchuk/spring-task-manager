@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Component
 public class InputParser {
-
+    //TODO parseLong
     public int parseInteger(String value) throws FieldParseException {
         try {
             return Integer.parseInt(value);

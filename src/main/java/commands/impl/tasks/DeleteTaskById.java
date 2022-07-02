@@ -2,30 +2,32 @@ package commands.impl.tasks;
 
 import commands.Command;
 import exceptions.CommandExecutionException;
+import exceptions.IncorrectArgsQuantityException;
+import exceptions.TaskNotFoundException;
+import org.springframework.stereotype.Component;
+import services.TaskService;
 import tasks.TaskManager;
+import utils.InputParser;
 
+@Component
 public class DeleteTaskById extends Command {
-    private final TaskManager taskManager;
+    private final TaskService taskService;
 
-    public DeleteTaskById(TaskManager taskManager) {
+    public DeleteTaskById(TaskService taskService) {
         super("delete_task_by_id", "|| {id} delete task by id", 1);
-        this.taskManager = taskManager;
+        this.taskService = taskService;
     }
 
     @Override
-    public String execute() throws CommandExecutionException {
-        int id;
-        try {
-            id = Integer.parseInt(arg);
-        } catch (NumberFormatException e) {
-            throw new CommandExecutionException("Id=" + arg + " is not integer!");
+    public String execute() throws TaskNotFoundException {
+        String[] args = getArgsAsArray();
+        resetArgs();
+        if(args.length != argsQuantity){
+            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
         }
 
-        boolean isIdExist = taskManager.isIdPresent(id);
-        if (!isIdExist) {
-            throw new CommandExecutionException("Id=" + id + " does not exist!");
-        }
-        taskManager.deleteById(id);
-        return "Task with id=" + id + " was deleted!";
+        long taskId = new InputParser().parseInteger(args[0]);
+        taskService.delete(taskId);
+        return String.format("Task with id=%d was deleted successfully!", taskId);
     }
 }
