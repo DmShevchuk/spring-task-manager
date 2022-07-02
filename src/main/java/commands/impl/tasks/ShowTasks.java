@@ -40,8 +40,6 @@ public class ShowTasks extends Command {
             totalString.append(Task.toModel(taskEntity));
             totalString.append("<br/>");
         }
-
-        resetArgs();
         return totalString.toString();
     }
 }

@@ -24,6 +24,7 @@ public class CommandFactory {
     private final ClearUsers clearUsers;
     private final DeleteTaskById deleteTaskById;
     private final DeleteUserById deleteUserById;
+    private final SortByStatus sortByStatus;
 
     @Autowired
     public CommandFactory(AddTask addTask,
@@ -34,7 +35,8 @@ public class CommandFactory {
                           ClearTasks clearTasks,
                           ClearUsers clearUsers,
                           DeleteTaskById deleteTaskById,
-                          DeleteUserById deleteUserById) {
+                          DeleteUserById deleteUserById,
+                          SortByStatus sortByStatus) {
         this.addTask = addTask;
         this.addUser = addUser;
         this.showTasks = showTasks;
@@ -44,6 +46,7 @@ public class CommandFactory {
         this.clearUsers = clearUsers;
         this.deleteTaskById = deleteTaskById;
         this.deleteUserById = deleteUserById;
+        this.sortByStatus = sortByStatus;
         initCommandHashMap();
     }
 
@@ -76,7 +79,7 @@ public class CommandFactory {
         commandHashMap.put("clear_users", clearUsers);
         commandHashMap.put("delete_task_by_id", deleteTaskById);
         commandHashMap.put("delete_user_by_id", deleteUserById);
-        //        commandHashMap.put("sort_by_status", new SortByStatus(taskManager));
+        commandHashMap.put("sort_by_status", sortByStatus);
 //        commandHashMap.put("help", new Help(getCommandsInfo()));
     }
 }

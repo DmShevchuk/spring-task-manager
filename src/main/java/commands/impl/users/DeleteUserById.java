@@ -2,7 +2,6 @@ package commands.impl.users;
 
 import commands.Command;
 import exceptions.IncorrectArgsQuantityException;
-import exceptions.TaskNotFoundException;
 import exceptions.UserNotFoundException;
 import org.springframework.stereotype.Component;
 import services.UserService;
