@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Класс, хранящий в себе все доступные команды
+ * */
 @Component
 public class CommandFactory {
     private final Map<String, Command> commandHashMap = new HashMap<>();

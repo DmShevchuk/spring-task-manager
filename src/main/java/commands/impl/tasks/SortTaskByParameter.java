@@ -11,6 +11,9 @@ import services.TaskService;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Класс, реализующий функционал сортировки задач по 3 параметрам: title, description, deadline, type
+ * */
 @Component
 public class SortTaskByParameter extends Command {
     private final TaskService taskService;

@@ -11,7 +11,7 @@ import services.TaskService;
 import java.util.List;
 
 /**
- * Класс выводящий список задач в консоль
+ * Класс выводящий список задач
  */
 @Component
 public class ShowTasks extends Command {
@@ -33,6 +33,7 @@ public class ShowTasks extends Command {
         if (taskEntityList.size() == 0) {
             return "No added tasks!";
         }
+
         StringBuilder totalString = new StringBuilder();
         for (TaskEntity taskEntity : taskEntityList) {
             totalString.append(Task.toModel(taskEntity));

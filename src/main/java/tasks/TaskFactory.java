@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import utils.InputParser;
 
 /**
- * Класс для получения полей объекта класса {@link Task} из ввода пользователя
+ * Класс для получения полей объекта класса {@link TaskEntity} из ввода пользователя
  */
 @Component
 @RequiredArgsConstructor
@@ -20,7 +20,6 @@ public class TaskFactory {
         taskEntity.setDescription(inputParser.parseString(fields[1]));
         taskEntity.setDeadline(inputParser.parseDate(fields[2]));
         taskEntity.setType(inputParser.parseTaskType(fields[3]));
-
 
         return taskEntity;
     }

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import services.TaskService;
 import utils.InputParser;
 
+/**
+ * Класс, реализующий функционал удаления задачи по id
+ * */
 @Component
 public class DeleteTaskById extends Command {
     private final TaskService taskService;

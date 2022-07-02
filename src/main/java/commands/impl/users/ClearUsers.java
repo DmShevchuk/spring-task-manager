@@ -5,6 +5,11 @@ import exceptions.IncorrectArgsQuantityException;
 import org.springframework.stereotype.Component;
 import services.UserService;
 
+/**
+ * Класс, реализующий функционал удаления всех пользователей <br/>
+ * При удалении всех пользователей удаляются все задачи, т.к. они связаны с пользователями <br/>
+ * Если нужно избежать такого поведения - см. {@link DeleteUserById}
+ * */
 @Component
 public class ClearUsers extends Command {
     private final UserService userService;

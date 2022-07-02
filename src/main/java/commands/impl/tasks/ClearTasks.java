@@ -5,6 +5,9 @@ import exceptions.IncorrectArgsQuantityException;
 import org.springframework.stereotype.Component;
 import services.TaskService;
 
+/**
+ *  Класс, реализующий функционал удаления всех задач
+ * */
 @Component
 public class ClearTasks extends Command {
     private final TaskService taskService;

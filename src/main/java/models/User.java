@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Модель {@link User} для представления данных пользователю
+ * Модель {@link UserEntity} для представления данных пользователю
  */
 @NoArgsConstructor
 @Getter

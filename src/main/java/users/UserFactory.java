@@ -5,7 +5,7 @@ import exceptions.FieldParseException;
 import utils.InputParser;
 
 /**
- * Класс для получения полей объекта класса {@link User} из ввода пользователя
+ * Класс для получения полей объекта класса {@link UserEntity} из ввода пользователя
  */
 public class UserFactory {
 

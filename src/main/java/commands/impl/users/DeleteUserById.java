@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import services.UserService;
 import utils.InputParser;
 
+/**
+ * Класс, реализующий функционал удаления пользователя по id
+ * */
 @Component
 public class DeleteUserById extends Command {
     private final UserService userService;

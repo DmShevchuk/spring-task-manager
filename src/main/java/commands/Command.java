@@ -7,6 +7,9 @@ import exceptions.UserNotFoundException;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Абстрактный класс для все команд
+ * */
 public abstract class Command {
     @Getter
     private final String name;

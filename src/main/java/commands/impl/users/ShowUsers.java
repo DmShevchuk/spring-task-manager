@@ -1,18 +1,18 @@
 package commands.impl.users;
 
 import commands.Command;
-import entities.TaskEntity;
 import entities.UserEntity;
 import exceptions.IncorrectArgsQuantityException;
-import models.Task;
 import models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import services.UserService;
-import users.UsersManager;
 
 import java.util.List;
 
+/**
+ * Класс, выводящий всех пользователей и их задач
+ * */
 @Component
 public class ShowUsers extends Command {
     private final UserService userService;

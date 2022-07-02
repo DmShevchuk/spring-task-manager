@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import services.UserService;
 import users.UserFactory;
 
+/**
+ * Класс, реализующий функционал добавления нового пользователя
+ * */
 @Component
 public class AddUser extends Command {
     private final UserService userService;
