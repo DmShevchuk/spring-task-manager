@@ -2,6 +2,7 @@ package commands;
 
 import commands.impl.tasks.AddTask;
 import commands.impl.tasks.ChangeTaskById;
+import commands.impl.tasks.ClearTasks;
 import commands.impl.tasks.ShowTasks;
 import commands.impl.users.AddUser;
 import commands.impl.users.ShowUsers;
@@ -20,18 +21,21 @@ public class CommandFactory {
     private final ShowTasks showTasks;
     private final ShowUsers showUsers;
     private final ChangeTaskById changeTaskById;
+    private final ClearTasks clearTasks;
 
     @Autowired
     public CommandFactory(AddTask addTask,
                           AddUser addUser,
                           ShowTasks showTasks,
                           ShowUsers showUsers,
-                          ChangeTaskById changeTaskById) {
+                          ChangeTaskById changeTaskById,
+                          ClearTasks clearTasks) {
         this.addTask = addTask;
         this.addUser = addUser;
         this.showTasks = showTasks;
         this.showUsers = showUsers;
         this.changeTaskById = changeTaskById;
+        this.clearTasks = clearTasks;
         initCommandHashMap();
     }
 
@@ -60,8 +64,8 @@ public class CommandFactory {
         commandHashMap.put("show_tasks", showTasks);
         commandHashMap.put("show_users", showUsers);
         commandHashMap.put("change_task_by_id", changeTaskById);
+        commandHashMap.put("clear_tasks", clearTasks);
 //        commandHashMap.put("sort_by_status", new SortByStatus(taskManager));
-//        commandHashMap.put("clear_tasks", new ClearTasks(taskManager));
 //        commandHashMap.put("delete_task_by_id", new DeleteTaskById(taskManager));
 //        commandHashMap.put("clear_users", new ClearUsers(usersManager));
 //        commandHashMap.put("help", new Help(getCommandsInfo()));
