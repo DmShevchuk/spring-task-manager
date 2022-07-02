@@ -1,35 +1,39 @@
 package commands;
 
-import commands.impl.Exit;
-import commands.impl.Help;
-import commands.impl.Save;
-import commands.impl.tasks.*;
+import commands.impl.tasks.AddTask;
+import commands.impl.tasks.ShowTasks;
 import commands.impl.users.AddUser;
-import commands.impl.users.ClearUsers;
 import commands.impl.users.ShowUsers;
 import exceptions.IncorrectCommandException;
-import tasks.TaskManager;
-import users.UsersManager;
-import utils.CommandLine;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class CommandFactory {
-    private final TaskManager taskManager;
-    private final UsersManager usersManager;
-    private final CommandLine commandLine;
     private final Map<String, Command> commandHashMap = new HashMap<>();
+    private final AddTask addTask;
+    private final AddUser addUser;
+    private final ShowTasks showTasks;
+    private final ShowUsers showUsers;
 
-    public CommandFactory(UsersManager usersManager, TaskManager taskManager, CommandLine commandLine) {
-        this.usersManager = usersManager;
-        this.taskManager = taskManager;
-        this.commandLine = commandLine;
+    @Autowired
+    public CommandFactory(AddTask addTask,
+                          AddUser addUser,
+                          ShowTasks showTasks,
+                          ShowUsers showUsers) {
+        this.addTask = addTask;
+        this.addUser = addUser;
+        this.showTasks = showTasks;
+        this.showUsers = showUsers;
         initCommandHashMap();
     }
 
     public Command getCommand(String command) throws IncorrectCommandException {
         String line = command.split("\\s")[0].trim();
+        System.out.println(line);
         if (commandHashMap.containsKey(line)) {
             return commandHashMap.get(line);
         }
@@ -37,9 +41,9 @@ public class CommandFactory {
     }
 
     // Получение информации по всем командам в формате _имя_: _информация_
-    private Map<String, String> getCommandsInfo(){
+    private Map<String, String> getCommandsInfo() {
         Map<String, String> infoMap = new HashMap<>();
-        for(String key: commandHashMap.keySet()){
+        for (String key : commandHashMap.keySet()) {
             infoMap.put(key, commandHashMap.get(key).getInfo());
         }
         return infoMap;
@@ -47,17 +51,17 @@ public class CommandFactory {
 
     // Установка всех доступных команд
     private void initCommandHashMap() {
-        commandHashMap.put("add_task", new AddTask(taskManager, commandLine));
-        commandHashMap.put("change_task_by_id", new ChangeTaskById(taskManager, commandLine));
-        commandHashMap.put("show_tasks", new ShowTasks(taskManager));
-        commandHashMap.put("sort_by_status", new SortByStatus(taskManager));
-        commandHashMap.put("clear_tasks", new ClearTasks(taskManager));
-        commandHashMap.put("delete_task_by_id", new DeleteTaskById(taskManager));
-        commandHashMap.put("add_user", new AddUser(usersManager, commandLine));
-        commandHashMap.put("clear_users", new ClearUsers(usersManager));
-        commandHashMap.put("show_users", new ShowUsers(usersManager));
-        commandHashMap.put("help", new Help(getCommandsInfo()));
-        commandHashMap.put("save", new Save(usersManager, taskManager));
-        commandHashMap.put("exit", new Exit());
+        commandHashMap.put("add_task", addTask);
+        commandHashMap.put("add_user", addUser);
+        commandHashMap.put("show_tasks", showTasks);
+        commandHashMap.put("show_users", showUsers);
+        //        commandHashMap.put("change_task_by_id", new ChangeTaskById(taskManager, commandLine));
+//        commandHashMap.put("sort_by_status", new SortByStatus(taskManager));
+//        commandHashMap.put("clear_tasks", new ClearTasks(taskManager));
+//        commandHashMap.put("delete_task_by_id", new DeleteTaskById(taskManager));
+//        commandHashMap.put("clear_users", new ClearUsers(usersManager));
+//        commandHashMap.put("help", new Help(getCommandsInfo()));
+//        commandHashMap.put("save", new Save(usersManager, taskManager));
+//        commandHashMap.put("exit", new Exit());
     }
 }

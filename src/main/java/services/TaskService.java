@@ -24,7 +24,6 @@ public class TaskService {
         if(userRepo.findById(userId).isEmpty()){
             throw new UserNotFoundException(userId.toString());
         }
-
         UserEntity user = userRepo.findById(userId).get();
         task.setUser(user);
         return taskRepo.save(task);

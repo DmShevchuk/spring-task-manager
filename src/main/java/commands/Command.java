@@ -1,6 +1,8 @@
 package commands;
 
 import exceptions.CommandExecutionException;
+import exceptions.UserAlreadyExistsException;
+import exceptions.UserNotFoundException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +11,9 @@ public abstract class Command {
     private final String name;
     @Getter
     private final String info;
-    @Getter
-    private final int argsQuantity;
+    protected final int argsQuantity;
     @Setter
-    public String arg;
+    protected String arg = "";
 
     public Command(String name, String info, int argsQuantity) {
         this.name = name;
@@ -20,5 +21,17 @@ public abstract class Command {
         this.argsQuantity = argsQuantity;
     }
 
-    public abstract String execute() throws CommandExecutionException;
+    public abstract String execute() throws CommandExecutionException, UserNotFoundException, UserAlreadyExistsException;
+
+    protected String[] getArgsAsArray() {
+        if ("".equals(arg)) {
+            return new String[]{};
+        }
+
+        return arg.split("\\s*,\\s*");
+    }
+
+    protected void resetArgs(){
+        arg = "";
+    }
 }

@@ -1,30 +1,27 @@
 package tasks;
 
-import utils.CommandLine;
+import entities.TaskEntity;
+import exceptions.FieldParseException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import utils.InputParser;
 
 /**
  * Класс для получения полей объекта класса {@link Task} из ввода пользователя
  */
+@Component
+@RequiredArgsConstructor
 public class TaskFactory {
-    private final CommandLine commandLine;
+    private final InputParser inputParser;
 
-    public TaskFactory(CommandLine commandLine) {
-        this.commandLine = commandLine;
-    }
+    public TaskEntity getTaskEntity(String[] fields) throws FieldParseException {
+        TaskEntity taskEntity = new TaskEntity();
+        taskEntity.setTitle(inputParser.parseString(fields[0]));
+        taskEntity.setDescription(inputParser.parseString(fields[1]));
+        taskEntity.setDeadline(inputParser.parseDate(fields[2]));
+        taskEntity.setType(inputParser.parseTaskType(fields[3]));
 
-    public Task.TaskBuilder getTask() {
-        InputParser inputParser = new InputParser(commandLine);
 
-        Task.TaskBuilder taskBuilder = Task.builder();
-
-        taskBuilder.title(inputParser.parseString("Title:"));
-        taskBuilder.description(inputParser.parseString("Description:"));
-        taskBuilder.ownerId(inputParser.parseInteger());
-        taskBuilder.deadline(inputParser.parseDate());
-        taskBuilder.type(inputParser.parseTaskType());
-
-        return taskBuilder;
-
+        return taskEntity;
     }
 }

@@ -2,8 +2,9 @@ package controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import services.UserService;
+import utils.LineHandler;
 
 /**
  * Главный контроллер, принимающий все запросы от пользователя
@@ -11,10 +12,15 @@ import services.UserService;
 @RestController
 @RequiredArgsConstructor
 public class MainController {
-    private final UserService userService;
+    private final LineHandler lineParser;
 
     @GetMapping("/")
-    public String index() {
-        return null;
+    public String index(@RequestParam String line) {
+        try {
+            return lineParser.parse(line.strip());
+        }catch (Exception e){
+            return e.getMessage();
+        }
+
     }
 }

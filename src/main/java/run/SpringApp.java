@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * Основной класс, точка входа в программу
  * */
 @SpringBootApplication
-@ComponentScan(basePackages = {"controllers", "services"})
+@ComponentScan(basePackages = {"controllers", "services", "utils", "commands", "tasks"})
 @EntityScan("entities")
 @EnableJpaRepositories("repositories")
 public class SpringApp {

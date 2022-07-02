@@ -1,5 +1,7 @@
 package utils;
 
+import exceptions.FieldParseException;
+import org.springframework.stereotype.Component;
 import tasks.TaskType;
 
 import java.text.ParseException;
@@ -8,53 +10,35 @@ import java.util.Date;
 
 /**
  * Класс, отвечающий за парсинг данных из ввода пользователя
- * */
+ */
+@Component
 public class InputParser {
-    private final CommandLine commandLine;
 
-    public InputParser(CommandLine commandLine){
-        this.commandLine = commandLine;
-    }
-
-    public int parseInteger() {
-        while (true) {
-            System.out.print("Owner id:");
-            String inputLine = commandLine.getLine();
-            try {
-                return Integer.parseInt(inputLine);
-            } catch (NumberFormatException | ClassCastException e) {
-                System.out.println("Unable to get id from '" + inputLine + "'!");
-            }
+    public int parseInteger(String value) throws FieldParseException {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException | ClassCastException e) {
+            throw new FieldParseException("Unable to get id from '" + value + "'!");
         }
     }
 
-    public Date parseDate() {
+    public String parseString(String value) throws FieldParseException {
+        if (value.length() != 0) {
+            return value;
+        }
+        throw new FieldParseException("Unable to read title from empty string!");
+    }
+
+    public Date parseDate(String value) throws FieldParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-
-        while (true) {
-            System.out.print("Enter deadline (format is dd.MM.yyyy):");
-            String inputLine = commandLine.getLine();
-            try {
-                return formatter.parse(inputLine);
-            } catch (ParseException e) {
-                System.out.println("Unable to get date from '" + inputLine + "'!");
-            }
+        try {
+            return formatter.parse(value);
+        } catch (ParseException e) {
+            throw new FieldParseException("Unable to get date from '" + value + "'!");
         }
     }
 
-    public String parseString(String message) {
-        while (true) {
-            System.out.print(message);
-            String inputLine = commandLine.getLine();
-            if (inputLine.length() != 0) {
-                return inputLine;
-            }
-            System.out.println("Unable to read title from empty string!");
-        }
-    }
-
-    public TaskType parseTaskType() {
-        System.out.print("Enter task type (new, in progress, done): ");
-        return TaskType.getByString(commandLine.getLine());
+    public TaskType parseTaskType(String value) {
+        return TaskType.getByString(value);
     }
 }

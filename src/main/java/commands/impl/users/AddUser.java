@@ -1,23 +1,36 @@
 package commands.impl.users;
 
 import commands.Command;
+import entities.UserEntity;
+import exceptions.IncorrectArgsQuantityException;
+import exceptions.UserAlreadyExistsException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import services.UserService;
 import users.UserFactory;
-import users.UsersManager;
-import utils.CommandLine;
 
+@Component
 public class AddUser extends Command {
-    private final UsersManager usersManager;
-    private final CommandLine commandLine;
+    private final UserService userService;
 
-    public AddUser(UsersManager usersManager, CommandLine commandLine) {
-        super("add_user", "|| add new user", 0);
-        this.usersManager = usersManager;
-        this.commandLine = commandLine;
+    @Autowired
+    public AddUser(UserService userService) {
+        super("add_user", "|| add new user", 1);
+        this.userService = userService;
     }
 
     @Override
-    public String execute() {
-        usersManager.addUser(new UserFactory(commandLine).getUser());
+    public String execute() throws UserAlreadyExistsException {
+        String[] args = getArgsAsArray();
+        resetArgs();
+        if(args.length != argsQuantity){
+            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
+        }
+
+        UserEntity userEntity = new UserFactory().getUser(args);
+
+        userService.registration(userEntity);
+        resetArgs();
         return "User was added successfully!";
     }
 }

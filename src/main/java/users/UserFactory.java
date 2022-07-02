@@ -1,25 +1,18 @@
 package users;
 
-import utils.CommandLine;
+import entities.UserEntity;
+import exceptions.FieldParseException;
 import utils.InputParser;
 
 /**
  * Класс для получения полей объекта класса {@link User} из ввода пользователя
  */
 public class UserFactory {
-    private final CommandLine commandLine;
 
-    public UserFactory(CommandLine commandLine) {
-        this.commandLine = commandLine;
-    }
-
-    public User.UserBuilder getUser() {
-        InputParser inputParser = new InputParser(commandLine);
-
-        User.UserBuilder userBuilder = User.builder();
-
-        userBuilder.name(inputParser.parseString("Name:"));
-
-        return userBuilder;
+    public UserEntity getUser(String[] fields) throws FieldParseException {
+        UserEntity userEntity = new UserEntity();
+        InputParser inputParser = new InputParser();
+        userEntity.setName(inputParser.parseString(fields[0]));
+        return userEntity;
     }
 }

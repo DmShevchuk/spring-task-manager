@@ -26,4 +26,13 @@ public class User {
         user.setTaskList(userEntity.getTaskEntityList().stream().map(Task::toModel).collect(Collectors.toList()));
         return user;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", taskList=" + taskList +
+                '}';
+    }
 }

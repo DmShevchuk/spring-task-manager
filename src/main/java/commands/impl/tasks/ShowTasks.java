@@ -1,30 +1,46 @@
 package commands.impl.tasks;
 
 import commands.Command;
-import tasks.Task;
-import tasks.TaskManager;
-import utils.TaskTableView;
+import entities.TaskEntity;
+import exceptions.IncorrectArgsQuantityException;
+import models.Task;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import services.TaskService;
 
 import java.util.List;
 
 /**
  * Класс выводящий список задач в консоль
  */
+@Component
 public class ShowTasks extends Command {
-    private final TaskManager taskManager;
+    private final TaskService taskService;
 
-    public ShowTasks(TaskManager taskManager) {
+    @Autowired
+    public ShowTasks(TaskService taskService) {
         super("show_tasks", "|| show all tasks in beauty table view", 0);
-        this.taskManager = taskManager;
+        this.taskService = taskService;
     }
 
     @Override
     public String execute() {
-        List<Task> lst = taskManager.getTasks();
-        if (lst.size() == 0) {
-            return "Collection is empty!";
+        String[] args = getArgsAsArray();
+        resetArgs();
+        if(args.length != argsQuantity){
+            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
         }
-        return new TaskTableView(lst, List.of("id", "title", "description", "owner id", "deadline", "status"))
-                .printCollection();
+
+        List<TaskEntity> taskEntityList = taskService.getAll();
+        if (taskEntityList.size() == 0) {
+            return "No added tasks!";
+        }
+        StringBuilder totalString = new StringBuilder();
+        for (TaskEntity taskEntity : taskEntityList) {
+            totalString.append(Task.toModel(taskEntity));
+        }
+
+        resetArgs();
+        return totalString.toString();
     }
 }

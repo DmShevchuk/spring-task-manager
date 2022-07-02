@@ -4,20 +4,16 @@ import commands.Command;
 import exceptions.CommandExecutionException;
 import tasks.TaskFactory;
 import tasks.TaskManager;
-import utils.CommandLine;
 
 /**
  * Класс, реализующий функционал обновления статуса задачи
  **/
 public class ChangeTaskById extends Command {
     private final TaskManager taskManager;
-    private final CommandLine commandLine;
 
-    public ChangeTaskById(TaskManager taskManager, CommandLine commandLine) {
+    public ChangeTaskById(TaskManager taskManager) {
         super("change_task", "|| {id} change task", 1);
         this.taskManager = taskManager;
-        this.commandLine = commandLine;
-
     }
 
     @Override
@@ -36,7 +32,7 @@ public class ChangeTaskById extends Command {
 
         System.out.println("Task to change:\n" + taskManager.getById(id));
 
-        taskManager.changeTask(new TaskFactory(commandLine).getTask().id(id).build());
+        //taskManager.changeTask(new TaskFactory(commandLine).getTask().id(id).build());
 
         return "Task successfully changed:\n" + taskManager.getById(id);
     }

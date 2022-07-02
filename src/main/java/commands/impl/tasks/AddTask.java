@@ -1,27 +1,45 @@
 package commands.impl.tasks;
 
 import commands.Command;
+import entities.TaskEntity;
+import exceptions.FieldParseException;
+import exceptions.IncorrectArgsQuantityException;
+import exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import services.TaskService;
 import tasks.TaskFactory;
-import tasks.TaskManager;
-import utils.CommandLine;
+import utils.InputParser;
 
 
 /**
- * Класс, реализующий функционал добавления задачи в список
+ * Класс, реализующий функционал добавления новой задачи
  **/
+@Component
 public class AddTask extends Command {
-    private final TaskManager taskManager;
-    private final CommandLine commandLine;
+    private final TaskService taskService;
+    private final TaskFactory taskFactory;
 
-    public AddTask(TaskManager taskManager, CommandLine commandLine) {
-        super("add_task", "|| add new task", 0);
-        this.taskManager = taskManager;
-        this.commandLine = commandLine;
+    @Autowired
+    public AddTask(TaskService taskService, TaskFactory taskFactory) {
+        super("add_task", "|| add new task", 5);
+        this.taskService = taskService;
+        this.taskFactory = taskFactory;
     }
 
     @Override
-    public String execute() {
-        taskManager.add(new TaskFactory(commandLine).getTask());
+    public String execute() throws FieldParseException, UserNotFoundException {
+        String[] args = getArgsAsArray();
+        resetArgs();
+        if(args.length != argsQuantity){
+            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
+        }
+
+        TaskEntity taskEntity = taskFactory.getTaskEntity(args);
+
+        long ownerId = new InputParser().parseInteger(args[4]);
+
+        taskService.create(taskEntity, ownerId);
         return "Task was added successfully!";
     }
 }
