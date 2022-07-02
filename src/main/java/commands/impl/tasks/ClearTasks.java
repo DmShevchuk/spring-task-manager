@@ -1,6 +1,7 @@
 package commands.impl.tasks;
 
 import commands.Command;
+import exceptions.IncorrectArgsQuantityException;
 import org.springframework.stereotype.Component;
 import services.TaskService;
 
@@ -15,6 +16,10 @@ public class ClearTasks extends Command {
 
     @Override
     public String execute() {
+        if(args.length != argsQuantity){
+            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
+        }
+
         taskService.deleteAll();
         return "Collection of tasks was clear successfully!";
     }

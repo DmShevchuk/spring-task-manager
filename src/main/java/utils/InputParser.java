@@ -13,10 +13,9 @@ import java.util.Date;
  */
 @Component
 public class InputParser {
-    //TODO parseLong
-    public int parseInteger(String value) throws FieldParseException {
+    public long parseLong(String value) throws FieldParseException {
         try {
-            return Integer.parseInt(value);
+            return Long.parseLong(value);
         } catch (NumberFormatException | ClassCastException e) {
             throw new FieldParseException("Unable to get id from '" + value + "'!");
         }

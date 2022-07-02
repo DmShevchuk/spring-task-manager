@@ -1,10 +1,14 @@
 package utils;
 
+import com.opencsv.CSVParser;
 import commands.Command;
 import commands.CommandFactory;
 import exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 
 /**
@@ -17,12 +21,17 @@ public class LineHandler {
 
     public String parse(String line) {
         try {
-            Command command = commandFactory.getCommand(line);
+            CSVParser csvParser = new CSVParser();
+            String[] fields = csvParser.parseLine(line);
 
-            int firstWhiteSpaceIdx = line.indexOf(' ');
+            for (int i = 0; i < fields.length; i++){
+                fields[i] = fields[i].trim();
+            }
 
-            if (firstWhiteSpaceIdx != -1) {
-                command.setArg(line.substring(firstWhiteSpaceIdx).trim());
+            Command command = commandFactory.getCommand(fields[0]);
+
+            if (fields.length > 1){
+                command.setArgs(Arrays.copyOfRange(fields, 1, fields.length));
             }
             return command.execute();
 
@@ -32,7 +41,8 @@ public class LineHandler {
                 FieldParseException|
                 UserNotFoundException|
                 UserAlreadyExistsException |
-                TaskNotFoundException e) {
+                TaskNotFoundException |
+                IOException e) {
             return e.getMessage();
         }
     }

@@ -25,7 +25,7 @@ public class CommandFactory {
     private final ClearUsers clearUsers;
     private final DeleteTaskById deleteTaskById;
     private final DeleteUserById deleteUserById;
-    private final SortByStatus sortByStatus;
+    private final SortTaskByParameter sortTaskByParameter;
     private final Help help;
 
     @Autowired
@@ -38,7 +38,7 @@ public class CommandFactory {
                           ClearUsers clearUsers,
                           DeleteTaskById deleteTaskById,
                           DeleteUserById deleteUserById,
-                          SortByStatus sortByStatus,
+                          SortTaskByParameter sortTaskByParameter,
                           Help help) {
         this.addTask = addTask;
         this.addUser = addUser;
@@ -49,14 +49,13 @@ public class CommandFactory {
         this.clearUsers = clearUsers;
         this.deleteTaskById = deleteTaskById;
         this.deleteUserById = deleteUserById;
-        this.sortByStatus = sortByStatus;
+        this.sortTaskByParameter = sortTaskByParameter;
         this.help = help;
         initCommandHashMap();
     }
 
     public Command getCommand(String command) throws IncorrectCommandException {
         String line = command.split("\\s")[0].trim();
-        System.out.println(line);
         if (commandHashMap.containsKey(line)) {
             return commandHashMap.get(line);
         }
@@ -83,7 +82,7 @@ public class CommandFactory {
         commandHashMap.put("clear_users", clearUsers);
         commandHashMap.put("delete_task_by_id", deleteTaskById);
         commandHashMap.put("delete_user_by_id", deleteUserById);
-        commandHashMap.put("sort_by_status", sortByStatus);
+        commandHashMap.put("sort_by_parameter", sortTaskByParameter);
         commandHashMap.put("help", help);
 
 

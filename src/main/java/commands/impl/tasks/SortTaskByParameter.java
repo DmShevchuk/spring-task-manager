@@ -8,18 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import services.TaskService;
 
+import java.util.Comparator;
 import java.util.List;
 
-/**
- * Класс выводящий список задач в консоль
- */
 @Component
-public class ShowTasks extends Command {
+public class SortTaskByParameter extends Command {
     private final TaskService taskService;
 
     @Autowired
-    public ShowTasks(TaskService taskService) {
-        super("show_tasks", "|| show all tasks in beauty table view", 0);
+    public SortTaskByParameter(TaskService taskService) {
+        super("sort_by_parameter", "|| sort all tasks by parameter", 1);
         this.taskService = taskService;
     }
 
@@ -30,9 +28,18 @@ public class ShowTasks extends Command {
         }
 
         List<TaskEntity> taskEntityList = taskService.getAll();
-        if (taskEntityList.size() == 0) {
-            return "No added tasks!";
+        if (taskEntityList.size() == 0){
+            return "Collection of tasks is empty!";
         }
+        String parameter = args[0];
+
+        switch (parameter){
+            case "title" -> taskEntityList.sort(Comparator.comparing(TaskEntity::getTitle));
+            case "description" -> taskEntityList.sort(Comparator.comparing(TaskEntity::getDescription));
+            case "deadline" -> taskEntityList.sort(Comparator.comparing(TaskEntity::getDeadline));
+            default -> taskEntityList.sort(Comparator.comparing(TaskEntity::getType));
+        }
+
         StringBuilder totalString = new StringBuilder();
         for (TaskEntity taskEntity : taskEntityList) {
             totalString.append(Task.toModel(taskEntity));

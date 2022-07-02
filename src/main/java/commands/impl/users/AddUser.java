@@ -21,8 +21,6 @@ public class AddUser extends Command {
 
     @Override
     public String execute() throws UserAlreadyExistsException {
-        String[] args = getArgsAsArray();
-        resetArgs();
         if(args.length != argsQuantity){
             throw new IncorrectArgsQuantityException(argsQuantity, args.length);
         }

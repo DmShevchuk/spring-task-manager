@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tasks.TaskType;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -35,11 +36,13 @@ public class Task {
 
     @Override
     public String toString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+
         return "Task{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", deadline=" + deadline +
+                ", deadline=" + sdf.format(deadline) +
                 ", type=" + type +
                 ", ownerId=" + ownerId +
                 '}';

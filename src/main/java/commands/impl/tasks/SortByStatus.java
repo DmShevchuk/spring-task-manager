@@ -26,8 +26,6 @@ public class SortByStatus extends Command {
 
     @Override
     public String execute() {
-        String[] args = getArgsAsArray();
-        resetArgs();
         if(args.length != argsQuantity){
             throw new IncorrectArgsQuantityException(argsQuantity, args.length);
         }

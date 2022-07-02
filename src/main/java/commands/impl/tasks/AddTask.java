@@ -11,6 +11,9 @@ import services.TaskService;
 import tasks.TaskFactory;
 import utils.InputParser;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 
 /**
  * Класс, реализующий функционал добавления новой задачи
@@ -29,15 +32,13 @@ public class AddTask extends Command {
 
     @Override
     public String execute() throws FieldParseException, UserNotFoundException {
-        String[] args = getArgsAsArray();
-        resetArgs();
         if(args.length != argsQuantity){
             throw new IncorrectArgsQuantityException(argsQuantity, args.length);
         }
 
         TaskEntity taskEntity = taskFactory.getTaskEntity(args);
 
-        long ownerId = new InputParser().parseInteger(args[4]);
+        long ownerId = new InputParser().parseLong(args[4]);
 
         taskService.create(taskEntity, ownerId);
         return "Task was added successfully!";

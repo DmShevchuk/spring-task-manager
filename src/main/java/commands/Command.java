@@ -14,7 +14,7 @@ public abstract class Command {
     private final String info;
     protected final int argsQuantity;
     @Setter
-    protected String arg = "";
+    protected String[] args = new String[]{};
 
     public Command(String name, String info, int argsQuantity) {
         this.name = name;
@@ -22,17 +22,11 @@ public abstract class Command {
         this.argsQuantity = argsQuantity;
     }
 
-    public abstract String execute() throws CommandExecutionException, UserNotFoundException, UserAlreadyExistsException, TaskNotFoundException;
+    public abstract String execute() throws CommandExecutionException, UserNotFoundException,
+            UserAlreadyExistsException, TaskNotFoundException;
 
-    protected String[] getArgsAsArray() {
-        if ("".equals(arg)) {
-            return new String[]{};
-        }
-
-        return arg.split("\\s*,\\s*");
-    }
 
     protected void resetArgs(){
-        arg = "";
+        args = new String[]{};
     }
 }
