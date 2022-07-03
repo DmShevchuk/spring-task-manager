@@ -30,7 +30,7 @@ public class LineHandler {
             }
 
             Command command = commandFactory.getCommand(fields[0]);
-
+            command.resetArgs();
             if (fields.length > 1){
                 command.setArgs(Arrays.copyOfRange(fields, 1, fields.length));
             }

@@ -29,7 +29,7 @@ public abstract class Command {
             UserAlreadyExistsException, TaskNotFoundException;
 
 
-    protected void resetArgs(){
+    public void resetArgs(){
         args = new String[]{};
     }
 }

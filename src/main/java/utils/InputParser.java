@@ -25,7 +25,7 @@ public class InputParser {
         if (value.length() != 0) {
             return value;
         }
-        throw new FieldParseException("Unable to read title from empty string!");
+        throw new FieldParseException("Unable to read field from empty string!");
     }
 
     public Date parseDate(String value) throws FieldParseException {
