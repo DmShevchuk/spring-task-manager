@@ -22,7 +22,7 @@ public class AddTask extends Command {
 
     @Autowired
     public AddTask(TaskService taskService, TaskFactory taskFactory) {
-        super("add_task", "|| add new task", 5);
+        super("add_task", "|| add new task: title, description, deadline, type, user id", 5);
         this.taskService = taskService;
         this.taskFactory = taskFactory;
     }

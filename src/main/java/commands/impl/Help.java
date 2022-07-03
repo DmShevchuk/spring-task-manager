@@ -10,7 +10,7 @@ import java.util.TreeSet;
 
 /**
  * Класс, выводящий все доступные команды, их описание и параметры
- * */
+ */
 @Component
 public class Help extends Command {
     private String infoString;
@@ -25,11 +25,19 @@ public class Help extends Command {
     }
 
     public void initializeInfoString(Map<String, String> infoMap) {
+        int spaceQuantity = 5;
+        // Получение названия самой длинной команды
+        Optional<String> maxLength = infoMap.keySet().stream().max(Comparator.comparing(String::length));
+
+        // Количество пробелов между названием команды и её описанием
+        int spacesBetweenWords = maxLength.get().length() + spaceQuantity;
+
         StringBuilder string = new StringBuilder();
         for (String key : new TreeSet<>(infoMap.keySet())) {
-            string.append(key)
-                    .append(infoMap.get(key))
-                    .append("<br/>");
+            string.append(key);
+            string.append("_".repeat(Math.max(0, spacesBetweenWords - key.length())));
+            string.append(infoMap.get(key));
+            string.append("<br/>");
         }
         infoString = string.toString();
     }

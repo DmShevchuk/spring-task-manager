@@ -2,8 +2,10 @@ package commands.impl.tasks;
 
 import commands.Command;
 import entities.TaskEntity;
-import exceptions.*;
 import models.Task;
+import exceptions.IncorrectArgsQuantityException;
+import exceptions.TaskNotFoundException;
+import exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import services.TaskService;
@@ -20,13 +22,13 @@ public class ChangeTaskById extends Command {
 
     @Autowired
     public ChangeTaskById(TaskService taskService, TaskFactory taskFactory) {
-        super("change_task", "|| {id} change task", 6);
+        super("change_task", "||change task: task id, title, description, deadline, type, user id", 6);
         this.taskService = taskService;
         this.taskFactory = taskFactory;
     }
 
     @Override
-    public String execute() throws CommandExecutionException, FieldParseException, TaskNotFoundException, UserNotFoundException {
+    public String execute() throws TaskNotFoundException, UserNotFoundException {
         if (args.length != argsQuantity) {
             throw new IncorrectArgsQuantityException(argsQuantity, args.length);
         }

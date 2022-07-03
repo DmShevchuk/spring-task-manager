@@ -24,6 +24,7 @@ public class LineHandler {
             CSVParser csvParser = new CSVParser();
             String[] fields = csvParser.parseLine(line);
 
+            // Удаление пробелов между полями
             for (int i = 0; i < fields.length; i++){
                 fields[i] = fields[i].trim();
             }
@@ -38,7 +39,7 @@ public class LineHandler {
         } catch (IncorrectCommandException |
                 CommandExecutionException |
                 IncorrectArgsQuantityException |
-                FieldParseException|
+                FieldParseException |
                 UserNotFoundException|
                 UserAlreadyExistsException |
                 TaskNotFoundException |

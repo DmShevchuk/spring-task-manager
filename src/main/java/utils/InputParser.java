@@ -37,6 +37,9 @@ public class InputParser {
         }
     }
 
+    /**
+     * Метод #getByString в {@link TaskType} возвращает TaskType.NEW по умолчанию
+     * */
     public TaskType parseTaskType(String value) {
         return TaskType.getByString(value);
     }
