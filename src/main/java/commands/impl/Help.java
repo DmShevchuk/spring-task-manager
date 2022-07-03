@@ -1,6 +1,7 @@
 package commands.impl;
 
 import commands.Command;
+import exceptions.IncorrectArgsQuantityException;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -21,6 +22,10 @@ public class Help extends Command {
 
     @Override
     public String execute() {
+        if(args.length != argsQuantity){
+            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
+        }
+
         return infoString;
     }
 

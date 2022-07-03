@@ -58,11 +58,10 @@ public class CommandFactory {
     }
 
     public Command getCommand(String command) throws IncorrectCommandException {
-        String line = command.split("\\s")[0].trim();
-        if (commandHashMap.containsKey(line)) {
-            return commandHashMap.get(line);
+        if (commandHashMap.containsKey(command)) {
+            return commandHashMap.get(command);
         }
-        throw new IncorrectCommandException("Unable to recognize command '" + line + "'!");
+        throw new IncorrectCommandException("Unable to recognize command '" + command + "'!");
     }
 
     // Получение информации по всем командам в формате _имя_: _информация_
