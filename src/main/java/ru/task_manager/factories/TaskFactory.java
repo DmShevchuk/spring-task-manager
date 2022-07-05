@@ -1,9 +1,9 @@
 package ru.task_manager.factories;
 
-import ru.task_manager.entities.TaskEntity;
-import ru.task_manager.exceptions.FieldParseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.task_manager.entities.TaskEntity;
+import ru.task_manager.exceptions.FieldParseException;
 import ru.task_manager.utils.InputParser;
 
 /**
@@ -13,32 +13,31 @@ import ru.task_manager.utils.InputParser;
 @RequiredArgsConstructor
 public class TaskFactory {
     private final InputParser inputParser;
+    private final int GET_TITLE_INDEX = 0;
+    private final int GET_DESCRIPTION_INDEX = 1;
+    private final int GET_DEADLINE_INDEX = 2;
+    private final int GET_TYPE_INDEX = 3;
 
     public TaskEntity getTaskEntity(String[] fields) throws FieldParseException {
-        int titleIdx = 0;
-        int descriptionIdx = 1;
-        int deadlineIdx = 2;
-        int typeIdx = 3;
-
         TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setTitle(inputParser.parseString(fields[titleIdx]));
-        taskEntity.setDescription(inputParser.parseString(fields[descriptionIdx]));
-        taskEntity.setDeadline(inputParser.parseDate(fields[deadlineIdx]));
-        taskEntity.setType(inputParser.parseTaskType(fields[typeIdx]));
+        taskEntity.setTitle(inputParser.parseString(fields[GET_TITLE_INDEX]));
+        taskEntity.setDescription(inputParser.parseString(fields[GET_DESCRIPTION_INDEX]));
+        taskEntity.setDeadline(inputParser.parseDate(fields[GET_DEADLINE_INDEX]));
+        taskEntity.setType(inputParser.parseTaskType(fields[GET_TYPE_INDEX]));
 
         return taskEntity;
     }
 
-    public TaskEntity updateTaskEntity(TaskEntity taskEntity, String[] fields) throws FieldParseException {
-        int titleIdx = 1;
-        int descriptionIdx = 2;
-        int deadlineIdx = 3;
-        int typeIdx = 4;
+    private final int UPDATE_TITLE_INDEX = 1;
+    private final int UPDATE_DESCRIPTION_INDEX = 2;
+    private final int UPDATE_DEADLINE_INDEX = 3;
+    private final int UPDATE_TYPE_INDEX = 4;
 
-        taskEntity.setTitle(inputParser.parseString(fields[titleIdx]));
-        taskEntity.setDescription(inputParser.parseString(fields[descriptionIdx]));
-        taskEntity.setDeadline(inputParser.parseDate(fields[deadlineIdx]));
-        taskEntity.setType(inputParser.parseTaskType(fields[typeIdx]));
+    public TaskEntity updateTaskEntity(TaskEntity taskEntity, String[] fields) throws FieldParseException {
+        taskEntity.setTitle(inputParser.parseString(fields[UPDATE_TITLE_INDEX]));
+        taskEntity.setDescription(inputParser.parseString(fields[UPDATE_DESCRIPTION_INDEX]));
+        taskEntity.setDeadline(inputParser.parseDate(fields[UPDATE_DEADLINE_INDEX]));
+        taskEntity.setType(inputParser.parseTaskType(fields[UPDATE_TYPE_INDEX]));
 
         return taskEntity;
     }

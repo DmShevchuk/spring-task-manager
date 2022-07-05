@@ -25,21 +25,10 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public UserEntity getOne(Long id) throws UserNotFoundException{
-        if (userRepo.findById(id).isEmpty()){
-            throw new UserNotFoundException(id.toString());
-        }
-        return userRepo.findById(id).get();
-    }
-
     public List<UserEntity> getAll(){return userRepo.findAll();}
 
-    public Long delete(Long id) throws UserNotFoundException{
-        if (userRepo.findById(id).isEmpty()){
-            throw new UserNotFoundException(id.toString());
-        }
+    public void delete(Long id) throws UserNotFoundException{
         userRepo.deleteById(id);
-        return id;
     }
 
     public void deleteAll(){

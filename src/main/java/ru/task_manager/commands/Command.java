@@ -1,9 +1,6 @@
 package ru.task_manager.commands;
 
-import ru.task_manager.exceptions.CommandExecutionException;
-import ru.task_manager.exceptions.TaskNotFoundException;
-import ru.task_manager.exceptions.UserAlreadyExistsException;
-import ru.task_manager.exceptions.UserNotFoundException;
+import ru.task_manager.exceptions.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +25,11 @@ public abstract class Command {
     public abstract String execute() throws CommandExecutionException, UserNotFoundException,
             UserAlreadyExistsException, TaskNotFoundException;
 
+    protected void isArgQuantityCorrect(){
+        if(args.length != argsQuantity){
+            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
+        }
+    }
 
     public void resetArgs(){
         args = new String[]{};

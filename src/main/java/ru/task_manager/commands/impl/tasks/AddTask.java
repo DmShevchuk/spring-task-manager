@@ -3,7 +3,6 @@ package ru.task_manager.commands.impl.tasks;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.exceptions.FieldParseException;
-import ru.task_manager.exceptions.IncorrectArgsQuantityException;
 import ru.task_manager.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +18,7 @@ import ru.task_manager.utils.InputParser;
 public class AddTask extends Command {
     private final TaskService taskService;
     private final TaskFactory taskFactory;
+    private final int OWNER_ID_INDEX = 4;
 
     @Autowired
     public AddTask(TaskService taskService, TaskFactory taskFactory) {
@@ -29,16 +29,10 @@ public class AddTask extends Command {
 
     @Override
     public String execute() throws FieldParseException, UserNotFoundException {
-        int ownerIdIndex = 4;
-        if(args.length != argsQuantity){
-            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
-        }
-
+        isArgQuantityCorrect();
         TaskEntity taskEntity = taskFactory.getTaskEntity(args);
-
-        long ownerId = new InputParser().parseLong(args[ownerIdIndex]);
-
-        taskService.create(taskEntity, ownerId);
+        long ownerId = new InputParser().parseLong(args[OWNER_ID_INDEX]);
+        taskService.add(taskEntity, ownerId);
         return "Task was added successfully!";
     }
 }

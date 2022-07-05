@@ -20,33 +20,20 @@ public class TaskService {
     private final TaskRepo taskRepo;
     private final UserRepo userRepo;
 
-    public void create(TaskEntity task, Long userId) throws UserNotFoundException {
-        if (userRepo.findById(userId).isEmpty()) {
-            throw new UserNotFoundException(userId.toString());
-        }
-        UserEntity user = userRepo.findById(userId).get();
-        task.setUser(user);
+    public TaskEntity add(TaskEntity task, Long userId) throws UserNotFoundException {
+        UserEntity userEntity = userRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
+        task.setUser(userEntity);
         taskRepo.save(task);
+        return task;
     }
 
     public TaskEntity update(TaskEntity task) {
         return taskRepo.save(task);
     }
 
-    public TaskEntity update(TaskEntity task, Long userId) throws UserNotFoundException {
-        if (userRepo.findById(userId).isEmpty()) {
-            throw new UserNotFoundException(userId.toString());
-        }
-        UserEntity user = userRepo.findById(userId).get();
-        task.setUser(user);
-        return taskRepo.save(task);
-    }
-
     public TaskEntity getById(Long id) throws TaskNotFoundException {
-        if (!taskRepo.existsById(id)) {
-            throw new TaskNotFoundException(id.toString());
-        }
-        return taskRepo.getReferenceById(id);
+        return taskRepo.findById(id).orElseThrow(() -> new TaskNotFoundException(id.toString()));
     }
 
     public List<TaskEntity> getAll() {
@@ -54,9 +41,6 @@ public class TaskService {
     }
 
     public void delete(Long id) throws TaskNotFoundException {
-        if (taskRepo.findById(id).isEmpty()) {
-            throw new TaskNotFoundException(id.toString());
-        }
         taskRepo.deleteById(id);
     }
 

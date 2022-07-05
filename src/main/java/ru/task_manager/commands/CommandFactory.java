@@ -1,6 +1,7 @@
 package ru.task_manager.commands;
 
 import ru.task_manager.commands.impl.Help;
+import ru.task_manager.commands.impl.tasks.*;
 import ru.task_manager.commands.impl.users.AddUser;
 import ru.task_manager.commands.impl.users.ClearUsers;
 import ru.task_manager.commands.impl.users.DeleteUserById;
@@ -8,7 +9,6 @@ import ru.task_manager.commands.impl.users.ShowUsers;
 import ru.task_manager.exceptions.IncorrectCommandException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.task_manager.commands.impl.tasks.*;
 
 import java.util.HashMap;
 import java.util.Map;

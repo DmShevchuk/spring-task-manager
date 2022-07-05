@@ -9,13 +9,10 @@ import ru.task_manager.factories.TaskType;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Модель {@link TaskEntity} для представления данных пользователю
- */
 @NoArgsConstructor
 @Getter
 @Setter
-public class Task {
+public class TaskDTO {
     private Long id;
     private String title;
     private String description;
@@ -23,8 +20,8 @@ public class Task {
     private TaskType type;
     private Long ownerId;
 
-    public static Task toModel(TaskEntity entity) {
-        Task task = new Task();
+    public static TaskDTO toDTO(TaskEntity entity) {
+        TaskDTO task = new TaskDTO();
         task.setId(entity.getId());
         task.setTitle(entity.getTitle());
         task.setDescription(entity.getDescription());

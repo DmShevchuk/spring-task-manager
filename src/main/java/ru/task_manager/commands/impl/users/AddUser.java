@@ -18,18 +18,14 @@ public class AddUser extends Command {
 
     @Autowired
     public AddUser(UserService userService) {
-        super("add_user", "|| add new user", 1);
+        super("add_user", "add new user", 1);
         this.userService = userService;
     }
 
     @Override
     public String execute() throws UserAlreadyExistsException {
-        if(args.length != argsQuantity){
-            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
-        }
-
+        isArgQuantityCorrect();
         UserEntity userEntity = new UserFactory().getUser(args);
-
         userService.registration(userEntity);
         resetArgs();
         return "User was added successfully!";

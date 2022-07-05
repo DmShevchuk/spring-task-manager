@@ -18,6 +18,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class LineHandler {
     private final CommandFactory commandFactory;
+    private final int COMMAND_NAME_INDEX = 0;
 
     public String parse(String line) {
         try {
@@ -29,7 +30,7 @@ public class LineHandler {
                 fields[i] = fields[i].trim();
             }
 
-            Command command = commandFactory.getCommand(fields[0]);
+            Command command = commandFactory.getCommand(fields[COMMAND_NAME_INDEX]);
             command.resetArgs();
             if (fields.length > 1){
                 command.setArgs(Arrays.copyOfRange(fields, 1, fields.length));

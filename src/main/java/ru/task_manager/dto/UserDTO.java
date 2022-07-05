@@ -8,22 +8,19 @@ import lombok.Setter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Модель {@link UserEntity} для представления данных пользователю
- */
 @NoArgsConstructor
 @Getter
 @Setter
-public class User {
+public class UserDTO {
     private Long id;
     private String name;
-    private List<Task> taskList;
+    private List<TaskDTO> taskList;
 
-    public static User toModel(UserEntity userEntity) {
-        User user = new User();
+    public static UserDTO toDTO(UserEntity userEntity) {
+        UserDTO user = new UserDTO();
         user.setId(userEntity.getId());
         user.setName(userEntity.getName());
-        user.setTaskList(userEntity.getTaskEntityList().stream().map(Task::toModel).collect(Collectors.toList()));
+        user.setTaskList(userEntity.getTaskEntityList().stream().map(TaskDTO::toDTO).collect(Collectors.toList()));
         return user;
     }
 
@@ -33,7 +30,7 @@ public class User {
 
         if (taskList.size() > 0) {
             stringBuilder.append("Task list:<br/>");
-            for (Task task : taskList) {
+            for (TaskDTO task : taskList) {
                 stringBuilder.append(task.toString());
                 stringBuilder.append("<br/>");
             }
