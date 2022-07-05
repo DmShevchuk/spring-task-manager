@@ -21,11 +21,13 @@ public class DeleteUserById extends Command {
 
     @Override
     public String execute() throws UserNotFoundException {
+        int taskIdIdx = 0;
+
         if(args.length != argsQuantity){
             throw new IncorrectArgsQuantityException(argsQuantity, args.length);
         }
 
-        long taskId = new InputParser().parseLong(args[0]);
+        long taskId = new InputParser().parseLong(args[taskIdIdx]);
         userService.delete(taskId);
         return String.format("User with id=%d was deleted successfully!", taskId);
     }

@@ -29,13 +29,14 @@ public class AddTask extends Command {
 
     @Override
     public String execute() throws FieldParseException, UserNotFoundException {
+        int ownerIdIndex = 4;
         if(args.length != argsQuantity){
             throw new IncorrectArgsQuantityException(argsQuantity, args.length);
         }
 
         TaskEntity taskEntity = taskFactory.getTaskEntity(args);
 
-        long ownerId = new InputParser().parseLong(args[4]);
+        long ownerId = new InputParser().parseLong(args[ownerIdIndex]);
 
         taskService.create(taskEntity, ownerId);
         return "Task was added successfully!";

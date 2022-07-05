@@ -10,9 +10,11 @@ import utils.InputParser;
 public class UserFactory {
 
     public UserEntity getUser(String[] fields) throws FieldParseException {
+        int nameIdx = 0;
+
         UserEntity userEntity = new UserEntity();
         InputParser inputParser = new InputParser();
-        userEntity.setName(inputParser.parseString(fields[0]));
+        userEntity.setName(inputParser.parseString(fields[nameIdx]));
         return userEntity;
     }
 }

@@ -29,16 +29,19 @@ public class ChangeTaskById extends Command {
 
     @Override
     public String execute() throws TaskNotFoundException, UserNotFoundException {
+        int taskIdIdx = 0;
+        int userIdxIdx = 5;
+
         if (args.length != argsQuantity) {
             throw new IncorrectArgsQuantityException(argsQuantity, args.length);
         }
         InputParser inputParser = new InputParser();
 
-        long taskId = inputParser.parseLong(args[0]);
+        long taskId = inputParser.parseLong(args[taskIdIdx]);
 
         TaskEntity taskEntity = taskFactory.updateTaskEntity(taskService.getById(taskId), args);
 
-        Long userId = inputParser.parseLong(args[5]);
+        Long userId = inputParser.parseLong(args[userIdxIdx]);
 
         if (!userId.equals(taskEntity.getUser().getId())) {
             return Task.toModel(taskService.update(taskEntity, userId)).toString();

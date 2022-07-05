@@ -15,20 +15,30 @@ public class TaskFactory {
     private final InputParser inputParser;
 
     public TaskEntity getTaskEntity(String[] fields) throws FieldParseException {
+        int titleIdx = 0;
+        int descriptionIdx = 1;
+        int deadlineIdx = 2;
+        int typeIdx = 3;
+
         TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setTitle(inputParser.parseString(fields[0]));
-        taskEntity.setDescription(inputParser.parseString(fields[1]));
-        taskEntity.setDeadline(inputParser.parseDate(fields[2]));
-        taskEntity.setType(inputParser.parseTaskType(fields[3]));
+        taskEntity.setTitle(inputParser.parseString(fields[titleIdx]));
+        taskEntity.setDescription(inputParser.parseString(fields[descriptionIdx]));
+        taskEntity.setDeadline(inputParser.parseDate(fields[deadlineIdx]));
+        taskEntity.setType(inputParser.parseTaskType(fields[typeIdx]));
 
         return taskEntity;
     }
 
     public TaskEntity updateTaskEntity(TaskEntity taskEntity, String[] fields) throws FieldParseException {
-        taskEntity.setTitle(inputParser.parseString(fields[1]));
-        taskEntity.setDescription(inputParser.parseString(fields[2]));
-        taskEntity.setDeadline(inputParser.parseDate(fields[3]));
-        taskEntity.setType(inputParser.parseTaskType(fields[4]));
+        int titleIdx = 1;
+        int descriptionIdx = 2;
+        int deadlineIdx = 3;
+        int typeIdx = 4;
+
+        taskEntity.setTitle(inputParser.parseString(fields[titleIdx]));
+        taskEntity.setDescription(inputParser.parseString(fields[descriptionIdx]));
+        taskEntity.setDeadline(inputParser.parseDate(fields[deadlineIdx]));
+        taskEntity.setType(inputParser.parseTaskType(fields[typeIdx]));
 
         return taskEntity;
     }
