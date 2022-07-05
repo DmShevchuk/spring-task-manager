@@ -32,13 +32,9 @@ public class ChangeTaskById extends Command {
     public String execute() throws TaskNotFoundException, UserNotFoundException {
         isArgQuantityCorrect();
         InputParser inputParser = new InputParser();
-
         long taskId = inputParser.parseLong(args[TASK_ID_INDEX]);
-
         TaskEntity taskEntity = taskFactory.updateTaskEntity(taskService.getById(taskId), args);
-
         Long userId = inputParser.parseLong(args[USER_ID_INDEX]);
-
         if (!userId.equals(taskEntity.getUser().getId())) {
             return TaskDTO.toDTO(taskService.add(taskEntity, userId)).toString();
         }
