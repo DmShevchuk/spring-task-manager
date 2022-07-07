@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.tasks;
 
+import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.dto.TaskDTO;
@@ -14,18 +15,13 @@ import java.util.List;
  * Класс, реализующий функционал сортировки задач по 3 параметрам: title, description, deadline, type
  * */
 @Component
+@RequiredArgsConstructor
 public class SortTaskByParameter extends Command {
     private final TaskService taskService;
     private final int SORTING_PARAMETER_INDEX = 0;
 
-    @Autowired
-    public SortTaskByParameter(TaskService taskService) {
-        super("sort_by_parameter", "sort all tasks by parameter", 1);
-        this.taskService = taskService;
-    }
-
     @Override
-    public String execute() {
+    public String execute(String[] args) {
         isArgQuantityCorrect();
         List<TaskEntity> taskEntityList = taskService.getAll();
         String parameter = args[SORTING_PARAMETER_INDEX];
@@ -41,5 +37,20 @@ public class SortTaskByParameter extends Command {
             totalString.append("<br/>");
         }
         return totalString.toString();
+    }
+
+    @Override
+    public String getName() {
+        return "sort_by_parameter";
+    }
+
+    @Override
+    public String getInfo() {
+        return "sort all tasks by parameter";
+    }
+
+    @Override
+    public int getArgsQuantity() {
+        return 1;
     }
 }

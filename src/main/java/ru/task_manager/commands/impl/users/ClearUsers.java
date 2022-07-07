@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.users;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.task_manager.commands.Command;
 import ru.task_manager.services.UserService;
@@ -10,18 +11,29 @@ import ru.task_manager.services.UserService;
  * Если нужно избежать такого поведения - см. {@link DeleteUserById}
  */
 @Component
+@RequiredArgsConstructor
 public class ClearUsers extends Command {
     private final UserService userService;
 
-    public ClearUsers(UserService userService) {
-        super("clear_users", "remove all users from collection", 0);
-        this.userService = userService;
-    }
-
     @Override
-    public String execute() {
+    public String execute(String[] args) {
         isArgQuantityCorrect();
         userService.deleteAll();
         return "All users was deleted!";
+    }
+
+    @Override
+    public String getName() {
+        return "clear_users";
+    }
+
+    @Override
+    public String getInfo() {
+        return "remove all users from collection";
+    }
+
+    @Override
+    public int getArgsQuantity() {
+        return 0;
     }
 }

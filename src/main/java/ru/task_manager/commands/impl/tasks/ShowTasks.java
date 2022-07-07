@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.tasks;
 
+import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.dto.TaskDTO;
@@ -13,17 +14,12 @@ import java.util.List;
  * Класс выводящий список задач
  */
 @Component
+@RequiredArgsConstructor
 public class ShowTasks extends Command {
     private final TaskService taskService;
 
-    @Autowired
-    public ShowTasks(TaskService taskService) {
-        super("show_tasks", "show all tasks in beauty table view", 0);
-        this.taskService = taskService;
-    }
-
     @Override
-    public String execute() {
+    public String execute(String[] args) {
         isArgQuantityCorrect();
         List<TaskEntity> taskEntityList = taskService.getAll();
         StringBuilder totalString = new StringBuilder();
@@ -32,5 +28,20 @@ public class ShowTasks extends Command {
             totalString.append("<br/>");
         }
         return totalString.toString();
+    }
+
+    @Override
+    public String getName() {
+        return "show_tasks";
+    }
+
+    @Override
+    public String getInfo() {
+        return "show all tasks in beauty table view";
+    }
+
+    @Override
+    public int getArgsQuantity() {
+        return 0;
     }
 }

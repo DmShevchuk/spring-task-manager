@@ -1,9 +1,10 @@
 package ru.task_manager.commands.impl;
 
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.task_manager.commands.Command;
-import ru.task_manager.exceptions.IncorrectArgsQuantityException;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -14,25 +15,35 @@ import java.util.TreeSet;
 public class Help extends Command {
     private String infoString;
 
-    public Help() {
-        super("help", "info about all commands", 0);
+    public Help(List<Command> commandList){
+        StringBuilder stringBuilder = new StringBuilder();
+        for(Command command: commandList){
+            stringBuilder.append(command.getName())
+                    .append("------>")
+                    .append(command.getInfo())
+                    .append("<br/>");
+        }
+        infoString = stringBuilder.toString();
     }
 
     @Override
-    public String execute() {
-        if (args.length != argsQuantity) {
-            throw new IncorrectArgsQuantityException(argsQuantity, args.length);
-        }
+    public String execute(String[] args) {
+        isArgQuantityCorrect();
         return infoString;
     }
 
-    public void initializeInfoString(Map<String, String> infoMap) {
-        StringBuilder string = new StringBuilder();
-        for (String key : new TreeSet<>(infoMap.keySet())) {
-            string.append(key)
-                    .append("-")
-                    .append(infoMap.get(key));
-        }
-        infoString = string.toString();
+    @Override
+    public String getName() {
+        return "help";
+    }
+
+    @Override
+    public String getInfo() {
+        return "info about all commands";
+    }
+
+    @Override
+    public int getArgsQuantity() {
+        return 0;
     }
 }

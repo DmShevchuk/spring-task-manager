@@ -22,7 +22,7 @@ public class CommandInvoker {
             if (args.length > 1) {
                 command.setArgs(Arrays.copyOfRange(args, 1, args.length));
             }
-            return command.execute();
+            return command.execute(args);
         } catch (IncorrectCommandException |
                 CommandExecutionException |
                 IncorrectArgsQuantityException |

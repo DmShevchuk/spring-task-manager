@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.users;
 
+import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.dto.UserDTO;
@@ -13,17 +14,12 @@ import java.util.List;
  * Класс, выводящий всех пользователей и их задач
  * */
 @Component
+@RequiredArgsConstructor
 public class ShowUsers extends Command {
     private final UserService userService;
 
-    @Autowired
-    public ShowUsers(UserService userService){
-        super("show_users", "show list of users", 0);
-        this.userService = userService;
-    }
-
     @Override
-    public String execute() {
+    public String execute(String[] args) {
         isArgQuantityCorrect();
         List<UserEntity> userEntityList = userService.getAll();
         StringBuilder totalString = new StringBuilder();
@@ -32,5 +28,20 @@ public class ShowUsers extends Command {
             totalString.append("<br/>");
         }
         return totalString.toString();
+    }
+
+    @Override
+    public String getName() {
+        return "show_users";
+    }
+
+    @Override
+    public String getInfo() {
+        return "show list of users";
+    }
+
+    @Override
+    public int getArgsQuantity() {
+        return 0;
     }
 }
