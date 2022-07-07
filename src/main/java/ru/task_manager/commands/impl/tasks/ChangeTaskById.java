@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.tasks;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.TaskEntity;
@@ -20,6 +21,14 @@ import ru.task_manager.utils.InputParser;
 public class ChangeTaskById extends Command {
     private final TaskService taskService;
     private final TaskFactory taskFactory;
+
+    @Getter
+    private final String name = "change_task";
+    @Getter
+    private final String info = "change task: task id, title, description, deadline, type, user id";
+    @Getter
+    private final int argsQuantity = 6;
+
     private final int TASK_ID_INDEX = 0;
     private final int USER_ID_INDEX = 5;
 
@@ -35,20 +44,5 @@ public class ChangeTaskById extends Command {
             return TaskDTO.toDTO(taskService.add(taskEntity, userId)).toString();
         }
         return TaskDTO.toDTO(taskService.update(taskEntity)).toString();
-    }
-
-    @Override
-    public String getName() {
-        return "change_task";
-    }
-
-    @Override
-    public String getInfo() {
-        return "change task: task id, title, description, deadline, type, user id";
-    }
-
-    @Override
-    public int getArgsQuantity() {
-        return 6;
     }
 }

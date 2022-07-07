@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.task_manager.commands.Command;
@@ -13,7 +14,14 @@ import java.util.TreeSet;
  */
 @Component
 public class Help extends Command {
-    private String infoString;
+    private final String infoString;
+
+    @Getter
+    private final String name = "help";
+    @Getter
+    private final String info = "info about all commands";
+    @Getter
+    private final int argsQuantity = 0;
 
     public Help(List<Command> commandList){
         StringBuilder stringBuilder = new StringBuilder();
@@ -30,20 +38,5 @@ public class Help extends Command {
     public String execute(String[] args) {
         isArgQuantityCorrect();
         return infoString;
-    }
-
-    @Override
-    public String getName() {
-        return "help";
-    }
-
-    @Override
-    public String getInfo() {
-        return "info about all commands";
-    }
-
-    @Override
-    public int getArgsQuantity() {
-        return 0;
     }
 }

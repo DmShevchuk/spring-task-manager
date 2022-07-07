@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.users;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.UserEntity;
@@ -18,6 +19,13 @@ import java.util.List;
 public class ShowUsers extends Command {
     private final UserService userService;
 
+    @Getter
+    private final String name = "show_users";
+    @Getter
+    private final String info = "show list of users";
+    @Getter
+    private final int argsQuantity = 0;
+
     @Override
     public String execute(String[] args) {
         isArgQuantityCorrect();
@@ -28,20 +36,5 @@ public class ShowUsers extends Command {
             totalString.append("<br/>");
         }
         return totalString.toString();
-    }
-
-    @Override
-    public String getName() {
-        return "show_users";
-    }
-
-    @Override
-    public String getInfo() {
-        return "show list of users";
-    }
-
-    @Override
-    public int getArgsQuantity() {
-        return 0;
     }
 }

@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.tasks;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.TaskEntity;
@@ -18,6 +19,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SortTaskByParameter extends Command {
     private final TaskService taskService;
+
+    @Getter
+    private final String name = "sort_by_parameter";
+    @Getter
+    private final String info = "sort all tasks by parameter";
+    @Getter
+    private final int argsQuantity = 1;
+
     private final int SORTING_PARAMETER_INDEX = 0;
 
     @Override
@@ -37,20 +46,5 @@ public class SortTaskByParameter extends Command {
             totalString.append("<br/>");
         }
         return totalString.toString();
-    }
-
-    @Override
-    public String getName() {
-        return "sort_by_parameter";
-    }
-
-    @Override
-    public String getInfo() {
-        return "sort all tasks by parameter";
-    }
-
-    @Override
-    public int getArgsQuantity() {
-        return 1;
     }
 }

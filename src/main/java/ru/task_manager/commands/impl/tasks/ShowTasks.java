@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.tasks;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.TaskEntity;
@@ -17,6 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ShowTasks extends Command {
     private final TaskService taskService;
+    @Getter
+    private final String name = "show_tasks";
+    @Getter
+    private final String info = "show all tasks in beauty table view";
+    @Getter
+    private final int argsQuantity = 0;
 
     @Override
     public String execute(String[] args) {
@@ -28,20 +35,5 @@ public class ShowTasks extends Command {
             totalString.append("<br/>");
         }
         return totalString.toString();
-    }
-
-    @Override
-    public String getName() {
-        return "show_tasks";
-    }
-
-    @Override
-    public String getInfo() {
-        return "show all tasks in beauty table view";
-    }
-
-    @Override
-    public int getArgsQuantity() {
-        return 0;
     }
 }

@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.users;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.UserEntity;
@@ -18,6 +19,13 @@ import ru.task_manager.factories.UserFactory;
 public class AddUser extends Command {
     private final UserService userService;
 
+    @Getter
+    private final String name = "add_user";
+    @Getter
+    private final String info = "add new user";
+    @Getter
+    private final int argsQuantity = 1;
+
     @Override
     public String execute(String[] args) throws UserAlreadyExistsException {
         isArgQuantityCorrect();
@@ -25,20 +33,5 @@ public class AddUser extends Command {
         userService.registration(userEntity);
         resetArgs();
         return "User was added successfully!";
-    }
-
-    @Override
-    public String getName() {
-        return "add_user";
-    }
-
-    @Override
-    public String getInfo() {
-        return "add new user";
-    }
-
-    @Override
-    public int getArgsQuantity() {
-        return 1;
     }
 }

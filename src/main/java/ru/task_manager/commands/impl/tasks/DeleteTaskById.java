@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.tasks;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.exceptions.IncorrectArgsQuantityException;
@@ -17,26 +18,18 @@ public class DeleteTaskById extends Command {
     private final TaskService taskService;
     private final int TASK_ID_INDEX = 0;
 
+    @Getter
+    private final String name = "delete_task_by_id";
+    @Getter
+    private final String info = "delete task by id";
+    @Getter
+    private final int argsQuantity = 1;
+
     @Override
     public String execute(String[] args) throws TaskNotFoundException {
         isArgQuantityCorrect();
         long taskId = new InputParser().parseLong(args[TASK_ID_INDEX]);
         taskService.delete(taskId);
         return String.format("Task with id=%d was deleted successfully!", taskId);
-    }
-
-    @Override
-    public String getName() {
-        return "delete_task_by_id";
-    }
-
-    @Override
-    public String getInfo() {
-        return "delete task by id";
-    }
-
-    @Override
-    public int getArgsQuantity() {
-        return 1;
     }
 }

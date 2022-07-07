@@ -1,5 +1,6 @@
 package ru.task_manager.commands.impl.tasks;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.TaskEntity;
@@ -20,6 +21,14 @@ import ru.task_manager.utils.InputParser;
 public class AddTask extends Command {
     private final TaskService taskService;
     private final TaskFactory taskFactory;
+
+    @Getter
+    private final String name = "add_task";
+    @Getter
+    private final String info = "add new task: title, description, deadline, type, user id";
+    @Getter
+    private final int argsQuantity = 5;
+
     private final int OWNER_ID_INDEX = 4;
 
     @Override
@@ -29,20 +38,5 @@ public class AddTask extends Command {
         long ownerId = new InputParser().parseLong(args[OWNER_ID_INDEX]);
         taskService.add(taskEntity, ownerId);
         return "Task was added successfully!";
-    }
-
-    @Override
-    public String getName() {
-        return "add_task";
-    }
-
-    @Override
-    public String getInfo() {
-        return "add new task: title, description, deadline, type, user id";
-    }
-
-    @Override
-    public int getArgsQuantity() {
-        return 5;
     }
 }
