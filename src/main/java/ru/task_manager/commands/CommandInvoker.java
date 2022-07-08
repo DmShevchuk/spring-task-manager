@@ -13,12 +13,12 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class CommandInvoker {
     private final CommandFactory commandFactory;
-    private final int COMMAND_NAME_INDEX = 0;
 
     public String invoke(String[] args) {
         try {
+            String commandName = args[0];
             return commandFactory.getCommand(
-                    args[COMMAND_NAME_INDEX],
+                    commandName,
                     Arrays.copyOfRange(args, 1, args.length))
                     .execute();
         } catch (IncorrectCommandException |

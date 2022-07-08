@@ -1,8 +1,6 @@
 package ru.task_manager.commands.impl.users;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import ru.task_manager.commands.Command;
 import ru.task_manager.services.UserService;
 

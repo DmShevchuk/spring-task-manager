@@ -1,7 +1,6 @@
 package ru.task_manager.utils;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Component;
 import ru.task_manager.exceptions.PropertiesReadException;
 

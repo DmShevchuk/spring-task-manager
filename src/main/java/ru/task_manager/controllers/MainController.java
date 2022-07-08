@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.task_manager.commands.CommandInvoker;
 import ru.task_manager.utils.LineHandler;
 
-import java.text.ParseException;
-
 /**
  * Главный контроллер, принимающий все запросы от пользователя
  */

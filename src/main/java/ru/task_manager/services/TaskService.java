@@ -37,10 +37,6 @@ public class TaskService {
         return taskRepo.save(task);
     }
 
-    public TaskEntity getById(Long id) throws TaskNotFoundException {
-        return taskRepo.findById(id).orElseThrow(() -> new TaskNotFoundException(id.toString()));
-    }
-
     public List<TaskEntity> getAll() {
         return taskRepo.findAll();
     }
