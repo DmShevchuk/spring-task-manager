@@ -17,12 +17,10 @@ public class CommandInvoker {
 
     public String invoke(String[] args) {
         try {
-            Command command = commandFactory.getCommand(args[COMMAND_NAME_INDEX]);
-            command.resetArgs();
-            if (args.length > 1) {
-                command.setArgs(Arrays.copyOfRange(args, 1, args.length));
-            }
-            return command.execute(args);
+            return commandFactory.getCommand(
+                    args[COMMAND_NAME_INDEX],
+                    Arrays.copyOfRange(args, 1, args.length))
+                    .execute();
         } catch (IncorrectCommandException |
                 CommandExecutionException |
                 IncorrectArgsQuantityException |

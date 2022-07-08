@@ -11,21 +11,12 @@ import ru.task_manager.services.UserService;
  * При удалении всех пользователей удаляются все задачи, т.к. они связаны с пользователями <br/>
  * Если нужно избежать такого поведения - см. {@link DeleteUserById}
  */
-@Component
 @RequiredArgsConstructor
 public class ClearUsers extends Command {
     private final UserService userService;
 
-    @Getter
-    private final String name = "clear_users";
-    @Getter
-    private final String info = "remove all users from collection";
-    @Getter
-    private final int argsQuantity = 0;
-
     @Override
-    public String execute(String[] args) {
-        isArgQuantityCorrect();
+    public String execute() {
         userService.deleteAll();
         return "All users was deleted!";
     }

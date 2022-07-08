@@ -12,24 +12,14 @@ import ru.task_manager.utils.InputParser;
 /**
  * Класс, реализующий функционал удаления задачи по id
  * */
-@Component
 @RequiredArgsConstructor
 public class DeleteTaskById extends Command {
     private final TaskService taskService;
-    private final int TASK_ID_INDEX = 0;
-
-    @Getter
-    private final String name = "delete_task_by_id";
-    @Getter
-    private final String info = "delete task by id";
-    @Getter
-    private final int argsQuantity = 1;
+    private final Long id;
 
     @Override
-    public String execute(String[] args) throws TaskNotFoundException {
-        isArgQuantityCorrect();
-        long taskId = new InputParser().parseLong(args[TASK_ID_INDEX]);
-        taskService.delete(taskId);
-        return String.format("Task with id=%d was deleted successfully!", taskId);
+    public String execute() throws TaskNotFoundException {
+        taskService.delete(id);
+        return String.format("Task with id=%d was deleted successfully!", id);
     }
 }

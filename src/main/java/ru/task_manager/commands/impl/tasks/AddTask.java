@@ -16,26 +16,14 @@ import ru.task_manager.utils.InputParser;
 /**
  * Класс, реализующий функционал добавления новой задачи
  **/
-@Component
 @RequiredArgsConstructor
 public class AddTask extends Command {
     private final TaskService taskService;
-    private final TaskFactory taskFactory;
-
-    @Getter
-    private final String name = "add_task";
-    @Getter
-    private final String info = "add new task: title, description, deadline, type, user id";
-    @Getter
-    private final int argsQuantity = 5;
-
-    private final int OWNER_ID_INDEX = 4;
+    private final TaskEntity taskEntity;
+    private final Long ownerId;
 
     @Override
-    public String execute(String[] args) throws FieldParseException, UserNotFoundException  {
-        isArgQuantityCorrect();
-        TaskEntity taskEntity = taskFactory.getTaskEntity(args);
-        long ownerId = new InputParser().parseLong(args[OWNER_ID_INDEX]);
+    public String execute() throws FieldParseException, UserNotFoundException  {
         taskService.add(taskEntity, ownerId);
         return "Task was added successfully!";
     }

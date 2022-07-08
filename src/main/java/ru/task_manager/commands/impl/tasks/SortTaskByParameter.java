@@ -15,25 +15,13 @@ import java.util.List;
 /**
  * Класс, реализующий функционал сортировки задач по 3 параметрам: title, description, deadline, type
  * */
-@Component
 @RequiredArgsConstructor
 public class SortTaskByParameter extends Command {
-    private final TaskService taskService;
-
-    @Getter
-    private final String name = "sort_by_parameter";
-    @Getter
-    private final String info = "sort all tasks by parameter";
-    @Getter
-    private final int argsQuantity = 1;
-
-    private final int SORTING_PARAMETER_INDEX = 0;
+    private final List<TaskEntity> taskEntityList;
+    private final String parameter;
 
     @Override
-    public String execute(String[] args) {
-        isArgQuantityCorrect();
-        List<TaskEntity> taskEntityList = taskService.getAll();
-        String parameter = args[SORTING_PARAMETER_INDEX];
+    public String execute() {
         switch (parameter){
             case "title" -> taskEntityList.sort(Comparator.comparing(TaskEntity::getTitle));
             case "description" -> taskEntityList.sort(Comparator.comparing(TaskEntity::getDescription));
