@@ -9,7 +9,7 @@ import ru.task_manager.services.TaskService;
  * Класс, реализующий функционал удаления задачи по id
  * */
 @RequiredArgsConstructor
-public class DeleteTaskById extends Command {
+public class DeleteTaskById implements Command {
     private final TaskService taskService;
     private final Long id;
 

@@ -12,7 +12,7 @@ import java.util.List;
  * Класс, реализующий функционал сортировки задач по 3 параметрам: title, description, deadline, type
  * */
 @RequiredArgsConstructor
-public class SortTaskByParameter extends Command {
+public class SortTaskByParameter implements Command {
     private final List<TaskEntity> taskEntityList;
     private final String parameter;
 

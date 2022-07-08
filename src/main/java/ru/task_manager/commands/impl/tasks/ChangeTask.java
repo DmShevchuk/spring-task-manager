@@ -12,7 +12,7 @@ import ru.task_manager.services.TaskService;
  * Класс, реализующий функционал обновления задачи
  **/
 @RequiredArgsConstructor
-public class ChangeTask extends Command {
+public class ChangeTask implements Command {
     private final TaskService taskService;
     private final TaskEntity taskEntity;
     private final Long ownerId;

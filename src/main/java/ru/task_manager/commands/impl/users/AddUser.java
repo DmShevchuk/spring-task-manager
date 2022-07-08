@@ -10,7 +10,7 @@ import ru.task_manager.services.UserService;
  * Класс, реализующий функционал добавления нового пользователя
  * */
 @RequiredArgsConstructor
-public class AddUser extends Command {
+public class AddUser implements Command {
     private final UserService userService;
     private final UserEntity userEntity;
 

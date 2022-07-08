@@ -10,7 +10,7 @@ import ru.task_manager.services.UserService;
  * Если нужно избежать такого поведения - см. {@link DeleteUserById}
  */
 @RequiredArgsConstructor
-public class ClearUsers extends Command {
+public class ClearUsers implements Command {
     private final UserService userService;
 
     @Override

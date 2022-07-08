@@ -11,7 +11,7 @@ import java.util.List;
  * Класс, выводящий всех пользователей и их задач
  * */
 @RequiredArgsConstructor
-public class ShowUsers extends Command {
+public class ShowUsers implements Command {
     private final List<UserEntity> userEntityList;
 
     @Override

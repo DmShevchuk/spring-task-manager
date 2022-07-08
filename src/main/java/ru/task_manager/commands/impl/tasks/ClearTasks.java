@@ -8,7 +8,7 @@ import ru.task_manager.services.TaskService;
  *  Класс, реализующий функционал удаления всех задач
  * */
 @RequiredArgsConstructor
-public class ClearTasks extends Command {
+public class ClearTasks implements Command {
     private final TaskService taskService;
 
     @Override

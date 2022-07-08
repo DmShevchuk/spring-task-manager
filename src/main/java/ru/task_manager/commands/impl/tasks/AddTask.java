@@ -11,7 +11,7 @@ import ru.task_manager.services.TaskService;
  * Класс, реализующий функционал добавления новой задачи
  **/
 @RequiredArgsConstructor
-public class AddTask extends Command {
+public class AddTask implements Command {
     private final TaskService taskService;
     private final TaskEntity taskEntity;
     private final Long ownerId;

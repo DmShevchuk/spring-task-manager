@@ -11,7 +11,7 @@ import java.util.List;
  * Класс выводящий список задач
  */
 @RequiredArgsConstructor
-public class ShowTasks extends Command {
+public class ShowTasks implements Command {
     private final List<TaskEntity> taskEntityList;
 
     @Override
