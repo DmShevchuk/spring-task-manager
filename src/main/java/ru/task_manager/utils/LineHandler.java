@@ -13,12 +13,15 @@ import java.io.IOException;
 public class LineHandler {
     public String[] parse(String line) throws IOException {
         CSVParser csvParser = new CSVParser();
-        String[] fields = csvParser.parseLine(line);
-
-        // Удаление пробелов между полями
-        for (int i = 0; i < fields.length; i++) {
-            fields[i] = fields[i].trim();
+        try {
+            String[] fields = csvParser.parseLine(line);
+            // Удаление пробелов между полями
+            for (int i = 0; i < fields.length; i++) {
+                fields[i] = fields[i].trim();
+            }
+            return fields;
+        } catch (NullPointerException | IOException e){
+            throw new IOException(String.format("Unable to get data from line='%s'!", line));
         }
-        return fields;
     }
 }
