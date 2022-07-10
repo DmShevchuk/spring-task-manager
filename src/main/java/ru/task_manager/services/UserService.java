@@ -18,11 +18,12 @@ import java.util.List;
 public class UserService {
     private final UserRepo userRepo;
 
-    public void registration(UserEntity user) throws UserAlreadyExistsException{
+    public UserEntity registration(UserEntity user) throws UserAlreadyExistsException{
         if (userRepo.findByName(user.getName()) != null){
             throw new UserAlreadyExistsException(user.getName());
         }
         userRepo.save(user);
+        return user;
     }
 
     public List<UserEntity> getAll(){return userRepo.findAll();}
