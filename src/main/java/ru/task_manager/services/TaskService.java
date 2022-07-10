@@ -28,12 +28,13 @@ public class TaskService {
         return task;
     }
 
-    public TaskEntity update(TaskEntity task) {
+    public TaskEntity update(TaskEntity task, Long userId) throws TaskNotFoundException, UserNotFoundException {
+        taskRepo.findById(task.getId())
+                .orElseThrow(() -> new TaskNotFoundException(task.getId().toString()));
+        UserEntity userEntity = userRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
+        task.setUser(userEntity);
         return taskRepo.save(task);
-    }
-
-    public TaskEntity getById(Long id) throws TaskNotFoundException {
-        return taskRepo.findById(id).orElseThrow(() -> new TaskNotFoundException(id.toString()));
     }
 
     public List<TaskEntity> getAll() {

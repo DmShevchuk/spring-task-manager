@@ -2,23 +2,23 @@ package ru.task_manager.commands.impl.tasks;
 
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
+import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.entities.TaskEntity;
-import ru.task_manager.exceptions.FieldParseException;
+import ru.task_manager.exceptions.TaskNotFoundException;
 import ru.task_manager.exceptions.UserNotFoundException;
 import ru.task_manager.services.TaskService;
 
 /**
- * Класс, реализующий функционал добавления новой задачи
+ * Класс, реализующий функционал обновления задачи
  **/
 @RequiredArgsConstructor
-public class AddTask implements Command {
+public class ChangeTask implements Command {
     private final TaskService taskService;
     private final TaskEntity taskEntity;
     private final Long ownerId;
 
     @Override
-    public String execute() throws FieldParseException, UserNotFoundException  {
-        taskService.add(taskEntity, ownerId);
-        return "Task was added successfully!";
+    public String execute() throws TaskNotFoundException, UserNotFoundException {
+        return TaskDTO.toDTO(taskService.update(taskEntity, ownerId)).toString();
     }
 }

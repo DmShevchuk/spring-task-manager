@@ -13,32 +13,23 @@ import ru.task_manager.utils.InputParser;
 @RequiredArgsConstructor
 public class TaskFactory {
     private final InputParser inputParser;
-    private final int GET_TITLE_INDEX = 0;
-    private final int GET_DESCRIPTION_INDEX = 1;
-    private final int GET_DEADLINE_INDEX = 2;
-    private final int GET_TYPE_INDEX = 3;
 
     public TaskEntity getTaskEntity(String[] fields) throws FieldParseException {
-        TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setTitle(inputParser.parseString(fields[GET_TITLE_INDEX]));
-        taskEntity.setDescription(inputParser.parseString(fields[GET_DESCRIPTION_INDEX]));
-        taskEntity.setDeadline(inputParser.parseDate(fields[GET_DEADLINE_INDEX]));
-        taskEntity.setType(inputParser.parseTaskType(fields[GET_TYPE_INDEX]));
-
-        return taskEntity;
+        return new TaskEntity.Builder()
+                .setTitle(inputParser.parseString(fields[0]))
+                .setDescription(inputParser.parseString(fields[1]))
+                .setDeadline(inputParser.parseDate(fields[2]))
+                .setTaskType(inputParser.parseTaskType(fields[3]))
+                .build();
     }
 
-    private final int UPDATE_TITLE_INDEX = 1;
-    private final int UPDATE_DESCRIPTION_INDEX = 2;
-    private final int UPDATE_DEADLINE_INDEX = 3;
-    private final int UPDATE_TYPE_INDEX = 4;
-
-    public TaskEntity updateTaskEntity(TaskEntity taskEntity, String[] fields) throws FieldParseException {
-        taskEntity.setTitle(inputParser.parseString(fields[UPDATE_TITLE_INDEX]));
-        taskEntity.setDescription(inputParser.parseString(fields[UPDATE_DESCRIPTION_INDEX]));
-        taskEntity.setDeadline(inputParser.parseDate(fields[UPDATE_DEADLINE_INDEX]));
-        taskEntity.setType(inputParser.parseTaskType(fields[UPDATE_TYPE_INDEX]));
-
-        return taskEntity;
+    public TaskEntity updateTaskEntity(String[] fields) throws FieldParseException {
+        return new TaskEntity.Builder()
+                .setId(inputParser.parseLong(fields[0]))
+                .setTitle(inputParser.parseString(fields[1]))
+                .setDescription(inputParser.parseString(fields[2]))
+                .setDeadline(inputParser.parseDate(fields[3]))
+                .setTaskType(inputParser.parseTaskType(fields[4]))
+                .build();
     }
 }

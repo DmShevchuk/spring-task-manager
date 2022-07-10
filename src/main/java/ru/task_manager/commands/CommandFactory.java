@@ -1,93 +1,148 @@
 package ru.task_manager.commands;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.task_manager.commands.impl.Help;
 import ru.task_manager.commands.impl.tasks.*;
 import ru.task_manager.commands.impl.users.AddUser;
 import ru.task_manager.commands.impl.users.ClearUsers;
 import ru.task_manager.commands.impl.users.DeleteUserById;
 import ru.task_manager.commands.impl.users.ShowUsers;
+import ru.task_manager.entities.TaskEntity;
+import ru.task_manager.entities.UserEntity;
+import ru.task_manager.exceptions.IncorrectArgsQuantityException;
 import ru.task_manager.exceptions.IncorrectCommandException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import ru.task_manager.factories.TaskFactory;
+import ru.task_manager.factories.UserFactory;
+import ru.task_manager.services.TaskService;
+import ru.task_manager.services.UserService;
+import ru.task_manager.utils.CommandPropertiesReader;
+import ru.task_manager.utils.InputParser;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Класс, хранящий в себе все доступные команды
- * */
+ */
 @Component
+@RequiredArgsConstructor
 public class CommandFactory {
-    private final Map<String, Command> commandHashMap = new HashMap<>();
-    private final AddTask addTask;
-    private final AddUser addUser;
-    private final ShowTasks showTasks;
-    private final ShowUsers showUsers;
-    private final ChangeTaskById changeTaskById;
-    private final ClearTasks clearTasks;
-    private final ClearUsers clearUsers;
-    private final DeleteTaskById deleteTaskById;
-    private final DeleteUserById deleteUserById;
-    private final SortTaskByParameter sortTaskByParameter;
-    private final Help help;
+    private final TaskService taskService;
+    private final UserService userService;
+    private final TaskFactory taskFactory;
+    private final UserFactory userFactory;
+    private final InputParser inputParser;
+    private final CommandPropertiesReader commandPropertiesReader;
 
-    @Autowired
-    public CommandFactory(AddTask addTask,
-                          AddUser addUser,
-                          ShowTasks showTasks,
-                          ShowUsers showUsers,
-                          ChangeTaskById changeTaskById,
-                          ClearTasks clearTasks,
-                          ClearUsers clearUsers,
-                          DeleteTaskById deleteTaskById,
-                          DeleteUserById deleteUserById,
-                          SortTaskByParameter sortTaskByParameter,
-                          Help help) {
-        this.addTask = addTask;
-        this.addUser = addUser;
-        this.showTasks = showTasks;
-        this.showUsers = showUsers;
-        this.changeTaskById = changeTaskById;
-        this.clearTasks = clearTasks;
-        this.clearUsers = clearUsers;
-        this.deleteTaskById = deleteTaskById;
-        this.deleteUserById = deleteUserById;
-        this.sortTaskByParameter = sortTaskByParameter;
-        this.help = help;
-        initCommandHashMap();
-    }
+    public Command getCommand(String commandName, String[] args) {
+        switch (commandName) {
+            case "add_task":
+                return getAddTaskCommand(args);
+            case "change_task":
+                return getChangeTaskCommand(args);
+            case "show_tasks":
+                return getShowTasksCommand();
+            case "add_user":
+                return getAddUserCommand(args);
+            case "show_users":
+                return getShowUsersCommand();
+            case "clear_tasks":
+                return getClearTaskCommand();
+            case "delete_task_by_id":
+                return getDeleteTaskCommand(args);
+            case "sort_by_parameter":
+                return getSortTasksByParameter(args);
+            case "clear_users":
+                return getClearUserCommand();
+            case "delete_user_by_id":
+                return getDeleteUserByIdCommand(args);
 
-    public Command getCommand(String command) throws IncorrectCommandException {
-        if (commandHashMap.containsKey(command)) {
-            return commandHashMap.get(command);
+            case "help":
+                return getHelpCommand();
         }
-        throw new IncorrectCommandException("Unable to recognize command '" + command + "'!");
+        throw new IncorrectCommandException(commandName);
     }
 
-    // Получение информации по всем командам в формате _имя_: _информация_
-    private Map<String, String> getCommandsInfo() {
+    private Command getAddTaskCommand(String[] args) {
+        try {
+            TaskEntity taskEntity = taskFactory.getTaskEntity(args);
+            long ownerId = inputParser.parseLong(args[args.length - 1]);
+            return new AddTask(taskService, taskEntity, ownerId);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IncorrectArgsQuantityException("add_task", Arrays.toString(args));
+        }
+    }
+
+    private Command getChangeTaskCommand(String[] args) {
+        try {
+            TaskEntity taskEntity = taskFactory.updateTaskEntity(args);
+            long ownerId = inputParser.parseLong(args[args.length - 1]);
+            return new ChangeTask(taskService, taskEntity, ownerId);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IncorrectArgsQuantityException("change_task", Arrays.toString(args));
+        }
+    }
+
+    private Command getClearTaskCommand() {
+        return new ClearTasks(taskService);
+    }
+
+    private Command getDeleteTaskCommand(String[] args) {
+        try {
+            long id = inputParser.parseLong(args[0]);
+            return new DeleteTaskById(taskService, id);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IncorrectArgsQuantityException("delete_task_by_id", Arrays.toString(args));
+        }
+    }
+
+    private Command getShowTasksCommand() {
+        return new ShowTasks(taskService.getAll());
+    }
+
+    private Command getSortTasksByParameter(String[] args) {
+        try {
+            String parameter = inputParser.parseString(args[0]);
+            List<TaskEntity> taskEntityList = taskService.getAll();
+            return new SortTaskByParameter(taskEntityList, parameter);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IncorrectArgsQuantityException("sort_by_parameter", Arrays.toString(args));
+        }
+    }
+
+    private Command getAddUserCommand(String[] args) {
+        try {
+            UserEntity userEntity = userFactory.getUser(args);
+            return new AddUser(userService, userEntity);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IncorrectArgsQuantityException("add_user", Arrays.toString(args));
+        }
+    }
+
+    private Command getClearUserCommand() {
+        return new ClearUsers(userService);
+    }
+
+    private Command getDeleteUserByIdCommand(String[] args) {
+        try {
+            long id = inputParser.parseLong(args[0]);
+            return new DeleteUserById(userService, id);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IncorrectArgsQuantityException("delete_task_by_id", Arrays.toString(args));
+        }
+    }
+
+    private Command getShowUsersCommand() {
+        return new ShowUsers(userService.getAll());
+    }
+
+    private Command getHelpCommand() {
         Map<String, String> infoMap = new HashMap<>();
-        for (String key : commandHashMap.keySet()) {
-            infoMap.put(key, commandHashMap.get(key).getInfo());
+        Set<Object> commandNamesSet = commandPropertiesReader.getKeySet();
+        for (Object key : commandNamesSet) {
+            infoMap.put(key.toString(), commandPropertiesReader.getCommandInfo(key.toString()));
         }
-        return infoMap;
+        return new Help(infoMap);
     }
 
-    // Установка всех доступных команд
-    private void initCommandHashMap() {
-        commandHashMap.put("add_task", addTask);
-        commandHashMap.put("add_user", addUser);
-        commandHashMap.put("show_tasks", showTasks);
-        commandHashMap.put("show_users", showUsers);
-        commandHashMap.put("change_task_by_id", changeTaskById);
-        commandHashMap.put("clear_tasks", clearTasks);
-        commandHashMap.put("clear_users", clearUsers);
-        commandHashMap.put("delete_task_by_id", deleteTaskById);
-        commandHashMap.put("delete_user_by_id", deleteUserById);
-        commandHashMap.put("sort_by_parameter", sortTaskByParameter);
-        commandHashMap.put("help", help);
-
-
-        help.initializeInfoString(getCommandsInfo());
-    }
 }

@@ -1,7 +1,7 @@
 package ru.task_manager.exceptions;
 
 public class IncorrectArgsQuantityException extends RuntimeException{
-    public IncorrectArgsQuantityException(int requiredQuantity, int providedQuantity){
-        super(String.format("Incorrect quantity of arguments! Requires %d, provided %d.", requiredQuantity, providedQuantity));
+    public IncorrectArgsQuantityException(String commandName, String info){
+        super(String.format("Incorrect quantity of arguments! Unable to run command '%s' with <%s>!", commandName, info));
     }
 }

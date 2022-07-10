@@ -20,7 +20,11 @@ public class UserDTO {
         UserDTO user = new UserDTO();
         user.setId(userEntity.getId());
         user.setName(userEntity.getName());
-        user.setTaskList(userEntity.getTaskEntityList().stream().map(TaskDTO::toDTO).collect(Collectors.toList()));
+        user.setTaskList(userEntity
+                .getTaskEntityList()
+                .stream()
+                .map(TaskDTO::toDTO)
+                .collect(Collectors.toList()));
         return user;
     }
 
