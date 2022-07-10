@@ -22,6 +22,8 @@ public class InputParser {
     }
 
     public String parseString(String value) throws FieldParseException {
+        if (value == null){throw new FieldParseException("Unable to read null as string!");}
+
         if (value.length() != 0) {
             return value;
         }
@@ -32,7 +34,7 @@ public class InputParser {
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         try {
             return formatter.parse(value);
-        } catch (ParseException e) {
+        } catch (ParseException | NullPointerException e) {
             throw new FieldParseException("Unable to get date from '" + value + "'!");
         }
     }
@@ -41,6 +43,7 @@ public class InputParser {
      * Метод #getByString в {@link TaskType} возвращает TaskType.NEW по умолчанию
      * */
     public TaskType parseTaskType(String value) {
+        if (value == null){throw new FieldParseException("Unable to gets TaskType from null!");}
         return TaskType.getByString(value);
     }
 }
