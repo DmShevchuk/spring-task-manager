@@ -20,6 +20,22 @@ class TaskFactoryTest {
     }
 
     @Test
+    @DisplayName("Get TaskEntity from null")
+    void getTaskEntityWithNull() {
+        String[] fields = null;
+
+        assertThrows(NullPointerException.class, () -> taskFactory.getTaskEntity(fields));
+    }
+
+    @Test
+    @DisplayName("Get TaskEntity from empty fields array")
+    void getTaskEntityWithEmptyArray() {
+        String[] fields = new String[]{};
+
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> taskFactory.getTaskEntity(fields));
+    }
+
+    @Test
     @DisplayName("Get TaskEntity with invalid date")
     void getTaskEntityWithInvalidDate() {
         String[] fields = new String[]{
@@ -48,6 +64,22 @@ class TaskFactoryTest {
                 .setTaskType(inputParser.parseTaskType(fields[3]))
                 .build();
         assertEquals(taskEntity.getId(), taskFactory.getTaskEntity(fields).getId());
+    }
+
+    @Test
+    @DisplayName("Update TaskEntity from null")
+    void updateTaskEntityWithNull() {
+        String[] fields = null;
+
+        assertThrows(NullPointerException.class, () -> taskFactory.updateTaskEntity(fields));
+    }
+
+    @Test
+    @DisplayName("Update TaskEntity from empty fields array")
+    void updateTaskEntityWithEmptyArray() {
+        String[] fields = new String[]{};
+
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> taskFactory.updateTaskEntity(fields));
     }
 
 
