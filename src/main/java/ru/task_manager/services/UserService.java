@@ -2,7 +2,6 @@ package ru.task_manager.services;
 
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.exceptions.UserAlreadyExistsException;
-import ru.task_manager.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.task_manager.repositories.UserRepo;
@@ -28,7 +27,7 @@ public class UserService {
 
     public List<UserEntity> getAll(){return userRepo.findAll();}
 
-    public void delete(Long id) throws UserNotFoundException{
+    public void delete(Long id){
         userRepo.deleteById(id);
     }
 
