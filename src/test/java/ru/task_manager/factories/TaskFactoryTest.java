@@ -21,7 +21,7 @@ class TaskFactoryTest {
 
     @Test
     @DisplayName("Get TaskEntity from null")
-    void getTaskEntityWithNull() {
+    void getTaskEntity_WithNull() {
         String[] fields = null;
 
         assertThrows(NullPointerException.class, () -> taskFactory.getTaskEntity(fields));
@@ -29,7 +29,7 @@ class TaskFactoryTest {
 
     @Test
     @DisplayName("Get TaskEntity from empty fields array")
-    void getTaskEntityWithEmptyArray() {
+    void getTaskEntity_WithEmptyArray() {
         String[] fields = new String[]{};
 
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> taskFactory.getTaskEntity(fields));
@@ -37,7 +37,7 @@ class TaskFactoryTest {
 
     @Test
     @DisplayName("Get TaskEntity with invalid date")
-    void getTaskEntityWithInvalidDate() {
+    void getTaskEntity_WithInvalidDate() {
         String[] fields = new String[]{
                 "Title",
                 "Description",
@@ -50,7 +50,7 @@ class TaskFactoryTest {
 
     @Test
     @DisplayName("Get TaskEntity with correct fields")
-    void getTaskEntityWithValidData() {
+    void getTaskEntity_WithValidData() {
         String[] fields = new String[]{
                 "Title",
                 "Description",
@@ -68,7 +68,7 @@ class TaskFactoryTest {
 
     @Test
     @DisplayName("Update TaskEntity from null")
-    void updateTaskEntityWithNull() {
+    void updateTaskEntity_WithNull() {
         String[] fields = null;
 
         assertThrows(NullPointerException.class, () -> taskFactory.updateTaskEntity(fields));
@@ -76,7 +76,7 @@ class TaskFactoryTest {
 
     @Test
     @DisplayName("Update TaskEntity from empty fields array")
-    void updateTaskEntityWithEmptyArray() {
+    void updateTaskEntity_WithEmptyArray() {
         String[] fields = new String[]{};
 
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> taskFactory.updateTaskEntity(fields));
@@ -85,7 +85,7 @@ class TaskFactoryTest {
 
     @Test
     @DisplayName("Update TaskEntity with invalid id")
-    void updateTaskEntityWithInvalidId() {
+    void updateTaskEntity_WithInvalidId() {
         String[] fields = new String[]{
                 "String instead of id",
                 "Title",
@@ -99,7 +99,7 @@ class TaskFactoryTest {
 
     @Test
     @DisplayName("Update TaskEntity with valid id")
-    void updateTaskEntityWithValidId() {
+    void updateTaskEntity_WithValidId() {
         String[] fields = new String[]{
                 "1",
                 "Title",

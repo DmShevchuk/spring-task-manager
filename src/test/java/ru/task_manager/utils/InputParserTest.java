@@ -24,13 +24,13 @@ class InputParserTest {
 
         @Test
         @DisplayName("Parsing of 0L")
-        void parseLongZero() {
+        void parseLong_Zero() {
             assertEquals(0L, inputParser.parseLong("0"));
         }
 
         @Test
         @DisplayName("Parsing of negative numbers")
-        void parseLongNegativeNumbers() {
+        void parseLong_NegativeNumbers() {
             assertAll(
                     () -> assertEquals(1L, inputParser.parseLong("1")),
                     () -> assertEquals(2L, inputParser.parseLong("2")),
@@ -42,7 +42,7 @@ class InputParserTest {
 
         @Test
         @DisplayName("Parsing of positive numbers")
-        void parseLongPositiveNumbers() {
+        void parseLong_PositiveNumbers() {
             assertAll(
                     () -> assertEquals(-1L, inputParser.parseLong("-1")),
                     () -> assertEquals(-2L, inputParser.parseLong("-2")),
@@ -54,25 +54,25 @@ class InputParserTest {
 
         @Test
         @DisplayName("Parsing of float numbers")
-        void parseLongFloatNumbers() {
+        void parseLong_FloatNumbers() {
             assertThrows(FieldParseException.class, () -> inputParser.parseLong("100.15"));
         }
 
         @Test
         @DisplayName("Parsing of empty string")
-        void parseLongEmptyString() {
+        void parseLong_EmptyString() {
             assertThrows(FieldParseException.class, () -> inputParser.parseLong(""));
         }
 
         @Test
         @DisplayName("Parsing of strings with characters")
-        void parseLongStringsWithCharacters() {
+        void parseLong_StringsWithCharacters() {
             assertThrows(FieldParseException.class, () -> inputParser.parseLong("ABC"));
         }
 
         @Test
         @DisplayName("Parsing of null")
-        void parseLongNull() {
+        void parseLong_Null() {
             assertThrows(FieldParseException.class, () -> inputParser.parseLong(null));
         }
     }
@@ -88,19 +88,19 @@ class InputParserTest {
 
         @Test
         @DisplayName("Parsing of empty string")
-        void parseEmptyString(){
+        void parseString_Empty(){
             assertThrows(FieldParseException.class, () -> inputParser.parseString(""));
         }
 
         @Test
         @DisplayName("Parsing of null")
-        void parseNullString(){
+        void parseString_Null(){
             assertThrows(FieldParseException.class, () -> inputParser.parseString(null));
         }
 
         @Test
         @DisplayName("Parsing of strings with characters")
-        void parseCorrectString(){
+        void parseString_Correct(){
             assertAll(
                     () -> assertEquals("title", inputParser.parseString("title")),
                     () -> assertEquals("description", inputParser.parseString("description")),
@@ -123,25 +123,25 @@ class InputParserTest {
 
         @Test
         @DisplayName("Parsing of null")
-        void parseDateFromNull(){
+        void parseDate_FromNull(){
             assertThrows(FieldParseException.class, () -> inputParser.parseDate(null));
         }
 
         @Test
         @DisplayName("Parsing of empty string")
-        void parseDateFromEmptyString(){
+        void parseDate_FromEmptyString(){
             assertThrows(FieldParseException.class, () -> inputParser.parseDate(""));
         }
 
         @Test
         @DisplayName("Parsing of string with characters")
-        void parseDateFromStringWithCharacters(){
+        void parseDate_FromStringWithCharacters(){
             assertThrows(FieldParseException.class, () -> inputParser.parseDate("Line with characters"));
         }
 
         @Test
         @DisplayName("Parsing of date with invalid format")
-        void parseDateWithInvalidFormat(){
+        void parseDate_WithInvalidFormat(){
             assertAll(
                     () -> assertThrows(FieldParseException.class, () -> inputParser.parseDate("25-09-2022")),
                     () -> assertThrows(FieldParseException.class,
@@ -155,7 +155,7 @@ class InputParserTest {
 
         @Test
         @DisplayName("Parsing of date with invalid numbers (ex: day > 31, month > 12)")
-        void parseDateWithInvalidNumbers() throws ParseException{
+        void parseDate_WithInvalidNumbers() throws ParseException{
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 
             Date dateFirstCase = formatter.parse("02.07.2022");
@@ -175,7 +175,7 @@ class InputParserTest {
 
         @Test
         @DisplayName("Parsing correct date")
-        void parseDateWithCorrectFormat() throws ParseException {
+        void parseDate_WithCorrectFormat() throws ParseException {
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 
             Date dateFirstCase = formatter.parse("22.06.2022");
@@ -205,19 +205,19 @@ class InputParserTest {
 
         @Test
         @DisplayName("Parse type from null")
-        void parseTaskTypeFromNull(){
+        void parseTaskType_FromNull(){
             assertThrows(FieldParseException.class, () -> inputParser.parseTaskType(null));
         }
 
         @Test
         @DisplayName("Parse type from empty string")
-        void parseTaskTypeFromEmptyString(){
+        void parseTaskType_FromEmptyString(){
             assertEquals(TaskType.NEW, inputParser.parseTaskType(""));
         }
 
         @Test
         @DisplayName("Parse type from unresolved type of task")
-        void parseTaskTypeFromUnresolvedTaskType(){
+        void parseTaskType_FromUnresolvedTaskType(){
             TaskType newType = TaskType.NEW;
 
             assertAll(
@@ -231,7 +231,7 @@ class InputParserTest {
 
         @Test
         @DisplayName("Parse types from correct strings")
-        void parseTaskTypeFromCorrectTaskType(){
+        void parseTaskType_FromCorrectTaskType(){
             assertAll(
                     () -> assertEquals(TaskType.NEW, inputParser.parseTaskType("new")),
                     () -> assertEquals(TaskType.DONE, inputParser.parseTaskType("done")),

@@ -21,14 +21,14 @@ class UserFactoryTest {
 
     @Test
     @DisplayName("Get user from null")
-    void getUserFromNull() {
+    void getUser_FromNull() {
         String[] fields = null;
         assertThrows(NullPointerException.class, () -> userFactory.getUser(fields));
     }
 
     @Test
     @DisplayName("Get user with empty array")
-    void getUserFromEmptyArray() {
+    void getUser_FromEmptyArray() {
         String[] fields = {};
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> userFactory.getUser(fields));
     }
@@ -36,7 +36,7 @@ class UserFactoryTest {
 
     @Test
     @DisplayName("Get user with empty string instead of name")
-    void getUserFromEmptyString() {
+    void getUser_FromEmptyString() {
         String[] fields = {""};
         assertThrows(FieldParseException.class, () -> userFactory.getUser(fields));
     }
@@ -44,7 +44,7 @@ class UserFactoryTest {
 
     @Test
     @DisplayName("Get user from correct fields")
-    void getUserFromCorrectFields() {
+    void getUser_FromCorrectFields() {
         String[] fields = {"John Doe"};
         UserEntity userEntity = new UserEntity.Builder()
                 .setName(inputParser.parseString(fields[0]))

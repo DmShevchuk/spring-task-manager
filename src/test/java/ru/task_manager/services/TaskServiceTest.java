@@ -24,7 +24,7 @@ class TaskServiceTest {
 
     @Test
     @DisplayName("Add task with invalid user")
-    void addTaskWithInvalidUser() {
+    void addTask_WithInvalidUser() {
         Long idOfNonExistentUser = 0L;
         TaskEntity taskEntity = getTask();
         assertThrows(UserNotFoundException.class, () -> taskService.add(taskEntity, idOfNonExistentUser));
@@ -32,7 +32,7 @@ class TaskServiceTest {
 
     @Test
     @DisplayName("Add task with correct user")
-    void addTaskWithCorrectUser() {
+    void addTask_WithCorrectUser() {
         UserEntity userEntity = userService.registration(getUser("John Doe"));
         TaskEntity taskEntity = taskService.add(getTask(), userEntity.getId());
 
@@ -41,7 +41,7 @@ class TaskServiceTest {
 
     @Test
     @DisplayName("Update task with invalid id")
-    void updateWithInvalidTaskId() {
+    void update_WithInvalidTaskId() {
         TaskEntity taskEntity = getTask();
         Long userId = 1L;
         taskEntity.setId(0L);
@@ -50,7 +50,7 @@ class TaskServiceTest {
 
     @Test
     @DisplayName("Update task with invalid owner")
-    void updateWithInvalidOwner() {
+    void update_WithInvalidOwner() {
         UserEntity userEntity = userService.registration(getUser("Ivan Ivanov"));
         TaskEntity taskEntity = taskService.add(getTask(), userEntity.getId());
         Long idOfNonExistentUser = 0L;
@@ -59,7 +59,7 @@ class TaskServiceTest {
 
     @Test
     @DisplayName("Update with correct task and user")
-    void updateWithCorrectTaskAndUser() {
+    void update_WithCorrectTaskAndUser() {
         UserEntity userEntity = userService.registration(getUser("Steve Walmart"));
         TaskEntity taskEntity = taskService.add(getTask(), userEntity.getId());
         assertEquals(taskEntity.getId(), taskService.update(taskEntity, userEntity.getId()).getId());

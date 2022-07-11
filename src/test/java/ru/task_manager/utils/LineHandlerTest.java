@@ -17,26 +17,26 @@ class LineHandlerTest {
 
     @Test
     @DisplayName("Parsing test on empty string")
-    void testParseEmptyString() throws IOException {
+    void testParse_EmptyString() throws IOException {
         assertArrayEquals(new String[]{""}, lineHandler.parse(""));
     }
 
     @Test
     @DisplayName("Parsing test on command name")
-    void testParseArgQuantity1() throws IOException{
+    void testParse_ArgQuantity_1() throws IOException{
         assertArrayEquals(new String[]{"command_name"}, lineHandler.parse("command_name"));
     }
 
     @Test
     @DisplayName("Parsing test on full command")
-    void testParseArgQuantity5() throws IOException{
+    void testParse_ArgQuantity_5() throws IOException{
         assertArrayEquals(new String[]{"command_name", "title", "description", "20.09.2022", "1", "in progress"},
                 lineHandler.parse("command_name, title, description, 20.09.2022, 1, in progress"));
     }
 
     @Test
     @DisplayName("Parsing test on null")
-    void testParseArgIsNull() {
+    void testParse_ArgIsNull() {
         assertThrows(IOException.class, () -> lineHandler.parse(null));
     }
 }

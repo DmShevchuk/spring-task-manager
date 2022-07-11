@@ -20,14 +20,14 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Registration with not unique name")
-    void registrationWithNotUniqueName() {
+    void registration_WithNotUniqueName() {
         userService.registration(getUser("Not Unique Name"));
         assertThrows(UserAlreadyExistsException.class, () -> userService.registration(getUser("Not Unique Name")));
     }
 
     @Test
     @DisplayName("Registration with unique name")
-    void registrationWithUniqueName() {
+    void registration_WithUniqueName() {
         UserEntity userEntity = getUser(getRandomUniqueUsername());
         assertEquals(userEntity.getName(), userService.registration(userEntity).getName());
     }
