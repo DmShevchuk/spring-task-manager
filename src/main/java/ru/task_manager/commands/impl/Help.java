@@ -8,7 +8,7 @@ import java.util.Map;
  * Класс, выводящий все доступные команды, их описание и параметры
  */
 @RequiredArgsConstructor
-public class Help extends Command {
+public class Help implements Command {
     private final Map<String, String> commandInfoMap;
 
     @Override

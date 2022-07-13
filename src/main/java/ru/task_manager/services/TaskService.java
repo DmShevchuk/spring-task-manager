@@ -41,7 +41,7 @@ public class TaskService {
         return taskRepo.findAll();
     }
 
-    public void delete(Long id) throws TaskNotFoundException {
+    public void delete(Long id) {
         taskRepo.deleteById(id);
     }
 
