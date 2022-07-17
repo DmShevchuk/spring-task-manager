@@ -1,6 +1,6 @@
 # Shevchuk_DO_Java_2022_Liga
 
-###Чтобы запустить приложение
+### Чтобы запустить приложение
 
 ```shell
 git clone https://github.com/DmShevchuk/Shevchuk_DO_Java_2022_Liga
@@ -10,7 +10,7 @@ cd docker
 docker-compose down -v
 docker-compose up --build
 ```
-####ИЛИ
+#### ИЛИ
 
 ```shell
 git clone https://github.com/DmShevchuk/Shevchuk_DO_Java_2022_Liga
