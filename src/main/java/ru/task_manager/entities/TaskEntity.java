@@ -16,14 +16,19 @@ import java.util.Date;
 public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "task_id")
     private Long id;
+    @Column(name = "title")
     private String title;
+    @Column(name = "description")
     private String description;
+    @Column(name = "deadline")
     private Date deadline;
+    @Column(name = "task_type")
     private TaskType type;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "owner_id")
     private UserEntity user;
 
     private TaskEntity(Long id, String title, String description, Date deadline, TaskType type) {

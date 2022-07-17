@@ -1,8 +1,23 @@
+spring.profiles.active: dev
+
+server.port: 8080
+
 spring:
+  application:
+    name: spring-boot-tasks-manager
   datasource:
-    url: jdbc:h2:mem:mydb
-    username: username
-    password: password
+    driver-class-name: ${ENV_DRIVER_CLASS_NAME}
+    url: ${ENV_DATASOURCE_URL}
+    username: ${ENV_DATASOURCE_SERVICE_USERNAME}
+    password: ${ENV_DATASOURCE_SERVICE_PASSWORD}
   jpa:
-    hibernate:
-      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc.lob.non_contextual_creation: true
+
+
+ENV_DATASOURCE_URL: jdbc:postgresql://postgres/app_db
+ENV_DATASOURCE_SERVICE_USERNAME: dbuser
+ENV_DATASOURCE_SERVICE_PASSWORD: password
+ENV_DRIVER_CLASS_NAME: org.postgresql.Driver
