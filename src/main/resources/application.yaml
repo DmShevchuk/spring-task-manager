@@ -2,12 +2,6 @@ spring.profiles.active: dev
 
 server.port: 8080
 
-#logging:
-#  level:
-#    org:
-#      hibernate:
-#        type: trace
-
 spring:
   application:
     name: spring-boot-tasks-manager
