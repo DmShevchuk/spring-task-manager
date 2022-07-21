@@ -33,4 +33,12 @@ public class MainController {
             return e.getMessage();
         }
     }
+
+    @GetMapping("/users_tasks")
+    public String index(@RequestParam(name = "status", required = false) String status,
+                        @RequestParam(name= "min_date", required = false) String minDate,
+                        @RequestParam(name = "max_date", required = false) String maxDate){
+
+        return status + " " + minDate + " " + maxDate;
+    }
 }
