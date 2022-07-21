@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.task_manager.commands.CommandInvoker;
+import ru.task_manager.factories.TaskType;
 import ru.task_manager.utils.LineHandler;
+
+import java.util.Date;
 
 /**
  * Главный контроллер, принимающий все запросы от пользователя
@@ -36,9 +39,13 @@ public class MainController {
 
     @GetMapping("/users_tasks")
     public String index(@RequestParam(name = "status", required = false) String status,
-                        @RequestParam(name= "min_date", required = false) String minDate,
-                        @RequestParam(name = "max_date", required = false) String maxDate){
+                        @RequestParam(name= "min_date", required = false) String lowDate,
+                        @RequestParam(name = "max_date", required = false) String highDate){
 
-        return status + " " + minDate + " " + maxDate;
+        TaskType type = lineHandler.parseTaskType(status);
+        Date minDate = lineHandler.parseDate(lowDate);
+        Date maxDate = lineHandler.parseDate(highDate);
+
+        return type + " " + minDate + " " + maxDate;
     }
 }
