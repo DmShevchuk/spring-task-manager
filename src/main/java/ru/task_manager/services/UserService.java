@@ -12,7 +12,6 @@ import ru.task_manager.repositories.UserRepo;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.Date;
 import java.util.List;
@@ -90,16 +89,22 @@ public class UserService {
             predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), maxDate));
         }
 
-        query.where(predicate);
-
-        query.multiselect(taskWithUsers.get(UserEntity_.id),
-                criteriaBuilder.count(taskWithUsers))
-                .groupBy(taskWithUsers.get(UserEntity_.id));
+        query.where(predicate)
+                .multiselect(
+                        taskWithUsers.get(UserEntity_.id),
+                        taskWithUsers.get(UserEntity_.name),
+                        criteriaBuilder.count(taskWithUsers)
+                )
+                .groupBy(
+                        taskWithUsers.get(UserEntity_.id)
+                )
+                .orderBy(
+                        criteriaBuilder.desc(criteriaBuilder.count(taskWithUsers))
+                );
 
         List<Object[]> lst = entityManager.createQuery(query).getResultList();
-        for(Object[] object : lst){
-            System.out.println(object[0] + "     " + object[1]);
-
+        for (Object[] object : lst) {
+            System.out.println(String.format("%s) %s. Task quantity: %s", object[0], object[1], object[2]));
         }
 //
 //        query.groupBy(taskRoot.get(TaskEntity_.user));
