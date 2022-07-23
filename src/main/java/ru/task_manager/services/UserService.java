@@ -54,22 +54,7 @@ public class UserService {
         Root<TaskEntity> taskRoot = query.from(TaskEntity.class);
         Join<TaskEntity, UserEntity> taskWithUsers = taskRoot.join(TaskEntity_.user);
 
-        Predicate predicate = criteriaBuilder.conjunction();
-
-        if (taskType != null) {
-            predicate = criteriaBuilder.and(predicate,
-                    criteriaBuilder.equal(taskRoot.get(TaskEntity_.type), taskType));
-        }
-
-        if (minDate != null) {
-            predicate = criteriaBuilder.and(predicate,
-                    criteriaBuilder.greaterThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), minDate));
-        }
-
-        if (maxDate != null) {
-            predicate = criteriaBuilder.and(predicate,
-                    criteriaBuilder.lessThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), maxDate));
-        }
+        Predicate predicate = createPredicateForFindTasks(criteriaBuilder, taskRoot, taskType, minDate, maxDate);
 
         query.where(predicate)
                 .multiselect(
@@ -95,5 +80,31 @@ public class UserService {
                 .setFirstResult(firstPositionOfResultToRetrieve)
                 .setMaxResults(maximumNumberOfResultToRetrieve)
                 .getSingleResult();
+    }
+
+    private Predicate createPredicateForFindTasks(CriteriaBuilder criteriaBuilder,
+                                                  Root<TaskEntity> taskRoot,
+                                                  TaskType taskType,
+                                                  Date minDate,
+                                                  Date maxDate
+                                                  ){
+        Predicate predicate = criteriaBuilder.conjunction();
+
+        if (taskType != null) {
+            predicate = criteriaBuilder.and(predicate,
+                    criteriaBuilder.equal(taskRoot.get(TaskEntity_.type), taskType));
+        }
+
+        if (minDate != null) {
+            predicate = criteriaBuilder.and(predicate,
+                    criteriaBuilder.greaterThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), minDate));
+        }
+
+        if (maxDate != null) {
+            predicate = criteriaBuilder.and(predicate,
+                    criteriaBuilder.lessThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), maxDate));
+        }
+
+        return predicate;
     }
 }
