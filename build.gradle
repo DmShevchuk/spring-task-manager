@@ -19,6 +19,8 @@ configurations {
     }
 }
 
+
+
 repositories {
     mavenCentral()
 }
@@ -26,6 +28,7 @@ repositories {
 dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -37,6 +40,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.opencsv:opencsv:5.6'
+    implementation 'com.querydsl:querydsl-jpa:5.0.0'
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     compileOnly 'org.projectlombok:lombok'

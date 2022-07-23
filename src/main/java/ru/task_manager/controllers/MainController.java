@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.task_manager.commands.CommandInvoker;
 import ru.task_manager.factories.TaskType;
+import ru.task_manager.services.UserService;
 import ru.task_manager.utils.LineHandler;
 
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.Date;
 public class MainController {
     private final LineHandler lineHandler;
     private final CommandInvoker commandInvoker;
+    private final UserService userService;
     /**
      * Примеры задания запросов:<br/>
      * http://localhost:8080/?line=add_user,Ivan Petrov <br/>
@@ -41,10 +43,10 @@ public class MainController {
     public String index(@RequestParam(name = "status", required = false) String status,
                         @RequestParam(name= "min_date", required = false) String lowDate,
                         @RequestParam(name = "max_date", required = false) String highDate){
-
         TaskType type = lineHandler.parseTaskType(status);
         Date minDate = lineHandler.parseDate(lowDate);
         Date maxDate = lineHandler.parseDate(highDate);
+        userService.findUserWithMaxTaskQuantity(type, minDate, maxDate);
 
         return type + " " + minDate + " " + maxDate;
     }
