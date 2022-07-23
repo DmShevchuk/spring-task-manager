@@ -102,10 +102,15 @@ public class UserService {
                         criteriaBuilder.desc(criteriaBuilder.count(taskWithUsers))
                 );
 
-        List<Object[]> lst = entityManager.createQuery(query).getResultList();
-        for (Object[] object : lst) {
-            System.out.println(String.format("%s) %s. Task quantity: %s", object[0], object[1], object[2]));
-        }
+        Object[] userWithMaxTaskQuantity = entityManager
+                .createQuery(query)
+                .setFirstResult(0)
+                .setMaxResults(1)
+                .getSingleResult();
+
+        System.out.println(String.format("%s) %s. Task quantity: %s", userWithMaxTaskQuantity[0],
+                userWithMaxTaskQuantity[1], userWithMaxTaskQuantity[2]));
+
 //
 //        query.groupBy(taskRoot.get(TaskEntity_.user));
 //        query.having(predicate);
