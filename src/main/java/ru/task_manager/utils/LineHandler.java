@@ -2,7 +2,6 @@ package ru.task_manager.utils;
 
 import com.opencsv.CSVParser;
 import org.springframework.stereotype.Component;
-import ru.task_manager.exceptions.FieldParseException;
 import ru.task_manager.factories.TaskType;
 
 import java.io.IOException;

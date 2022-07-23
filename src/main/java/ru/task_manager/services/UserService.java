@@ -36,40 +36,19 @@ public class UserService {
         return user;
     }
 
-    public UserEntity findUserWithMaxTaskQuantity(TaskType taskType, Date minDate, Date maxDate) {
-//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<UserEntity> query = cb.createQuery(UserEntity.class);
-//        Root<UserEntity> user = query.from(UserEntity.class);
-//        ListJoin<UserEntity, TaskEntity> tasks = user.join(UserEntity_.taskEntityList);
-//        query.select(user)
-//                .where(cb.equal(tasks.get(TaskEntity_.title), "Do homework"))
-//                .distinct(true);
-//        TypedQuery<UserEntity> typedQuery = entityManager.createQuery(query);
-//        for(UserEntity u: typedQuery.getResultList()){
-//            List<TaskEntity> taskEntityList = u.getTaskEntityList();
-//            for(TaskEntity taskEntity: taskEntityList){
-//                System.out.println(TaskDTO.toDTO(taskEntity));
-//            }
-//        }
-//        return null;
-//        query.select(taskRoot)
-//                .where(cb.equal(taskRoot.get(TaskEntity_.type), taskType));
-//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<TaskEntity> query = cb.createQuery(TaskEntity.class);
-//        Root<TaskEntity> taskRoot = query.from(TaskEntity.class);
-//
-//
-//        query
-//                .groupBy(taskRoot.get(TaskEntity_.type))
-//                .having(predicate);
-//
-//        System.out.println(entityManager.createQuery(query).getResultList());
-//        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-//
-//        Subquery<TaskEntity> subQuery = cq.subquery(TaskEntity.class);
-//        Root<TaskEntity> taskRoot = subQuery.from(TaskEntity.class);
+    public List<UserEntity> getAll() {
+        return userRepo.findAll();
+    }
 
+    public void delete(Long id) {
+        userRepo.deleteById(id);
+    }
 
+    public void deleteAll() {
+        userRepo.deleteAll();
+    }
+
+    public Object[] findUserWithMaxTaskQuantity(TaskType taskType, Date minDate, Date maxDate) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object[]> query = criteriaBuilder.createQuery(Object[].class);
         Root<TaskEntity> taskRoot = query.from(TaskEntity.class);
@@ -78,15 +57,18 @@ public class UserService {
         Predicate predicate = criteriaBuilder.conjunction();
 
         if (taskType != null) {
-            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(taskRoot.get(TaskEntity_.type), taskType));
+            predicate = criteriaBuilder.and(predicate,
+                    criteriaBuilder.equal(taskRoot.get(TaskEntity_.type), taskType));
         }
 
         if (minDate != null) {
-            predicate = criteriaBuilder.and(predicate, criteriaBuilder.greaterThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), minDate));
+            predicate = criteriaBuilder.and(predicate,
+                    criteriaBuilder.greaterThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), minDate));
         }
 
         if (maxDate != null) {
-            predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), maxDate));
+            predicate = criteriaBuilder.and(predicate,
+                    criteriaBuilder.lessThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), maxDate));
         }
 
         query.where(predicate)
@@ -101,37 +83,17 @@ public class UserService {
                 .orderBy(
                         criteriaBuilder.desc(criteriaBuilder.count(taskWithUsers))
                 );
+        return runQueryToFindUserWithTask(query);
+    }
 
-        Object[] userWithMaxTaskQuantity = entityManager
+    private Object[] runQueryToFindUserWithTask(CriteriaQuery<Object[]> query){
+        int firstPositionOfResultToRetrieve = 0;
+        int maximumNumberOfResultToRetrieve = 1;
+
+        return entityManager
                 .createQuery(query)
-                .setFirstResult(0)
-                .setMaxResults(1)
+                .setFirstResult(firstPositionOfResultToRetrieve)
+                .setMaxResults(maximumNumberOfResultToRetrieve)
                 .getSingleResult();
-
-        System.out.println(String.format("%s) %s. Task quantity: %s", userWithMaxTaskQuantity[0],
-                userWithMaxTaskQuantity[1], userWithMaxTaskQuantity[2]));
-
-//
-//        query.groupBy(taskRoot.get(TaskEntity_.user));
-//        query.having(predicate);
-//
-//        TypedQuery<Object[]> typedQuery = entityManager.createQuery(query);
-//        List<Object[]> resultList = typedQuery.getResultList();
-//
-//        resultList.forEach(System.out::println);
-
-        return null;
-    }
-
-    public List<UserEntity> getAll() {
-        return userRepo.findAll();
-    }
-
-    public void delete(Long id) {
-        userRepo.deleteById(id);
-    }
-
-    public void deleteAll() {
-        userRepo.deleteAll();
     }
 }

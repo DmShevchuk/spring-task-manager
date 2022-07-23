@@ -4,20 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.task_manager.commands.impl.Help;
 import ru.task_manager.commands.impl.tasks.*;
-import ru.task_manager.commands.impl.users.AddUser;
-import ru.task_manager.commands.impl.users.ClearUsers;
-import ru.task_manager.commands.impl.users.DeleteUserById;
-import ru.task_manager.commands.impl.users.ShowUsers;
+import ru.task_manager.commands.impl.users.*;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.exceptions.IncorrectArgsQuantityException;
 import ru.task_manager.exceptions.IncorrectCommandException;
 import ru.task_manager.factories.TaskFactory;
+import ru.task_manager.factories.TaskType;
 import ru.task_manager.factories.UserFactory;
 import ru.task_manager.services.TaskService;
 import ru.task_manager.services.UserService;
 import ru.task_manager.utils.CommandPropertiesReader;
 import ru.task_manager.utils.InputParser;
+import ru.task_manager.utils.LineHandler;
 
 import java.util.*;
 
@@ -56,9 +55,10 @@ public class CommandFactory {
                 return getClearUserCommand();
             case "delete_user_by_id":
                 return getDeleteUserByIdCommand(args);
-
             case "help":
                 return getHelpCommand();
+            case "find_user_with_max_task_quantity":
+                return getUserWithMaxTaskCommand(args);
         }
         throw new IncorrectCommandException(commandName);
     }
@@ -145,4 +145,11 @@ public class CommandFactory {
         return new Help(infoMap);
     }
 
+    private Command getUserWithMaxTaskCommand(String[] args){
+        LineHandler lineHandler = new LineHandler();
+        TaskType type = lineHandler.parseTaskType(args[0]);
+        Date minDate = lineHandler.parseDate(args[1]);
+        Date maxDate = lineHandler.parseDate(args[2]);
+        return new FindUserWithMaxTaskQuantity(userService, type, minDate, maxDate);
+    }
 }
