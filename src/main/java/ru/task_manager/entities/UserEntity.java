@@ -3,6 +3,8 @@ package ru.task_manager.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,10 +17,13 @@ import java.util.List;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
+    @Column(name = "user_name")
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @Fetch(FetchMode.JOIN)
     private List<TaskEntity> taskEntityList;
 
     private UserEntity(Long id, String name){
