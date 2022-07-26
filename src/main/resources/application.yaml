@@ -10,6 +10,8 @@ spring:
     url: ${ENV_DATASOURCE_URL}
     username: ${ENV_DATASOURCE_SERVICE_USERNAME}
     password: ${ENV_DATASOURCE_SERVICE_PASSWORD}
+  flyway:
+    enabled: true
   jpa:
     hibernate:
       ddl-auto: none
@@ -22,7 +24,7 @@ spring:
 
 
 
-ENV_DATASOURCE_URL: jdbc:postgresql://postgres/app_db
-ENV_DATASOURCE_SERVICE_USERNAME: dbuser
+ENV_DATASOURCE_URL: jdbc:postgresql://localhost:5432/app_db
+ENV_DATASOURCE_SERVICE_USERNAME: postgres
 ENV_DATASOURCE_SERVICE_PASSWORD: password
 ENV_DRIVER_CLASS_NAME: org.postgresql.Driver

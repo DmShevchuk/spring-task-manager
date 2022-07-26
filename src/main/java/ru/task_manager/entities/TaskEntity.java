@@ -25,6 +25,7 @@ public class TaskEntity {
     @Column(name = "deadline")
     private Date deadline;
     @Column(name = "task_type")
+    @Enumerated(value = EnumType.STRING)
     private TaskType type;
 
     @ManyToOne

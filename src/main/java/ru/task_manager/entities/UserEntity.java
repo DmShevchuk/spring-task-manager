@@ -19,7 +19,7 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
-    @Column(name = "name")
+    @Column(name = "user_name")
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
