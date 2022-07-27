@@ -87,7 +87,8 @@ public class UserService {
                                                   TaskType taskType,
                                                   Date minDate,
                                                   Date maxDate
-                                                  ){
+                                                  )
+    {
         Predicate predicate = criteriaBuilder.conjunction();
 
         if (taskType != null) {
