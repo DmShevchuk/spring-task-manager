@@ -14,12 +14,18 @@ import java.util.stream.Collectors;
 public class UserDTO {
     private Long id;
     private String name;
+    private String middleName;
+    private String lastName;
+    private String email;
     private List<TaskDTO> taskList;
 
     public static UserDTO toDTO(UserEntity userEntity) {
         UserDTO user = new UserDTO();
         user.setId(userEntity.getId());
         user.setName(userEntity.getName());
+        user.setMiddleName(userEntity.getMiddleName());
+        user.setLastName(userEntity.getLastName());
+        user.setEmail(userEntity.getEmail());
         user.setTaskList(userEntity
                 .getTaskEntityList()
                 .stream()

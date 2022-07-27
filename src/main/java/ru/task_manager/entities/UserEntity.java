@@ -44,19 +44,19 @@ public class UserEntity {
 
     @ManyToMany(mappedBy = "usersEntity")
     @Fetch(FetchMode.SUBSELECT)
-    private Set<ProjectEntity> projects=new HashSet<>();
+    private Set<ProjectEntity> projects = new HashSet<>();
 
     private UserEntity(Long id,
                        String name,
                        String middleName,
                        String lastName,
                        String email,
-                       String password){
+                       String password) {
         this.id = id;
         this.name = name;
     }
 
-    public static class Builder{
+    public static class Builder {
         private Long id;
         private String name;
         private String middleName;
@@ -94,7 +94,7 @@ public class UserEntity {
             return this;
         }
 
-        public UserEntity build(){
+        public UserEntity build() {
             return new UserEntity(
                     id,
                     name,

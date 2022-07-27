@@ -7,6 +7,7 @@ import ru.task_manager.entities.TaskEntity_;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.entities.UserEntity_;
 import ru.task_manager.exceptions.UserAlreadyExistsException;
+import ru.task_manager.exceptions.UserNotFoundException;
 import ru.task_manager.factories.TaskType;
 import ru.task_manager.repositories.UserRepo;
 
@@ -29,15 +30,23 @@ public class UserService {
     private EntityManager entityManager;
 
     public UserEntity registration(UserEntity user) throws UserAlreadyExistsException {
-        if (userRepo.findByName(user.getName()) != null) {
-            throw new UserAlreadyExistsException(user.getName());
-        }
+//        if (userRepo.findByName(user.getName()) != null) {
+//            throw new UserAlreadyExistsException(user.getName());
+//        }
         userRepo.save(user);
         return user;
     }
 
+    public void updateUser(UserEntity user) throws UserNotFoundException{
+        userRepo.save(user);
+    }
+
     public List<UserEntity> getAll() {
         return userRepo.findAll();
+    }
+
+    public UserEntity getUserById(Long id) {
+        return userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id.toString()));
     }
 
     public void delete(Long id) {
@@ -71,7 +80,7 @@ public class UserService {
         return runQueryToFindUserWithTask(query);
     }
 
-    private Object[] runQueryToFindUserWithTask(CriteriaQuery<Object[]> query){
+    private Object[] runQueryToFindUserWithTask(CriteriaQuery<Object[]> query) {
         int firstPositionOfResultToRetrieve = 0;
         int maximumNumberOfResultToRetrieve = 1;
 
@@ -87,8 +96,7 @@ public class UserService {
                                                   TaskType taskType,
                                                   Date minDate,
                                                   Date maxDate
-                                                  )
-    {
+    ) {
         Predicate predicate = criteriaBuilder.conjunction();
 
         if (taskType != null) {
