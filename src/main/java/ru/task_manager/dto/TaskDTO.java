@@ -8,6 +8,8 @@ import ru.task_manager.factories.TaskType;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
@@ -19,6 +21,7 @@ public class TaskDTO {
     private Date deadline;
     private TaskType type;
     private Long ownerId;
+    private List<CommentDTO> commentEntityList;
 
     public static TaskDTO toDTO(TaskEntity entity) {
         TaskDTO task = new TaskDTO();
@@ -28,6 +31,11 @@ public class TaskDTO {
         task.setDeadline(entity.getDeadline());
         task.setType(entity.getType());
         task.setOwnerId(entity.getUser().getId());
+        task.setCommentEntityList(entity
+                .getComment()
+                .stream()
+                .map(CommentDTO::toDTO)
+                .collect(Collectors.toList()));
         return task;
     }
 

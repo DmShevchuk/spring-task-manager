@@ -1,12 +1,14 @@
 package ru.task_manager.services;
 
-import javafx.concurrent.Task;
-import ru.task_manager.entities.TaskEntity;
-import ru.task_manager.entities.UserEntity;
-import ru.task_manager.exceptions.TaskNotFoundException;
-import ru.task_manager.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.task_manager.entities.ProjectEntity;
+import ru.task_manager.entities.TaskEntity;
+import ru.task_manager.entities.UserEntity;
+import ru.task_manager.exceptions.ProjectNotFoundException;
+import ru.task_manager.exceptions.TaskNotFoundException;
+import ru.task_manager.exceptions.UserNotFoundException;
+import ru.task_manager.repositories.ProjectRepo;
 import ru.task_manager.repositories.TaskRepo;
 import ru.task_manager.repositories.UserRepo;
 
@@ -20,12 +22,25 @@ import java.util.List;
 public class TaskService {
     private final TaskRepo taskRepo;
     private final UserRepo userRepo;
+    private final ProjectRepo projectRepo;
 
-    public void addNewTask(TaskEntity taskEntity){
+    public void addNewTask(TaskEntity taskEntity, Long userId, Long projectId) {
+        UserEntity userEntity = userRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
+        ProjectEntity projectEntity = projectRepo.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
+        taskEntity.setUser(userEntity);
+        taskEntity.setProjectEntity(projectEntity);
         taskRepo.save(taskEntity);
     }
-    public TaskEntity getTaskById(Long id) throws TaskNotFoundException{
+
+    public TaskEntity getTaskById(Long id) throws TaskNotFoundException {
         return taskRepo.findById(id).orElseThrow(() -> new TaskNotFoundException(id.toString()));
+    }
+
+    public TaskEntity add(TaskEntity task) throws UserNotFoundException {
+        taskRepo.save(task);
+        return task;
     }
 
     public TaskEntity add(TaskEntity task, Long userId) throws UserNotFoundException {
@@ -45,7 +60,7 @@ public class TaskService {
         return taskRepo.save(task);
     }
 
-    public void update(TaskEntity taskEntity){
+    public void update(TaskEntity taskEntity) {
         taskRepo.save(taskEntity);
     }
 

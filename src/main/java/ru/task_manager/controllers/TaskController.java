@@ -8,23 +8,29 @@ import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.services.TaskService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/tasks/")
+@RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
 public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
     public ResponseEntity<String> addTask(@RequestBody TaskEntity taskEntity){
-        taskService.addNewTask(taskEntity);
+        taskService.add(taskEntity);
         return new ResponseEntity<>("Task was added successfully!", HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskEntity>> getAllTasks(){
-        return new ResponseEntity<>(taskService.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<TaskDTO>> getAllTasks(){
+        List<TaskEntity> taskEntityList = taskService.getAll();
+        List<TaskDTO> taskDTOList = new ArrayList<>();
+        for(TaskEntity taskEntity: taskEntityList){
+            taskDTOList.add(TaskDTO.toDTO(taskEntity));
+        }
+        return new ResponseEntity<>(taskDTOList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
