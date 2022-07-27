@@ -1,5 +1,6 @@
 package ru.task_manager.services;
 
+import javafx.concurrent.Task;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.exceptions.TaskNotFoundException;
@@ -20,6 +21,13 @@ public class TaskService {
     private final TaskRepo taskRepo;
     private final UserRepo userRepo;
 
+    public void addNewTask(TaskEntity taskEntity){
+        taskRepo.save(taskEntity);
+    }
+    public TaskEntity getTaskById(Long id) throws TaskNotFoundException{
+        return taskRepo.findById(id).orElseThrow(() -> new TaskNotFoundException(id.toString()));
+    }
+
     public TaskEntity add(TaskEntity task, Long userId) throws UserNotFoundException {
         UserEntity userEntity = userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId.toString()));
@@ -35,6 +43,10 @@ public class TaskService {
                 .orElseThrow(() -> new UserNotFoundException(userId.toString()));
         task.setUser(userEntity);
         return taskRepo.save(task);
+    }
+
+    public void update(TaskEntity taskEntity){
+        taskRepo.save(taskEntity);
     }
 
     public List<TaskEntity> getAll() {
