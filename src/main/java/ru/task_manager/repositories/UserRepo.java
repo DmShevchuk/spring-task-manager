@@ -11,4 +11,5 @@ import java.util.Date;
 @Repository
 public interface UserRepo extends JpaRepository<UserEntity, Long> {
     UserEntity findByName(String name);
+    boolean existsByEmail(String email);
 }

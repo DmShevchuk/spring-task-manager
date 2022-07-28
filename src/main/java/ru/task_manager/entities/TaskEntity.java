@@ -8,9 +8,10 @@ import org.hibernate.annotations.FetchMode;
 import ru.task_manager.factories.TaskType;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -41,12 +42,12 @@ public class TaskEntity {
     private UserEntity user;
 
     @ManyToOne
-    @JoinColumn(name="id_of_project")
+    @JoinColumn(name = "id_of_project")
     private ProjectEntity projectEntity;
 
     @OneToMany(mappedBy = "taskEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
-    private Set<CommentEntity> comment=new HashSet<>();
+    private List<CommentEntity> comments = new ArrayList<>();
 
     private TaskEntity(Long id, String title, String description, Date deadline, TaskType type) {
         this.id = id;

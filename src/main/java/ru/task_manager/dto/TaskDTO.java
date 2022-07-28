@@ -32,7 +32,7 @@ public class TaskDTO {
         task.setType(entity.getType());
         task.setOwnerId(entity.getUser().getId());
         task.setCommentEntityList(entity
-                .getComment()
+                .getComments()
                 .stream()
                 .map(CommentDTO::toDTO)
                 .collect(Collectors.toList()));

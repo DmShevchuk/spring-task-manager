@@ -7,6 +7,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,11 +41,11 @@ public class UserEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @Fetch(FetchMode.JOIN)
-    private List<TaskEntity> taskEntityList;
+    private List<TaskEntity> taskEntityList = new ArrayList<>();
 
     @ManyToMany(mappedBy = "usersEntity")
     @Fetch(FetchMode.SUBSELECT)
-    private Set<ProjectEntity> projects = new HashSet<>();
+    private List<ProjectEntity> projects = new ArrayList<>();
 
     private UserEntity(Long id,
                        String name,

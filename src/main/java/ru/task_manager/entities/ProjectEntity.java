@@ -7,8 +7,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "projects")
@@ -34,9 +34,9 @@ public class ProjectEntity {
             inverseJoinColumns = @JoinColumn(name = "id_of_project")
     )
     @Fetch(FetchMode.SUBSELECT)
-    private Set<UserEntity> usersEntity = new HashSet<>();
+    private List<UserEntity> usersEntity = new ArrayList<>();
 
     @OneToMany(mappedBy = "projectEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
-    private Set<TaskEntity> taskEntities = new HashSet<>();
+    private List<TaskEntity> taskEntities = new ArrayList<>();
 }

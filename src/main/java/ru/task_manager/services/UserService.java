@@ -2,10 +2,12 @@ package ru.task_manager.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.task_manager.dto.create.UserCreateDTO;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.TaskEntity_;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.entities.UserEntity_;
+import ru.task_manager.exceptions.EmailAlreadyExistsException;
 import ru.task_manager.exceptions.UserAlreadyExistsException;
 import ru.task_manager.exceptions.UserNotFoundException;
 import ru.task_manager.factories.TaskType;
@@ -29,6 +31,13 @@ public class UserService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public Long addNewUser(UserEntity userEntity) {
+        if (userRepo.existsByEmail(userEntity.getEmail())) {
+            throw new EmailAlreadyExistsException(userEntity.getEmail());
+        }
+        return userRepo.save(userEntity).getId();
+    }
+
     public UserEntity registration(UserEntity user) throws UserAlreadyExistsException {
 //        if (userRepo.findByName(user.getName()) != null) {
 //            throw new UserAlreadyExistsException(user.getName());
@@ -37,7 +46,7 @@ public class UserService {
         return user;
     }
 
-    public void updateUser(UserEntity user) throws UserNotFoundException{
+    public void updateUser(UserEntity user) throws UserNotFoundException {
         userRepo.save(user);
     }
 
