@@ -51,6 +51,14 @@ public class TaskService {
         return task;
     }
 
+    public TaskEntity add(Long userId, TaskEntity task) throws UserNotFoundException {
+        UserEntity userEntity = userRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
+        task.setUser(userEntity);
+        taskRepo.save(task);
+        return task;
+    }
+
     public TaskEntity update(TaskEntity task, Long userId) throws TaskNotFoundException, UserNotFoundException {
         taskRepo.findById(task.getId())
                 .orElseThrow(() -> new TaskNotFoundException(task.getId().toString()));
@@ -64,6 +72,10 @@ public class TaskService {
         taskRepo.save(taskEntity);
     }
 
+    public TaskEntity getTask(Long taskId, Long userId){
+        return taskRepo.getTaskEntityByIdAndUserId(taskId, userId);
+    }
+
     public List<TaskEntity> getAll() {
         return taskRepo.findAll();
     }
@@ -74,5 +86,13 @@ public class TaskService {
 
     public void deleteAll() {
         taskRepo.deleteAll();
+    }
+
+    public List<TaskEntity> getAllTasksByUserId(Long userId) {
+        return taskRepo.getTaskEntitiesByUserId(userId);
+    }
+
+    public List<TaskEntity> getAllTasksByProjectId(Long projectId) {
+        return taskRepo.getTaskEntitiesByUserId(projectId);
     }
 }

@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.services.TaskService;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,37 +16,28 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<String> addTask(@RequestBody TaskEntity taskEntity){
-        taskService.add(taskEntity);
-        return new ResponseEntity<>("Task was added successfully!", HttpStatus.OK);
+    public ResponseEntity<String> addTask(@RequestBody TaskEntity taskEntity) {
+        return null;
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskDTO>> getAllTasks(){
-        List<TaskEntity> taskEntityList = taskService.getAll();
-        List<TaskDTO> taskDTOList = new ArrayList<>();
-        for(TaskEntity taskEntity: taskEntityList){
-            taskDTOList.add(TaskDTO.toDTO(taskEntity));
-        }
-        return new ResponseEntity<>(taskDTOList, HttpStatus.OK);
+    public ResponseEntity<List<TaskDTO>> getAllTasks() {
+        return null;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id){
-        return new ResponseEntity<>(TaskDTO.toDTO(taskService.getTaskById(id)), HttpStatus.OK);
+    public ResponseEntity<List<TaskDTO>> getTaskById(@PathVariable Long id) {
+        return null;
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateTaskById(@PathVariable Long id, @RequestBody TaskEntity taskEntity){
-        taskEntity.setId(id);
-        taskService.update(taskEntity);
-        return new ResponseEntity<>("Task was updated successfully!", HttpStatus.OK);
+    @PutMapping
+    public ResponseEntity<String> updateTaskById( @RequestBody TaskEntity taskEntity) {
+        return null;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTaskById(@PathVariable Long id){
-        taskService.delete(id);
-        return new ResponseEntity<>("Task was deleted successfully!", HttpStatus.OK);
+    public ResponseEntity<String> deleteTaskById(@PathVariable Long id) {
+        return null;
     }
 
 }

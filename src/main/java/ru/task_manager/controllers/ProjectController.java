@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.task_manager.dto.ProjectDTO;
+import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.entities.ProjectEntity;
+import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.services.ProjectService;
 
 import java.util.List;
@@ -16,35 +19,27 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<String> addNewProject(@RequestBody ProjectEntity projectEntity)
-    {
-        projectService.createProject(projectEntity);
-        return new ResponseEntity<>("Project was created successfully!", HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProjectEntity> getProjectById(@PathVariable Long id){
-        return new ResponseEntity<>(projectService.getProjectById(id), HttpStatus.OK);
+    public ResponseEntity<String> addProject(@RequestBody ProjectEntity projectEntity) {
+        return null;
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectEntity>> getAllProjects(){
-        return new ResponseEntity<>(projectService.getAllProjects(), HttpStatus.OK);
+    public ResponseEntity<List<ProjectDTO>> getAllTasks() {
+        return null;
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateProjectById(@PathVariable Long id, @RequestBody ProjectEntity projectEntity){
-        projectEntity.setId(id);
-        projectService.updateProject(projectEntity);
+    @GetMapping("/{id}")
+    public ResponseEntity<List<TaskDTO>> getProjectById(@PathVariable Long id) {
+        return null;
+    }
 
-        return new ResponseEntity<>("Project was updated successfully!", HttpStatus.OK);
+    @PutMapping
+    public ResponseEntity<String> updateProjectById( @RequestBody ProjectEntity projectEntity) {
+        return null;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProjectByID(@PathVariable Long id){
-        projectService.deleteById(id);
-
-        return new ResponseEntity<>("Project was deleted successfully!", HttpStatus.OK);
+    public ResponseEntity<String> deleteProjectById(@PathVariable Long id) {
+        return null;
     }
-
 }
