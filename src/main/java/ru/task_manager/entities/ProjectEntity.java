@@ -30,8 +30,8 @@ public class ProjectEntity {
     @ManyToMany
     @JoinTable(
             name = "users_projects",
-            joinColumns = @JoinColumn(name = "id_of_user"),
-            inverseJoinColumns = @JoinColumn(name = "id_of_project")
+            joinColumns = @JoinColumn(name = "id_of_project"),
+            inverseJoinColumns = @JoinColumn(name = "id_of_user")
     )
     @Fetch(FetchMode.SUBSELECT)
     private List<UserEntity> usersEntity = new ArrayList<>();

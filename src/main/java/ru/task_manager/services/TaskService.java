@@ -24,14 +24,24 @@ public class TaskService {
     private final UserRepo userRepo;
     private final ProjectRepo projectRepo;
 
-    public void addNewTask(TaskEntity taskEntity, Long userId, Long projectId) {
+    public Long addNewTask(TaskEntity taskEntity, Long userId, Long projectId) {
         UserEntity userEntity = userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId.toString()));
         ProjectEntity projectEntity = projectRepo.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
         taskEntity.setUser(userEntity);
         taskEntity.setProjectEntity(projectEntity);
-        taskRepo.save(taskEntity);
+        return taskRepo.save(taskEntity).getId();
+    }
+
+    public TaskEntity updateTask(TaskEntity taskEntity, Long userId, Long projectId) {
+        UserEntity userEntity = userRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
+        ProjectEntity projectEntity = projectRepo.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
+        taskEntity.setUser(userEntity);
+        taskEntity.setProjectEntity(projectEntity);
+        return taskRepo.save(taskEntity);
     }
 
     public TaskEntity getTaskById(Long id) throws TaskNotFoundException {

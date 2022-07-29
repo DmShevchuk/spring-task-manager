@@ -17,11 +17,11 @@ public class CommentService {
     private final CommentRepo commentRepo;
     private final TaskRepo taskRepo;
 
-    public void addNewComment(CommentEntity commentEntity, Long taskId) {
+    public Long addNewComment(CommentEntity commentEntity, Long taskId) {
         TaskEntity taskEntity = taskRepo.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
         commentEntity.setTaskEntity(taskEntity);
-        commentRepo.save(commentEntity);
+        return commentRepo.save(commentEntity).getId();
     }
 
     public void updateComment(Long taskId, Long commentId, CommentEntity commentEntity) {
@@ -35,12 +35,27 @@ public class CommentService {
         ).orElseThrow(() -> new CommentNotFoundException(commentId.toString(), taskId.toString()));
     }
 
-    public CommentEntity getCommentById(Long commentId, Long taskId) {
-        return commentRepo.findCommentByIdAndTaskEntityId(commentId, taskId);
+    public CommentEntity updateComment(CommentEntity commentEntity, Long taskId) {
+        TaskEntity taskEntity = taskRepo.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
+        commentEntity.setTaskEntity(taskEntity);
+        return commentRepo.save(commentEntity);
+    }
+
+    public CommentEntity getCommentById(Long id) {
+        return commentRepo.findById(id).orElseThrow(() -> new CommentNotFoundException(id.toString(), "12"));
     }
 
     public List<CommentEntity> getAllComment(Long taskId) {
         return commentRepo.findAllByTaskEntityId(taskId);
+    }
+
+    public List<CommentEntity> getAll() {
+        return commentRepo.findAll();
+    }
+
+    public void delete(Long id){
+        commentRepo.deleteById(id);
     }
 
     public void deleteCommentById(Long taskId, Long commentId) {

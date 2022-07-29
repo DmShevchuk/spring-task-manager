@@ -1,4 +1,4 @@
-package ru.task_manager.dto.create;
+package ru.task_manager.dto.save;
 
 
 import lombok.Getter;
@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserCreateDTO {
+public class UserSaveDTO {
     @NotBlank(message = "Name not specified!")
     private String name;
 

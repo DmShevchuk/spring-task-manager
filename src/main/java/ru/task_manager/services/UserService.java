@@ -2,7 +2,6 @@ package ru.task_manager.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.task_manager.dto.create.UserCreateDTO;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.TaskEntity_;
 import ru.task_manager.entities.UserEntity;

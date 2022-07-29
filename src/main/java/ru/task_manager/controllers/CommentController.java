@@ -1,58 +1,60 @@
 package ru.task_manager.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.task_manager.dto.CommentDTO;
+import ru.task_manager.dto.save.CommentSaveDTO;
 import ru.task_manager.entities.CommentEntity;
 import ru.task_manager.services.CommentService;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
+    private final ModelMapper modelMapper;
 
-    @PostMapping("/tasks/{taskId}/comments")
-    public ResponseEntity<String> addNewComment(@PathVariable Long taskId,
-                                                @RequestBody CommentEntity commentEntity){
-        commentService.addNewComment(commentEntity, taskId);
-        return new ResponseEntity<>("Comment was added successfully!", HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<Long> addNewComment(@Valid @RequestBody CommentSaveDTO commentSaveDTO){
+        CommentEntity commentEntity = modelMapper.map(commentSaveDTO, CommentEntity.class);
+        Long taskId = commentSaveDTO.getTaskId();
+        Long addedCommentId = commentService.addNewComment(commentEntity, taskId);
+        return new ResponseEntity<>(addedCommentId, HttpStatus.OK);
     }
 
-    @GetMapping("/tasks/{taskId}/comments")
-    public ResponseEntity<List<CommentDTO>> getAllComments(@PathVariable Long taskId){
-        List<CommentEntity> commentEntityList = commentService.getAllComment(taskId);
-        List<CommentDTO> commentDTOList = new ArrayList<>();
-        for(CommentEntity commentEntity: commentEntityList){
-            commentDTOList.add(CommentDTO.toDTO(commentEntity));
-        }
-        return new ResponseEntity<>(commentDTOList, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<CommentDTO>> getAllComments(){
+        List<CommentDTO> commentDTOS = commentService.getAll()
+                .stream()
+                .map(CommentDTO::toDTO).toList();
+        return new ResponseEntity<>(commentDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/tasks/{taskId}/comments/{commentId}")
-    public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long taskId,
-                                                        @PathVariable Long commentId){
-        return new ResponseEntity<>(CommentDTO.toDTO(commentService.getCommentById(commentId, taskId)), HttpStatus.OK);
+    @GetMapping("{id}")
+    public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long id){
+        CommentDTO commentDTO = CommentDTO.toDTO(commentService.getCommentById(id));
+        return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/tasks/{taskId}/comments/{commentId}")
-    public ResponseEntity<String> updateTaskById(@PathVariable Long taskId,
-                                                 @PathVariable Long commentId,
-                                                 @RequestBody CommentEntity commentEntity){
-        commentService.updateComment(taskId, commentId, commentEntity);
+    @PutMapping("{id}")
+    public ResponseEntity<CommentDTO> updateTaskById(@PathVariable Long id,
+                                                 @Valid @RequestBody CommentSaveDTO commentSaveDTO){
+        CommentEntity commentEntity = modelMapper.map(commentSaveDTO, CommentEntity.class);
+        Long taskId = commentSaveDTO.getTaskId();
+        CommentDTO commentDTO = CommentDTO.toDTO(commentService.updateComment(commentEntity, taskId));
 
-        return new ResponseEntity<>("Comment was updated successfully!", HttpStatus.OK);
+        return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
-    public ResponseEntity<String> deleteCommentByID(@PathVariable Long taskId,
-                                                    @PathVariable Long commentId){
-        commentService.deleteCommentById(taskId, commentId);
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteCommentByID(@PathVariable Long id){
+        commentService.delete(id);
         return new ResponseEntity<>("Comment was deleted successfully!", HttpStatus.OK);
     }
 }
