@@ -39,13 +39,17 @@ public class UserEntity {
     private String password;
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(mappedBy = "user")
     @Fetch(FetchMode.JOIN)
     private List<TaskEntity> taskEntityList = new ArrayList<>();
 
     @ManyToMany(mappedBy = "usersEntity")
     @Fetch(FetchMode.SUBSELECT)
     private List<ProjectEntity> projects = new ArrayList<>();
+
+    public void deleteProjectFromList(ProjectEntity projectEntity){
+        projects.remove(projectEntity);
+    }
 
     private UserEntity(Long id,
                        String name,

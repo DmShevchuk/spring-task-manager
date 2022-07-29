@@ -10,7 +10,6 @@ import ru.task_manager.factories.TaskType;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 @Entity
@@ -48,6 +47,10 @@ public class TaskEntity {
     @OneToMany(mappedBy = "taskEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     private List<CommentEntity> comments = new ArrayList<>();
+
+    public void deleteProject(){
+        this.projectEntity = null;
+    }
 
     private TaskEntity(Long id, String title, String description, Date deadline, TaskType type) {
         this.id = id;

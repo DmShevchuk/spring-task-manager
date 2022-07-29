@@ -9,6 +9,7 @@ import ru.task_manager.dto.CommentDTO;
 import ru.task_manager.dto.save.CommentSaveDTO;
 import ru.task_manager.entities.CommentEntity;
 import ru.task_manager.services.CommentService;
+import ru.task_manager.utils.CustomCommentEntityMapper;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,11 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
-    private final ModelMapper modelMapper;
+    private final CustomCommentEntityMapper modelMapper;
 
     @PostMapping
     public ResponseEntity<Long> addNewComment(@Valid @RequestBody CommentSaveDTO commentSaveDTO){
-        CommentEntity commentEntity = modelMapper.map(commentSaveDTO, CommentEntity.class);
+        CommentEntity commentEntity = modelMapper.map(commentSaveDTO);
         Long taskId = commentSaveDTO.getTaskId();
         Long addedCommentId = commentService.addNewComment(commentEntity, taskId);
         return new ResponseEntity<>(addedCommentId, HttpStatus.OK);
@@ -45,7 +46,8 @@ public class CommentController {
     @PutMapping("{id}")
     public ResponseEntity<CommentDTO> updateTaskById(@PathVariable Long id,
                                                  @Valid @RequestBody CommentSaveDTO commentSaveDTO){
-        CommentEntity commentEntity = modelMapper.map(commentSaveDTO, CommentEntity.class);
+        CommentEntity commentEntity = modelMapper.map(commentSaveDTO);
+        commentEntity.setId(id);
         Long taskId = commentSaveDTO.getTaskId();
         CommentDTO commentDTO = CommentDTO.toDTO(commentService.updateComment(commentEntity, taskId));
 

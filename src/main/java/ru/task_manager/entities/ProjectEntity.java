@@ -36,7 +36,11 @@ public class ProjectEntity {
     @Fetch(FetchMode.SUBSELECT)
     private List<UserEntity> usersEntity = new ArrayList<>();
 
-    @OneToMany(mappedBy = "projectEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "projectEntity", fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<TaskEntity> taskEntities = new ArrayList<>();
+
+    public void deleteUserFromProject(UserEntity userEntity){
+        usersEntity.remove(userEntity);
+    }
 }

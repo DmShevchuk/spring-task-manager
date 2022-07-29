@@ -2,14 +2,13 @@ package ru.task_manager.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.task_manager.entities.TaskEntity;
-import ru.task_manager.entities.TaskEntity_;
-import ru.task_manager.entities.UserEntity;
-import ru.task_manager.entities.UserEntity_;
+import ru.task_manager.entities.*;
 import ru.task_manager.exceptions.EmailAlreadyExistsException;
 import ru.task_manager.exceptions.UserAlreadyExistsException;
 import ru.task_manager.exceptions.UserNotFoundException;
 import ru.task_manager.factories.TaskType;
+import ru.task_manager.repositories.ProjectRepo;
+import ru.task_manager.repositories.TaskRepo;
 import ru.task_manager.repositories.UserRepo;
 
 import javax.persistence.EntityManager;
@@ -26,6 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepo userRepo;
+    private final ProjectRepo projectRepo;
+    private final TaskRepo taskRepo;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -54,10 +55,22 @@ public class UserService {
     }
 
     public UserEntity getUserById(Long id) {
-        return userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id.toString()));
+        return userRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id.toString()));
     }
 
     public void delete(Long id) {
+        UserEntity userEntity = getUserById(id);
+        List<ProjectEntity> projectEntities = userEntity.getProjects();
+        for(ProjectEntity project: projectEntities){
+            project.deleteUserFromProject(userEntity);
+            projectRepo.save(project);
+        }
+        List<TaskEntity> taskEntities = userEntity.getTaskEntityList();
+        for(TaskEntity task: taskEntities){
+            task.setUser(null);
+            taskRepo.save(task);
+        }
         userRepo.deleteById(id);
     }
 

@@ -21,6 +21,7 @@ public class CommentService {
         TaskEntity taskEntity = taskRepo.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId.toString()));
         commentEntity.setTaskEntity(taskEntity);
+        System.out.println(commentEntity.getId());
         return commentRepo.save(commentEntity).getId();
     }
 

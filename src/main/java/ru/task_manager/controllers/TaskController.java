@@ -13,7 +13,6 @@ import ru.task_manager.utils.CustomTaskEntityMapper;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -62,6 +61,7 @@ public class TaskController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTaskById(@PathVariable Long id) {
         taskService.delete(id);
+        System.out.println(id);
         return new ResponseEntity<>("Task was deleted successfully!", HttpStatus.OK);
     }
 }
