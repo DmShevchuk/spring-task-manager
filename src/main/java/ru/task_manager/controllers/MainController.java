@@ -2,11 +2,12 @@ package ru.task_manager.controllers;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.task_manager.commands.CommandInvoker;
-import ru.task_manager.services.UserService;
 import ru.task_manager.utils.LineHandler;
 
 /**
@@ -17,7 +18,6 @@ import ru.task_manager.utils.LineHandler;
 public class MainController {
     private final LineHandler lineHandler;
     private final CommandInvoker commandInvoker;
-    private final UserService userService;
 
     /**
      * Примеры задания запросов:<br/>
@@ -46,13 +46,32 @@ public class MainController {
                         @RequestParam(name = "max_date", required = false) String maxDate) {
         try {
             return commandInvoker.invoke(new String[]{
-                            "find_user_with_max_task_quantity",
-                            type,
-                            minDate,
-                            maxDate
+                    "find_user_with_max_task_quantity",
+                    type,
+                    minDate,
+                    maxDate
             });
         } catch (Exception e) {
             return e.getMessage();
         }
+    }
+
+
+    @GetMapping("/health")
+    @ApiOperation("Проверка доступности сервера")
+    public ResponseEntity<String> sendHealth() {
+        return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/version")
+    @ApiOperation("Информация о версиях API")
+    public ResponseEntity<String> sendVersion() {
+        return new ResponseEntity<>(
+                "{" +
+                        "\"allVersions\": [\"v1\", \"v2\"], " +
+                        "\"latest\": \"v2\"" +
+                        "}",
+                HttpStatus.OK);
     }
 }

@@ -18,7 +18,7 @@ public class FindUserWithMaxTaskQuantity implements Command {
     @Override
     public String execute() {
         UserEntity userEntity = userService.findBusiestUser(taskType, minDate, maxDate);
-        return String.format("id = %s: %s %s %s.",
+        return String.format("id = %s: %s %s %s",
                 userEntity.getId(), userEntity.getName(), userEntity.getLastName(), userEntity.getEmail());
     }
 }
