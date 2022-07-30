@@ -39,18 +39,12 @@ public class CommandFactory {
                 return getAddTaskCommand(args);
             case "change_task":
                 return getChangeTaskCommand(args);
-            case "show_tasks":
-                return getShowTasksCommand();
             case "add_user":
                 return getAddUserCommand(args);
-            case "show_users":
-                return getShowUsersCommand();
             case "clear_tasks":
                 return getClearTaskCommand();
             case "delete_task_by_id":
                 return getDeleteTaskCommand(args);
-            case "sort_by_parameter":
-                return getSortTasksByParameter(args);
             case "clear_users":
                 return getClearUserCommand();
             case "delete_user_by_id":
@@ -96,20 +90,6 @@ public class CommandFactory {
         }
     }
 
-    private Command getShowTasksCommand() {
-        return new ShowTasks(taskService.getAll());
-    }
-
-    private Command getSortTasksByParameter(String[] args) {
-        try {
-            String parameter = inputParser.parseString(args[0]);
-            List<TaskEntity> taskEntityList = taskService.getAll();
-            return new SortTaskByParameter(taskEntityList, parameter);
-        } catch (IndexOutOfBoundsException e) {
-            throw new IncorrectArgsQuantityException("sort_by_parameter", Arrays.toString(args));
-        }
-    }
-
     private Command getAddUserCommand(String[] args) {
         try {
             UserEntity userEntity = userFactory.getUser(args);
@@ -130,10 +110,6 @@ public class CommandFactory {
         } catch (IndexOutOfBoundsException e) {
             throw new IncorrectArgsQuantityException("delete_task_by_id", Arrays.toString(args));
         }
-    }
-
-    private Command getShowUsersCommand() {
-        return new ShowUsers(userService.getAll());
     }
 
     private Command getHelpCommand() {

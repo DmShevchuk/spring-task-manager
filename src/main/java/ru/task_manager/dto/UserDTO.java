@@ -17,7 +17,6 @@ public class UserDTO {
     private String middleName;
     private String lastName;
     private String email;
-    private List<TaskDTO> taskList;
 
     public static UserDTO toDTO(UserEntity userEntity) {
         UserDTO user = new UserDTO();
@@ -26,25 +25,11 @@ public class UserDTO {
         user.setMiddleName(userEntity.getMiddleName());
         user.setLastName(userEntity.getLastName());
         user.setEmail(userEntity.getEmail());
-        user.setTaskList(userEntity
-                .getTaskEntityList()
-                .stream()
-                .map(TaskDTO::toDTO)
-                .collect(Collectors.toList()));
         return user;
     }
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder(String.format("User{id=%d, name=%s}<br/>", id, name));
-
-        if (taskList.size() > 0) {
-            stringBuilder.append("Task list:<br/>");
-            for (TaskDTO task : taskList) {
-                stringBuilder.append(task.toString());
-                stringBuilder.append("<br/>");
-            }
-        }
-        return stringBuilder.toString();
+        return String.format("User{id=%d, name=%s}<br/>", id, name);
     }
 }

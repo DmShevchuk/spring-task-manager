@@ -1,6 +1,8 @@
 package ru.task_manager.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.entities.UserEntity;
@@ -43,8 +45,8 @@ public class ProjectService {
     }
 
 
-    public List<ProjectEntity> getAllProjects() {
-        return projectRepo.findAll();
+    public Page<ProjectEntity> getAllProjects(Pageable pageable) {
+        return projectRepo.findAll(pageable);
     }
 
 
@@ -52,8 +54,9 @@ public class ProjectService {
         return projectRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Project", id));
     }
 
-    public List<ProjectEntity> getUserProjects(UserEntity userEntity) {
-        return projectRepo.findAll(commonSpecificationFactory.getUserProject(userEntity));
+
+    public Page<ProjectEntity> getUserProjects(UserEntity userEntity, Pageable pageable) {
+        return projectRepo.findAll(commonSpecificationFactory.getUserProject(userEntity), pageable);
     }
 
 

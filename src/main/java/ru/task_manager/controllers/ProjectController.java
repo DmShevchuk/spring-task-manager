@@ -2,9 +2,15 @@ package ru.task_manager.controllers;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.task_manager.dto.ProjectDTO;
+import ru.task_manager.dto.TaskDTO;
+import ru.task_manager.dto.UserDTO;
 import ru.task_manager.dto.save.ProjectSaveDTO;
 import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.services.EntityRelationService;
@@ -37,11 +43,40 @@ public class ProjectController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение списка всех проектов")
-    public List<ProjectDTO> getAllProjects() {
-        return projectService.getAllProjects()
-                .stream()
-                .map(ProjectDTO::toDTO)
-                .toList();
+    public Page<ProjectDTO> getAllProjects(@PageableDefault Pageable pageable) {
+        return new PageImpl<>(
+                projectService.getAllProjects(pageable)
+                        .stream()
+                        .map(ProjectDTO::toDTO)
+                        .toList());
+    }
+
+
+    @GetMapping("/{id}/tasks")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation("Получение всех задач проекта")
+    public Page<TaskDTO> getProjectTasks(@PathVariable Long id,
+                                         @PageableDefault Pageable pageable) {
+        ProjectEntity projectEntity = projectService.getProjectById(id);
+        return new PageImpl<>(
+                entityRelationService.getProjectTasks(projectEntity, pageable)
+                        .stream()
+                        .map(TaskDTO::toDTO)
+                        .toList());
+    }
+
+
+    @GetMapping("/{id}/users")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation("Получение всех исполнителей проекта")
+    public Page<UserDTO> getProjectUsers(@PathVariable Long id,
+                                         @PageableDefault Pageable pageable) {
+        ProjectEntity projectEntity = projectService.getProjectById(id);
+        return new PageImpl<>(
+                entityRelationService.getProjectUsers(projectEntity, pageable)
+                        .stream()
+                        .map(UserDTO::toDTO)
+                        .toList());
     }
 
 
@@ -58,7 +93,7 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Обновление проекта по id")
     public ProjectDTO updateProjectById(@PathVariable Long id,
-                                                        @Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
+                                        @Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
         List<Long> usersIdList = projectSaveDTO.getUsersIdList();
         ProjectEntity projectEntity = modelMapper.map(projectSaveDTO);
         return ProjectDTO.toDTO(projectService.update(projectEntity, id, usersIdList));

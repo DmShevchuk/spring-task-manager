@@ -64,16 +64,6 @@ class TaskServiceTest {
         assertEquals(taskEntity.getId(), taskService.update(taskEntity, userId).getId());
     }
 
-    @Test
-    void getAll() {
-        Long userId = userService.registration(getUser("Nick Diamond"));
-        int numberOfAdditions = 5;
-        for (int i = 0; i < numberOfAdditions; i++){
-            taskService.add(getTask(), userId);
-        }
-        assertEquals(numberOfAdditions, taskService.getAll().size());
-    }
-
     TaskEntity getTask() {
         try {
             return new TaskEntity.Builder()

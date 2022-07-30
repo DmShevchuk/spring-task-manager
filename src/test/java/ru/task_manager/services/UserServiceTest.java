@@ -32,16 +32,6 @@ class UserServiceTest {
         assertDoesNotThrow(() -> userService.registration(userEntity));
     }
 
-    @Test
-    void getAll() {
-        userService.deleteAll();
-
-        int numberOfAdditions = 5;
-        for(int i = 0; i < numberOfAdditions; i++){
-            userService.registration(getUser(getRandomUniqueUsername()));
-        }
-        assertEquals(numberOfAdditions, userService.getAll().size());
-    }
 
     UserEntity getUser(String name){
         return new UserEntity.Builder()

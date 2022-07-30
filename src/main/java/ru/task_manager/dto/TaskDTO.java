@@ -1,17 +1,16 @@
 package ru.task_manager.dto;
 
-import ru.task_manager.entities.ProjectEntity;
-import ru.task_manager.entities.TaskEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.task_manager.entities.ProjectEntity;
+import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.factories.TaskType;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
@@ -24,7 +23,6 @@ public class TaskDTO {
     private TaskType type;
     private Long ownerId;
     private Long projectId;
-    private List<CommentDTO> commentEntityList;
 
     public static TaskDTO toDTO(TaskEntity entity) {
         TaskDTO task = new TaskDTO();
@@ -33,11 +31,6 @@ public class TaskDTO {
         task.setDescription(entity.getDescription());
         task.setDeadline(entity.getDeadline());
         task.setType(entity.getType());
-        task.setCommentEntityList(entity
-                .getComments()
-                .stream()
-                .map(CommentDTO::toDTO)
-                .collect(Collectors.toList()));
         UserEntity user = entity.getUser();
         if(user != null){task.setOwnerId(user.getId());}
         ProjectEntity project = entity.getProjectEntity();

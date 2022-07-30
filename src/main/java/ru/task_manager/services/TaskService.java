@@ -1,6 +1,8 @@
 package ru.task_manager.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.entities.TaskEntity;
@@ -49,8 +51,8 @@ public class TaskService {
     }
 
 
-    public List<TaskEntity> getAll() {
-        return taskRepo.findAll();
+    public Page<TaskEntity> getAll(Pageable pageable) {
+        return taskRepo.findAll(pageable);
     }
 
 
@@ -63,10 +65,13 @@ public class TaskService {
         taskRepo.deleteAll();
     }
 
-    public List<TaskEntity> getTasksByUser(UserEntity userEntity) {
-        return taskRepo.findAll(specificationFactory.getUserTasks(userEntity));
+    public Page<TaskEntity> getTasksByUser(UserEntity userEntity, Pageable pageable) {
+        return taskRepo.findAll(specificationFactory.getUserTasks(userEntity), pageable);
     }
 
+    public Page<TaskEntity> getProjectTasks(ProjectEntity projectEntity, Pageable pageable) {
+        return taskRepo.findAll(specificationFactory.getProjectTasks(projectEntity), pageable);
+    }
 
     /**
      * Метод, осуществляющий создание задачи. Использовался до введения новых сущностей<br/>

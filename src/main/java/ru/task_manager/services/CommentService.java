@@ -1,13 +1,15 @@
 package ru.task_manager.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.task_manager.entities.CommentEntity;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.repositories.CommentRepo;
+import ru.task_manager.specification.CommonSpecificationFactory;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +17,7 @@ public class CommentService {
 
     private final CommentRepo commentRepo;
     private final TaskService taskService;
+    private final CommonSpecificationFactory specificationFactory;
 
 
     public Long create(CommentEntity commentEntity, Long taskId) {
@@ -37,12 +40,17 @@ public class CommentService {
     }
 
 
-    public List<CommentEntity> getAll() {
-        return commentRepo.findAll();
+    public Page<CommentEntity> getAll(Pageable pageable) {
+        return commentRepo.findAll(pageable);
     }
 
 
     public void delete(Long id){
         commentRepo.deleteById(id);
+    }
+
+
+    public Page<CommentEntity> getCommentByTask(TaskEntity taskEntity, Pageable pageable) {
+        return commentRepo.findAll(specificationFactory.getTaskComments(taskEntity), pageable);
     }
 }

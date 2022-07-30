@@ -2,16 +2,21 @@ package ru.task_manager.controllers;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.task_manager.dto.CommentDTO;
 import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.dto.save.TaskSaveDTO;
 import ru.task_manager.entities.TaskEntity;
+import ru.task_manager.services.EntityRelationService;
 import ru.task_manager.services.TaskService;
 import ru.task_manager.utils.CustomTaskEntityMapper;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
@@ -22,7 +27,7 @@ public class TaskController {
 
     private final TaskService taskService;
     private final CustomTaskEntityMapper modelMapper;
-
+    private final EntityRelationService entityRelationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,19 +43,34 @@ public class TaskController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение всех задач")
-    public List<TaskDTO> getAllTasks() {
-        return taskService.getAll()
-                .stream()
-                .map(TaskDTO::toDTO)
-                .collect(toList());
+    public Page<TaskDTO> getAllTasks(@PageableDefault Pageable pageable) {
+        return new PageImpl<>(
+                taskService.getAll(pageable)
+                        .stream()
+                        .map(TaskDTO::toDTO)
+                        .collect(toList()));
     }
 
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation("Получение всех задач по id")
+    @ApiOperation("Получение задачи по id")
     public TaskDTO getTaskById(@PathVariable Long id) {
         return TaskDTO.toDTO(taskService.getTaskById(id));
+    }
+
+
+    @GetMapping("/{id}/comments")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation("Получение всех комментариев задачи")
+    public Page<CommentDTO> getTaskComments(@PathVariable Long id,
+                                      @PageableDefault Pageable pageable) {
+        TaskEntity taskEntity = taskService.getTaskById(id);
+        return new PageImpl<>(
+                entityRelationService.getTaskComments(taskEntity, pageable)
+                        .stream()
+                        .map(CommentDTO::toDTO)
+                        .toList());
     }
 
 
@@ -58,7 +78,7 @@ public class TaskController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Обновление задачи по id")
     public TaskDTO updateTaskById(@PathVariable Long id,
-                                                  @Valid @RequestBody TaskSaveDTO taskSaveDTO) {
+                                  @Valid @RequestBody TaskSaveDTO taskSaveDTO) {
         Long userId = taskSaveDTO.getUserId();
         Long projectId = taskSaveDTO.getProjectId();
         TaskEntity taskEntity = modelMapper.map(taskSaveDTO);

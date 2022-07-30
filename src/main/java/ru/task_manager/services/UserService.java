@@ -1,8 +1,11 @@
 package ru.task_manager.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.exceptions.BusiestUserNotFoundException;
 import ru.task_manager.exceptions.EmailAlreadyExistsException;
@@ -10,6 +13,7 @@ import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.factories.TaskType;
 import ru.task_manager.repositories.UserRepo;
 import ru.task_manager.specification.BusiestUserSpecificationFactory;
+import ru.task_manager.specification.CommonSpecificationFactory;
 
 import java.util.Date;
 import java.util.List;
@@ -24,7 +28,7 @@ public class UserService {
 
     private final UserRepo userRepo;
     private final BusiestUserSpecificationFactory userSpecificationFactory;
-
+    private final CommonSpecificationFactory specificationFactory;
 
     public Long registration(UserEntity userEntity) {
         if (userRepo.existsByEmail(userEntity.getEmail())) {
@@ -39,8 +43,8 @@ public class UserService {
     }
 
 
-    public List<UserEntity> getAll() {
-        return userRepo.findAll();
+    public Page<UserEntity> getAll(Pageable pageable) {
+        return userRepo.findAll(pageable);
     }
 
 
@@ -73,4 +77,7 @@ public class UserService {
         throw new BusiestUserNotFoundException();
     }
 
+    public Page<UserEntity> getProjectUsers(ProjectEntity projectEntity, Pageable pageable) {
+        return userRepo.findAll(specificationFactory.getProjectUsers(projectEntity), pageable);
+    }
 }
