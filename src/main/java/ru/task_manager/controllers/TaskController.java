@@ -1,7 +1,6 @@
 package ru.task_manager.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,7 @@ public class TaskController {
         Long userId = taskSaveDTO.getUserId();
         Long projectId = taskSaveDTO.getProjectId();
         TaskEntity taskEntity = modelMapper.map(taskSaveDTO);
-        Long createdTaskId = taskService.addNewTask(taskEntity, userId, projectId);
+        Long createdTaskId = taskService.create(taskEntity, userId, projectId);
         return new ResponseEntity<>(createdTaskId, HttpStatus.CREATED);
     }
 
@@ -53,15 +52,13 @@ public class TaskController {
         Long userId = taskSaveDTO.getUserId();
         Long projectId = taskSaveDTO.getProjectId();
         TaskEntity taskEntity = modelMapper.map(taskSaveDTO);
-        taskEntity.setId(id);
-        TaskDTO taskDTO = TaskDTO.toDTO(taskService.updateTask(taskEntity, userId, projectId));
+        TaskDTO taskDTO = TaskDTO.toDTO(taskService.update(taskEntity, id, userId, projectId));
         return new ResponseEntity<>(taskDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTaskById(@PathVariable Long id) {
         taskService.delete(id);
-        System.out.println(id);
         return new ResponseEntity<>("Task was deleted successfully!", HttpStatus.OK);
     }
 }

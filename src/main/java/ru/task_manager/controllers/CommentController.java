@@ -1,7 +1,6 @@
 package ru.task_manager.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ public class CommentController {
     public ResponseEntity<Long> addNewComment(@Valid @RequestBody CommentSaveDTO commentSaveDTO){
         CommentEntity commentEntity = modelMapper.map(commentSaveDTO);
         Long taskId = commentSaveDTO.getTaskId();
-        Long addedCommentId = commentService.addNewComment(commentEntity, taskId);
+        Long addedCommentId = commentService.create(commentEntity, taskId);
         return new ResponseEntity<>(addedCommentId, HttpStatus.OK);
     }
 
@@ -49,7 +48,7 @@ public class CommentController {
         CommentEntity commentEntity = modelMapper.map(commentSaveDTO);
         commentEntity.setId(id);
         Long taskId = commentSaveDTO.getTaskId();
-        CommentDTO commentDTO = CommentDTO.toDTO(commentService.updateComment(commentEntity, taskId));
+        CommentDTO commentDTO = CommentDTO.toDTO(commentService.update(commentEntity, taskId));
 
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }

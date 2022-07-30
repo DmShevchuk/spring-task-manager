@@ -20,11 +20,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TaskService {
+
     private final TaskRepo taskRepo;
     private final UserRepo userRepo;
     private final ProjectRepo projectRepo;
 
-    public Long addNewTask(TaskEntity taskEntity, Long userId, Long projectId) {
+
+    public Long create(TaskEntity taskEntity, Long userId, Long projectId) {
         UserEntity userEntity = userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId.toString()));
         ProjectEntity projectEntity = projectRepo.findById(projectId)
@@ -34,25 +36,44 @@ public class TaskService {
         return taskRepo.save(taskEntity).getId();
     }
 
-    public TaskEntity updateTask(TaskEntity taskEntity, Long userId, Long projectId) {
+
+    public TaskEntity update(TaskEntity taskEntity, Long taskId, Long userId, Long projectId) {
         UserEntity userEntity = userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId.toString()));
         ProjectEntity projectEntity = projectRepo.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
         taskEntity.setUser(userEntity);
         taskEntity.setProjectEntity(projectEntity);
+        taskEntity.setId(taskId);
         return taskRepo.save(taskEntity);
     }
+
 
     public TaskEntity getTaskById(Long id) throws TaskNotFoundException {
         return taskRepo.findById(id).orElseThrow(() -> new TaskNotFoundException(id.toString()));
     }
 
-    public TaskEntity add(TaskEntity task) throws UserNotFoundException {
-        taskRepo.save(task);
-        return task;
+
+    public List<TaskEntity> getAll() {
+        return taskRepo.findAll();
     }
 
+
+    public void delete(Long id) {
+        taskRepo.deleteById(id);
+    }
+
+
+    public void deleteAll() {
+        taskRepo.deleteAll();
+    }
+
+
+    /**
+     * Метод, осуществляющий создание задачи. Использовался до введения новых сущностей<br/>
+     * Используйте {@link TaskService#create(TaskEntity, Long, Long)}
+     * */
+    @Deprecated
     public TaskEntity add(TaskEntity task, Long userId) throws UserNotFoundException {
         UserEntity userEntity = userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId.toString()));
@@ -61,14 +82,12 @@ public class TaskService {
         return task;
     }
 
-    public TaskEntity add(Long userId, TaskEntity task) throws UserNotFoundException {
-        UserEntity userEntity = userRepo.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
-        task.setUser(userEntity);
-        taskRepo.save(task);
-        return task;
-    }
 
+    /**
+     * Метод, осуществляющий обновление задачи. Использовался до введения новых сущностей<br/>
+     * Используйте {@link TaskService#update(TaskEntity, Long, Long, Long)}
+     * */
+    @Deprecated
     public TaskEntity update(TaskEntity task, Long userId) throws TaskNotFoundException, UserNotFoundException {
         taskRepo.findById(task.getId())
                 .orElseThrow(() -> new TaskNotFoundException(task.getId().toString()));
@@ -76,33 +95,5 @@ public class TaskService {
                 .orElseThrow(() -> new UserNotFoundException(userId.toString()));
         task.setUser(userEntity);
         return taskRepo.save(task);
-    }
-
-    public void update(TaskEntity taskEntity) {
-        taskRepo.save(taskEntity);
-    }
-
-    public TaskEntity getTask(Long taskId, Long userId){
-        return taskRepo.getTaskEntityByIdAndUserId(taskId, userId);
-    }
-
-    public List<TaskEntity> getAll() {
-        return taskRepo.findAll();
-    }
-
-    public void delete(Long id) {
-        taskRepo.deleteById(id);
-    }
-
-    public void deleteAll() {
-        taskRepo.deleteAll();
-    }
-
-    public List<TaskEntity> getAllTasksByUserId(Long userId) {
-        return taskRepo.getTaskEntitiesByUserId(userId);
-    }
-
-    public List<TaskEntity> getAllTasksByProjectId(Long projectId) {
-        return taskRepo.getTaskEntitiesByUserId(projectId);
     }
 }

@@ -24,7 +24,7 @@ public class ProjectController {
     public ResponseEntity<Long> addProject(@Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
         List<Long> usersIdList = projectSaveDTO.getUsersIdList();
         ProjectEntity projectEntity = modelMapper.map(projectSaveDTO);
-        Long createdProjectId = projectService.createProject(projectEntity, usersIdList);
+        Long createdProjectId = projectService.create(projectEntity, usersIdList);
         return new ResponseEntity<>(createdProjectId, HttpStatus.OK);
     }
 
@@ -51,8 +51,7 @@ public class ProjectController {
                                                         @Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
         List<Long> usersIdList = projectSaveDTO.getUsersIdList();
         ProjectEntity projectEntity = modelMapper.map(projectSaveDTO);
-        projectEntity.setId(id);
-        ProjectDTO projectDTO = ProjectDTO.toDTO(projectService.updateProject(projectEntity, usersIdList));
+        ProjectDTO projectDTO = ProjectDTO.toDTO(projectService.update(projectEntity, id, usersIdList));
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
