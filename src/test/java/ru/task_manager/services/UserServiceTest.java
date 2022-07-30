@@ -29,7 +29,7 @@ class UserServiceTest {
     @DisplayName("Registration with unique name")
     void registration_WithUniqueName() {
         UserEntity userEntity = getUser(getRandomUniqueUsername());
-        assertEquals(userEntity.getName(), userService.registration(userEntity).getName());
+        assertDoesNotThrow(() -> userService.registration(userEntity));
     }
 
     @Test

@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.task_manager.dto.ProjectDTO;
+import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.dto.UserDTO;
 import ru.task_manager.dto.save.UserSaveDTO;
 import ru.task_manager.entities.UserEntity;
@@ -25,12 +27,10 @@ public class UserController {
     @PostMapping
     public ResponseEntity<String> addUser(@Valid @RequestBody UserSaveDTO userSaveDTO) {
         UserEntity userEntity = modelMapper.map(userSaveDTO, UserEntity.class);
-        Long id = userService.addNewUser(userEntity);
-        return new ResponseEntity<>
-                (
+        Long id = userService.registration(userEntity);
+        return new ResponseEntity<>(
                         String.format("User was added successfully! Id = %d", id),
-                        HttpStatus.OK
-                );
+                        HttpStatus.OK);
     }
 
     @GetMapping
@@ -44,9 +44,26 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        UserEntity userEntity = userService.getUserById(id);
+        UserDTO userDTO = UserDTO.toDTO(userService.getUserById(id));
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    }
 
-        return new ResponseEntity<>(UserDTO.toDTO(userEntity), HttpStatus.OK);
+    @GetMapping("/{id}/tasks")
+    public ResponseEntity<List<TaskDTO>> getUserTasks(@PathVariable Long id){
+        List<TaskDTO> taskDTOS = userService.getUserTasks(id)
+                .stream()
+                .map(TaskDTO::toDTO)
+                .toList();
+        return new ResponseEntity<>(taskDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/projects")
+    public ResponseEntity<List<ProjectDTO>> getUserProjects(@PathVariable Long id){
+        List<ProjectDTO> projectDTOS = userService.getUserProjects(id)
+                .stream()
+                .map(ProjectDTO::toDTO)
+                .toList();
+        return new ResponseEntity<>(projectDTOS, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -54,15 +71,13 @@ public class UserController {
                                                   @RequestBody @Validated UserSaveDTO userSaveDTO) {
         UserEntity userEntity = modelMapper.map(userSaveDTO, UserEntity.class);
         userEntity.setId(id);
-        userService.updateUser(userEntity);
-
+        userService.update(userEntity);
         return new ResponseEntity<>(UserDTO.toDTO(userEntity), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
         userService.delete(id);
-
         return new ResponseEntity<>("User was deleted successfully!", HttpStatus.OK);
     }
 }

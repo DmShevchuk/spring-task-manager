@@ -37,7 +37,7 @@ public class MainController {
         }
     }
 
-    @GetMapping("/users_tasks")
+    @GetMapping("/busiest-user")
     public String index(@RequestParam(name = "type", required = false) String type,
                         @RequestParam(name = "min_date", required = false) String minDate,
                         @RequestParam(name = "max_date", required = false) String maxDate) {

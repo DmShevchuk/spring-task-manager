@@ -1,21 +1,23 @@
 package ru.task_manager.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.task_manager.entities.*;
+import ru.task_manager.entities.ProjectEntity;
+import ru.task_manager.entities.TaskEntity;
+import ru.task_manager.entities.UserEntity;
+import ru.task_manager.exceptions.BusiestUserNotFoundException;
 import ru.task_manager.exceptions.EmailAlreadyExistsException;
-import ru.task_manager.exceptions.UserAlreadyExistsException;
 import ru.task_manager.exceptions.UserNotFoundException;
 import ru.task_manager.factories.TaskType;
 import ru.task_manager.repositories.ProjectRepo;
 import ru.task_manager.repositories.TaskRepo;
 import ru.task_manager.repositories.UserRepo;
+import ru.task_manager.specification.UserSpecificationFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -27,26 +29,17 @@ public class UserService {
     private final UserRepo userRepo;
     private final ProjectRepo projectRepo;
     private final TaskRepo taskRepo;
+    private final UserSpecificationFactory userSpecificationFactory;
+    private final EntityRelationService entityRelationService;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public Long addNewUser(UserEntity userEntity) {
+    public Long registration(UserEntity userEntity) {
         if (userRepo.existsByEmail(userEntity.getEmail())) {
             throw new EmailAlreadyExistsException(userEntity.getEmail());
         }
         return userRepo.save(userEntity).getId();
     }
 
-    public UserEntity registration(UserEntity user) throws UserAlreadyExistsException {
-//        if (userRepo.findByName(user.getName()) != null) {
-//            throw new UserAlreadyExistsException(user.getName());
-//        }
-        userRepo.save(user);
-        return user;
-    }
-
-    public void updateUser(UserEntity user) throws UserNotFoundException {
+    public void update(UserEntity user) throws UserNotFoundException {
         userRepo.save(user);
     }
 
@@ -60,17 +53,11 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        UserEntity userEntity = getUserById(id);
-        List<ProjectEntity> projectEntities = userEntity.getProjects();
-        for(ProjectEntity project: projectEntities){
-            project.deleteUserFromProject(userEntity);
-            projectRepo.save(project);
+        if (!userRepo.existsById(id)) {
+            throw new UserNotFoundException(id.toString());
         }
-        List<TaskEntity> taskEntities = userEntity.getTaskEntityList();
-        for(TaskEntity task: taskEntities){
-            task.setUser(null);
-            taskRepo.save(task);
-        }
+        entityRelationService.removeUserFromProjects(id);
+        entityRelationService.removeUserFromTasks(id);
         userRepo.deleteById(id);
     }
 
@@ -78,63 +65,24 @@ public class UserService {
         userRepo.deleteAll();
     }
 
-    public Object[] findUserWithMaxTaskQuantity(TaskType taskType, Date minDate, Date maxDate) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Object[]> query = criteriaBuilder.createQuery(Object[].class);
-        Root<TaskEntity> taskRoot = query.from(TaskEntity.class);
-        Join<TaskEntity, UserEntity> taskWithUsers = taskRoot.join(TaskEntity_.user);
-
-        Predicate predicate = createPredicateForFindTasks(criteriaBuilder, taskRoot, taskType, minDate, maxDate);
-
-        query.where(predicate)
-                .multiselect(
-                        taskWithUsers.get(UserEntity_.id),
-                        taskWithUsers.get(UserEntity_.name),
-                        criteriaBuilder.count(taskWithUsers)
-                )
-                .groupBy(
-                        taskWithUsers.get(UserEntity_.id)
-                )
-                .orderBy(
-                        criteriaBuilder.desc(criteriaBuilder.count(taskWithUsers))
-                );
-        return runQueryToFindUserWithTask(query);
+    public List<TaskEntity> getUserTasks(Long id) {
+        return taskRepo.getTaskEntitiesByUserId(id);
     }
 
-    private Object[] runQueryToFindUserWithTask(CriteriaQuery<Object[]> query) {
-        int firstPositionOfResultToRetrieve = 0;
-        int maximumNumberOfResultToRetrieve = 1;
-
-        return entityManager
-                .createQuery(query)
-                .setFirstResult(firstPositionOfResultToRetrieve)
-                .setMaxResults(maximumNumberOfResultToRetrieve)
-                .getSingleResult();
+    public Set<ProjectEntity> getUserProjects(Long id) {
+        UserEntity userEntity = userRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id.toString()));
+        return userEntity.getProjects();
     }
 
-    private Predicate createPredicateForFindTasks(CriteriaBuilder criteriaBuilder,
-                                                  Root<TaskEntity> taskRoot,
-                                                  TaskType taskType,
-                                                  Date minDate,
-                                                  Date maxDate
-    ) {
-        Predicate predicate = criteriaBuilder.conjunction();
-
-        if (taskType != null) {
-            predicate = criteriaBuilder.and(predicate,
-                    criteriaBuilder.equal(taskRoot.get(TaskEntity_.type), taskType));
+    public UserEntity findBusiestUser(TaskType taskType, Date minDate, Date maxDate) {
+        Specification<UserEntity> specification = userSpecificationFactory
+                .getSpecificationForBusiestUser(taskType, minDate, maxDate);
+        List<UserEntity> userEntities = userRepo.findAll(specification);
+        if (!userEntities.isEmpty()) {
+            return userEntities.get(0);
         }
-
-        if (minDate != null) {
-            predicate = criteriaBuilder.and(predicate,
-                    criteriaBuilder.greaterThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), minDate));
-        }
-
-        if (maxDate != null) {
-            predicate = criteriaBuilder.and(predicate,
-                    criteriaBuilder.lessThanOrEqualTo(taskRoot.get(TaskEntity_.deadline), maxDate));
-        }
-
-        return predicate;
+        throw new BusiestUserNotFoundException();
     }
+
 }

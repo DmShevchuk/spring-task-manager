@@ -33,10 +33,10 @@ class TaskServiceTest {
     @Test
     @DisplayName("Add task with correct user")
     void addTask_WithCorrectUser() {
-        UserEntity userEntity = userService.registration(getUser("John Doe"));
-        TaskEntity taskEntity = taskService.add(getTask(), userEntity.getId());
+        Long userId = userService.registration(getUser("John Doe"));
+        TaskEntity taskEntity = taskService.add(getTask(), userId);
 
-        assertEquals(userEntity.getId(), taskEntity.getUser().getId());
+        assertEquals(userId, taskEntity.getUser().getId());
     }
 
     @Test
@@ -51,8 +51,8 @@ class TaskServiceTest {
     @Test
     @DisplayName("Update task with invalid owner")
     void update_WithInvalidOwner() {
-        UserEntity userEntity = userService.registration(getUser("Ivan Ivanov"));
-        TaskEntity taskEntity = taskService.add(getTask(), userEntity.getId());
+        Long userId = userService.registration(getUser("Ivan Ivanov"));
+        TaskEntity taskEntity = taskService.add(getTask(), userId);
         Long idOfNonExistentUser = 0L;
         assertThrows(UserNotFoundException.class, () -> taskService.update(taskEntity, idOfNonExistentUser));
     }
@@ -60,17 +60,17 @@ class TaskServiceTest {
     @Test
     @DisplayName("Update with correct task and user")
     void update_WithCorrectTaskAndUser() {
-        UserEntity userEntity = userService.registration(getUser("Steve Walmart"));
-        TaskEntity taskEntity = taskService.add(getTask(), userEntity.getId());
-        assertEquals(taskEntity.getId(), taskService.update(taskEntity, userEntity.getId()).getId());
+        Long userId = userService.registration(getUser("Steve Walmart"));
+        TaskEntity taskEntity = taskService.add(getTask(), userId);
+        assertEquals(taskEntity.getId(), taskService.update(taskEntity, userId).getId());
     }
 
     @Test
     void getAll() {
-        UserEntity userEntity = userService.registration(getUser("Nick Diamond"));
+        Long userId = userService.registration(getUser("Nick Diamond"));
         int numberOfAdditions = 5;
         for (int i = 0; i < numberOfAdditions; i++){
-            taskService.add(getTask(), userEntity.getId());
+            taskService.add(getTask(), userId);
         }
         assertEquals(numberOfAdditions, taskService.getAll().size());
     }

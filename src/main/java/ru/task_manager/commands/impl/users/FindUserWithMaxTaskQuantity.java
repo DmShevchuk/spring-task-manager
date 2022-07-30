@@ -2,6 +2,7 @@ package ru.task_manager.commands.impl.users;
 
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
+import ru.task_manager.entities.UserEntity;
 import ru.task_manager.factories.TaskType;
 import ru.task_manager.services.UserService;
 
@@ -16,14 +17,8 @@ public class FindUserWithMaxTaskQuantity implements Command {
 
     @Override
     public String execute() {
-        int idIdx = 0;
-        int nameIdx = 1;
-        int taskQuantityIdx = 2;
-
-        Object[] queryResult = userService.findUserWithMaxTaskQuantity(taskType, minDate, maxDate);
-        return String.format("id = %s: %s. Task quantity: %s",
-                queryResult[idIdx],
-                queryResult[nameIdx],
-                queryResult[taskQuantityIdx]);
+        UserEntity userEntity = userService.findBusiestUser(taskType, minDate, maxDate);
+        return String.format("id = %s: %s %s %s.",
+                userEntity.getId(), userEntity.getName(), userEntity.getLastName(), userEntity.getEmail());
     }
 }

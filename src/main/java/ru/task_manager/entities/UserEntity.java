@@ -45,7 +45,7 @@ public class UserEntity {
 
     @ManyToMany(mappedBy = "usersEntity")
     @Fetch(FetchMode.SUBSELECT)
-    private List<ProjectEntity> projects = new ArrayList<>();
+    private Set<ProjectEntity> projects = new HashSet<>();
 
     public void deleteProjectFromList(ProjectEntity projectEntity){
         projects.remove(projectEntity);
