@@ -16,7 +16,6 @@ import java.util.List;
 public class EntityRelationService {
     @PersistenceContext
     private EntityManager entityManager;
-    private final UserService userService;
     private final TaskService taskService;
     private final ProjectService projectService;
 

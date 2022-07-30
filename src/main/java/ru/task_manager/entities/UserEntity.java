@@ -47,10 +47,6 @@ public class UserEntity {
     @Fetch(FetchMode.SUBSELECT)
     private Set<ProjectEntity> projects = new HashSet<>();
 
-    public void deleteProjectFromList(ProjectEntity projectEntity){
-        projects.remove(projectEntity);
-    }
-
     private UserEntity(Long id,
                        String name,
                        String middleName,
