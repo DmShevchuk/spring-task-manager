@@ -8,7 +8,7 @@ import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.exceptions.BusiestUserNotFoundException;
 import ru.task_manager.exceptions.EmailAlreadyExistsException;
-import ru.task_manager.exceptions.UserNotFoundException;
+import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.factories.TaskType;
 import ru.task_manager.repositories.ProjectRepo;
 import ru.task_manager.repositories.TaskRepo;
@@ -39,7 +39,7 @@ public class UserService {
         return userRepo.save(userEntity).getId();
     }
 
-    public void update(UserEntity user) throws UserNotFoundException {
+    public void update(UserEntity user) throws EntityNotFoundException {
         userRepo.save(user);
     }
 
@@ -49,12 +49,12 @@ public class UserService {
 
     public UserEntity getUserById(Long id) {
         return userRepo.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id.toString()));
+                .orElseThrow(() -> new EntityNotFoundException("User", id));
     }
 
     public void delete(Long id) {
         if (!userRepo.existsById(id)) {
-            throw new UserNotFoundException(id.toString());
+            throw new EntityNotFoundException("User", id);
         }
         entityRelationService.removeUserFromProjects(id);
         entityRelationService.removeUserFromTasks(id);
@@ -71,7 +71,7 @@ public class UserService {
 
     public Set<ProjectEntity> getUserProjects(Long id) {
         UserEntity userEntity = userRepo.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id.toString()));
+                .orElseThrow(() -> new EntityNotFoundException("User", id));
         return userEntity.getProjects();
     }
 

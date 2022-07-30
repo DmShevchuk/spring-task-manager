@@ -25,9 +25,8 @@ public class CommandInvoker {
                 CommandExecutionException |
                 IncorrectArgsQuantityException |
                 FieldParseException |
-                UserNotFoundException |
-                UserAlreadyExistsException |
-                TaskNotFoundException e) {
+                EntityNotFoundException |
+                UserAlreadyExistsException e) {
             return e.getMessage();
         }
     }

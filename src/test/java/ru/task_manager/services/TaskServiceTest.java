@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.UserEntity;
-import ru.task_manager.exceptions.TaskNotFoundException;
-import ru.task_manager.exceptions.UserNotFoundException;
+import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.factories.TaskType;
 
 import java.text.ParseException;
@@ -27,7 +26,7 @@ class TaskServiceTest {
     void addTask_WithInvalidUser() {
         Long idOfNonExistentUser = 0L;
         TaskEntity taskEntity = getTask();
-        assertThrows(UserNotFoundException.class, () -> taskService.add(taskEntity, idOfNonExistentUser));
+        assertThrows(EntityNotFoundException.class, () -> taskService.add(taskEntity, idOfNonExistentUser));
     }
 
     @Test
@@ -45,7 +44,7 @@ class TaskServiceTest {
         TaskEntity taskEntity = getTask();
         Long userId = 1L;
         taskEntity.setId(0L);
-        assertThrows(TaskNotFoundException.class, () -> taskService.update(taskEntity, userId));
+        assertThrows(EntityNotFoundException.class, () -> taskService.update(taskEntity, userId));
     }
 
     @Test
@@ -54,7 +53,7 @@ class TaskServiceTest {
         Long userId = userService.registration(getUser("Ivan Ivanov"));
         TaskEntity taskEntity = taskService.add(getTask(), userId);
         Long idOfNonExistentUser = 0L;
-        assertThrows(UserNotFoundException.class, () -> taskService.update(taskEntity, idOfNonExistentUser));
+        assertThrows(EntityNotFoundException.class, () -> taskService.update(taskEntity, idOfNonExistentUser));
     }
 
     @Test

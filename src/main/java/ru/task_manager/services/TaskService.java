@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.UserEntity;
-import ru.task_manager.exceptions.ProjectNotFoundException;
-import ru.task_manager.exceptions.TaskNotFoundException;
-import ru.task_manager.exceptions.UserNotFoundException;
+import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.repositories.ProjectRepo;
 import ru.task_manager.repositories.TaskRepo;
 import ru.task_manager.repositories.UserRepo;
@@ -28,9 +26,9 @@ public class TaskService {
 
     public Long create(TaskEntity taskEntity, Long userId, Long projectId) {
         UserEntity userEntity = userRepo.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
+                .orElseThrow(() -> new EntityNotFoundException("User", userId));
         ProjectEntity projectEntity = projectRepo.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
+                .orElseThrow(() -> new EntityNotFoundException("Project", projectId));
         taskEntity.setUser(userEntity);
         taskEntity.setProjectEntity(projectEntity);
         return taskRepo.save(taskEntity).getId();
@@ -39,9 +37,9 @@ public class TaskService {
 
     public TaskEntity update(TaskEntity taskEntity, Long taskId, Long userId, Long projectId) {
         UserEntity userEntity = userRepo.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
+                .orElseThrow(() -> new EntityNotFoundException("User", userId));
         ProjectEntity projectEntity = projectRepo.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId.toString()));
+                .orElseThrow(() -> new EntityNotFoundException("Project", projectId));
         taskEntity.setUser(userEntity);
         taskEntity.setProjectEntity(projectEntity);
         taskEntity.setId(taskId);
@@ -49,8 +47,8 @@ public class TaskService {
     }
 
 
-    public TaskEntity getTaskById(Long id) throws TaskNotFoundException {
-        return taskRepo.findById(id).orElseThrow(() -> new TaskNotFoundException(id.toString()));
+    public TaskEntity getTaskById(Long id){
+        return taskRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Task", id));
     }
 
 
@@ -74,9 +72,9 @@ public class TaskService {
      * Используйте {@link TaskService#create(TaskEntity, Long, Long)}
      * */
     @Deprecated
-    public TaskEntity add(TaskEntity task, Long userId) throws UserNotFoundException {
+    public TaskEntity add(TaskEntity task, Long userId){
         UserEntity userEntity = userRepo.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
+                .orElseThrow(() -> new EntityNotFoundException("User", userId));
         task.setUser(userEntity);
         taskRepo.save(task);
         return task;
@@ -88,11 +86,10 @@ public class TaskService {
      * Используйте {@link TaskService#update(TaskEntity, Long, Long, Long)}
      * */
     @Deprecated
-    public TaskEntity update(TaskEntity task, Long userId) throws TaskNotFoundException, UserNotFoundException {
-        taskRepo.findById(task.getId())
-                .orElseThrow(() -> new TaskNotFoundException(task.getId().toString()));
+    public TaskEntity update(TaskEntity task, Long userId) {
+        taskRepo.findById(task.getId()).orElseThrow(() -> new EntityNotFoundException("Task", task.getId()));
         UserEntity userEntity = userRepo.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId.toString()));
+                .orElseThrow(() -> new EntityNotFoundException("User", userId));
         task.setUser(userEntity);
         return taskRepo.save(task);
     }

@@ -3,8 +3,8 @@ package ru.task_manager.commands.impl.tasks;
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.TaskEntity;
+import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.exceptions.FieldParseException;
-import ru.task_manager.exceptions.UserNotFoundException;
 import ru.task_manager.services.TaskService;
 
 /**
@@ -17,7 +17,7 @@ public class AddTask implements Command {
     private final Long ownerId;
 
     @Override
-    public String execute() throws FieldParseException, UserNotFoundException  {
+    public String execute() throws FieldParseException, EntityNotFoundException {
         taskService.add(taskEntity, ownerId);
         return "Task was added successfully!";
     }
