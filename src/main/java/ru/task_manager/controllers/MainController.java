@@ -3,9 +3,9 @@ package ru.task_manager.controllers;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.task_manager.commands.CommandInvoker;
 import ru.task_manager.utils.LineHandler;
@@ -16,6 +16,7 @@ import ru.task_manager.utils.LineHandler;
 @RestController
 @RequiredArgsConstructor
 public class MainController {
+
     private final LineHandler lineHandler;
     private final CommandInvoker commandInvoker;
 
@@ -39,6 +40,7 @@ public class MainController {
         }
     }
 
+
     @GetMapping("/busiest-user")
     @ApiOperation("Поиск самого загруженного пользователя")
     public String index(@RequestParam(name = "type", required = false) String type,
@@ -58,20 +60,19 @@ public class MainController {
 
 
     @GetMapping("/health")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Проверка доступности сервера")
-    public ResponseEntity<String> sendHealth() {
-        return ResponseEntity.ok().build();
+    public void sendHealth() {
     }
 
 
     @GetMapping("/version")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Информация о версиях API")
-    public ResponseEntity<String> sendVersion() {
-        return new ResponseEntity<>(
-                "{" +
-                        "\"allVersions\": [\"v1\", \"v2\"], " +
-                        "\"latest\": \"v2\"" +
-                        "}",
-                HttpStatus.OK);
+    public String sendVersion() {
+        return "{" +
+                "\"allVersions\": [\"v1\", \"v2\"], " +
+                "\"latest\": \"v2\"" +
+                "}";
     }
 }

@@ -3,7 +3,6 @@ package ru.task_manager.controllers;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.dto.save.TaskSaveDTO;
@@ -20,56 +19,58 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
 public class TaskController {
+
     private final TaskService taskService;
     private final CustomTaskEntityMapper modelMapper;
 
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Добавление новой задачи")
-    public ResponseEntity<Long> addTask(@Valid @RequestBody TaskSaveDTO taskSaveDTO) {
+    public Long addTask(@Valid @RequestBody TaskSaveDTO taskSaveDTO) {
         Long userId = taskSaveDTO.getUserId();
         Long projectId = taskSaveDTO.getProjectId();
         TaskEntity taskEntity = modelMapper.map(taskSaveDTO);
-        Long createdTaskId = taskService.create(taskEntity, userId, projectId);
-        return new ResponseEntity<>(createdTaskId, HttpStatus.CREATED);
+        return taskService.create(taskEntity, userId, projectId);
     }
 
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение всех задач")
-    public ResponseEntity<List<TaskDTO>> getAllTasks() {
-        List<TaskDTO> taskDTOS = taskService.getAll()
+    public List<TaskDTO> getAllTasks() {
+        return taskService.getAll()
                 .stream()
                 .map(TaskDTO::toDTO)
                 .collect(toList());
-        return new ResponseEntity<>(taskDTOS, HttpStatus.OK);
     }
 
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение всех задач по id")
-    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
-        TaskDTO taskDTO = TaskDTO.toDTO(taskService.getTaskById(id));
-        return new ResponseEntity<>(taskDTO, HttpStatus.OK);
+    public TaskDTO getTaskById(@PathVariable Long id) {
+        return TaskDTO.toDTO(taskService.getTaskById(id));
     }
 
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Обновление задачи по id")
-    public ResponseEntity<TaskDTO> updateTaskById(@PathVariable Long id,
+    public TaskDTO updateTaskById(@PathVariable Long id,
                                                   @Valid @RequestBody TaskSaveDTO taskSaveDTO) {
         Long userId = taskSaveDTO.getUserId();
         Long projectId = taskSaveDTO.getProjectId();
         TaskEntity taskEntity = modelMapper.map(taskSaveDTO);
-        TaskDTO taskDTO = TaskDTO.toDTO(taskService.update(taskEntity, id, userId, projectId));
-        return new ResponseEntity<>(taskDTO, HttpStatus.OK);
+        return TaskDTO.toDTO(taskService.update(taskEntity, id, userId, projectId));
     }
 
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Удаление задачи по id")
-    public ResponseEntity<String> deleteTaskById(@PathVariable Long id) {
+    public String deleteTaskById(@PathVariable Long id) {
         taskService.delete(id);
-        return new ResponseEntity<>("Task was deleted successfully!", HttpStatus.OK);
+        return "Task was deleted successfully!";
     }
 }

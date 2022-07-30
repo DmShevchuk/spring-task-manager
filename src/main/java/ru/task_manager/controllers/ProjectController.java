@@ -3,7 +3,6 @@ package ru.task_manager.controllers;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.task_manager.dto.ProjectDTO;
 import ru.task_manager.dto.save.ProjectSaveDTO;
@@ -26,54 +25,53 @@ public class ProjectController {
 
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Создание нового проекта")
-    public ResponseEntity<Long> addProject(@Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
+    public Long addProject(@Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
         List<Long> usersIdList = projectSaveDTO.getUsersIdList();
         ProjectEntity projectEntity = modelMapper.map(projectSaveDTO);
-        Long createdProjectId = projectService.create(projectEntity, usersIdList);
-        return new ResponseEntity<>(createdProjectId, HttpStatus.OK);
+        return projectService.create(projectEntity, usersIdList);
     }
 
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение списка всех проектов")
-    public ResponseEntity<List<ProjectDTO>> getAllProjects() {
-        List<ProjectDTO> projectDTOS = projectService.getAllProjects()
+    public List<ProjectDTO> getAllProjects() {
+        return projectService.getAllProjects()
                 .stream()
                 .map(ProjectDTO::toDTO)
                 .toList();
-        return new ResponseEntity<>(projectDTOS, HttpStatus.OK);
     }
 
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение проекта по id")
-    public ResponseEntity<ProjectDTO> getProjectById(@PathVariable Long id) {
+    public ProjectDTO getProjectById(@PathVariable Long id) {
         ProjectEntity projectEntity = projectService.getProjectById(id);
-        return new ResponseEntity<>(
-                ProjectDTO.toDTO(projectEntity),
-                HttpStatus.OK
-        );
+        return ProjectDTO.toDTO(projectEntity);
     }
 
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Обновление проекта по id")
-    public ResponseEntity<ProjectDTO> updateProjectById(@PathVariable Long id,
+    public ProjectDTO updateProjectById(@PathVariable Long id,
                                                         @Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
         List<Long> usersIdList = projectSaveDTO.getUsersIdList();
         ProjectEntity projectEntity = modelMapper.map(projectSaveDTO);
-        ProjectDTO projectDTO = ProjectDTO.toDTO(projectService.update(projectEntity, id, usersIdList));
-        return new ResponseEntity<>(projectDTO, HttpStatus.OK);
+        return ProjectDTO.toDTO(projectService.update(projectEntity, id, usersIdList));
     }
 
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Удаление проекта по id; проект также удаляется у пользователей и задач")
-    public ResponseEntity<String> deleteProjectById(@PathVariable Long id) {
+    public String deleteProjectById(@PathVariable Long id) {
         entityRelationService.removeProjectFromUsers(id);
         entityRelationService.removeProjectFromTasks(id);
         projectService.delete(id);
-        return new ResponseEntity<>("Project was deleted successfully!", HttpStatus.OK);
+        return "Project was deleted successfully!";
     }
 }

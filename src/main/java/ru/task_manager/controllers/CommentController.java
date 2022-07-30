@@ -3,7 +3,6 @@ package ru.task_manager.controllers;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.task_manager.dto.CommentDTO;
 import ru.task_manager.dto.save.CommentSaveDTO;
@@ -24,50 +23,50 @@ public class CommentController {
 
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Создание нового комментария")
-    public ResponseEntity<Long> addNewComment(@Valid @RequestBody CommentSaveDTO commentSaveDTO){
+    public Long addNewComment(@Valid @RequestBody CommentSaveDTO commentSaveDTO){
         CommentEntity commentEntity = modelMapper.map(commentSaveDTO);
         Long taskId = commentSaveDTO.getTaskId();
-        Long addedCommentId = commentService.create(commentEntity, taskId);
-        return new ResponseEntity<>(addedCommentId, HttpStatus.OK);
+        return commentService.create(commentEntity, taskId);
     }
 
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение списка всех комментариев")
-    public ResponseEntity<List<CommentDTO>> getAllComments(){
-        List<CommentDTO> commentDTOS = commentService.getAll()
+    public List<CommentDTO> getAllComments(){
+        return commentService.getAll()
                 .stream()
                 .map(CommentDTO::toDTO).toList();
-        return new ResponseEntity<>(commentDTOS, HttpStatus.OK);
     }
 
 
     @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение комментария по id")
-    public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long id){
-        CommentDTO commentDTO = CommentDTO.toDTO(commentService.getCommentById(id));
-        return new ResponseEntity<>(commentDTO, HttpStatus.OK);
+    public CommentDTO getCommentById(@PathVariable Long id){
+        return CommentDTO.toDTO(commentService.getCommentById(id));
     }
 
 
     @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Обновление комментария по id")
-    public ResponseEntity<CommentDTO> updateTaskById(@PathVariable Long id,
+    public CommentDTO updateTaskById(@PathVariable Long id,
                                                  @Valid @RequestBody CommentSaveDTO commentSaveDTO){
         CommentEntity commentEntity = modelMapper.map(commentSaveDTO);
         commentEntity.setId(id);
         Long taskId = commentSaveDTO.getTaskId();
-        CommentDTO commentDTO = CommentDTO.toDTO(commentService.update(commentEntity, taskId));
-
-        return new ResponseEntity<>(commentDTO, HttpStatus.OK);
+        return CommentDTO.toDTO(commentService.update(commentEntity, taskId));
     }
 
 
     @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Удаление комментария по id")
-    public ResponseEntity<String> deleteCommentByID(@PathVariable Long id){
+    public String deleteCommentByID(@PathVariable Long id){
         commentService.delete(id);
-        return new ResponseEntity<>("Comment was deleted successfully!", HttpStatus.OK);
+        return "Comment was deleted successfully!";
     }
 }

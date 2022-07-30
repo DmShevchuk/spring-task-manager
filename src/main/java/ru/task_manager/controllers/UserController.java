@@ -23,82 +23,83 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
     private final ModelMapper modelMapper;
     private final EntityRelationService entityRelationService;
 
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Добавление нового пользователя")
-    public ResponseEntity<String> addUser(@Valid @RequestBody UserSaveDTO userSaveDTO) {
+    public Long addUser(@Valid @RequestBody UserSaveDTO userSaveDTO) {
         UserEntity userEntity = modelMapper.map(userSaveDTO, UserEntity.class);
-        Long id = userService.registration(userEntity);
-        return new ResponseEntity<>(
-                        String.format("User was added successfully! Id = %d", id),
-                        HttpStatus.OK);
+        return userService.registration(userEntity);
     }
 
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение всех пользователей")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> userDTOS = userService.getAll()
+    public List<UserDTO> getAllUsers() {
+        return userService.getAll()
                 .stream()
                 .map(UserDTO::toDTO)
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение пользователя по id")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        UserDTO userDTO = UserDTO.toDTO(userService.getUserById(id));
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    public UserDTO getUserById(@PathVariable Long id) {
+        return UserDTO.toDTO(userService.getUserById(id));
     }
 
 
     @GetMapping("/{id}/tasks")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение всех задач пользователя")
-    public ResponseEntity<List<TaskDTO>> getUserTasks(@PathVariable Long id){
+    public List<TaskDTO> getUserTasks(@PathVariable Long id){
         UserEntity userEntity = userService.getUserById(id);
-        List<TaskDTO> taskDTOS = entityRelationService.getUserTasks(userEntity)
+        return entityRelationService.getUserTasks(userEntity)
                 .stream()
                 .map(TaskDTO::toDTO)
                 .toList();
-        return new ResponseEntity<>(taskDTOS, HttpStatus.OK);
     }
 
 
     @GetMapping("/{id}/projects")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение всех проектов пользователя")
-    public ResponseEntity<List<ProjectDTO>> getUserProjects(@PathVariable Long id){
+    public List<ProjectDTO> getUserProjects(@PathVariable Long id){
         UserEntity userEntity = userService.getUserById(id);
-        List<ProjectDTO> projectDTOS = entityRelationService.getUserProjects(userEntity)
+        return entityRelationService.getUserProjects(userEntity)
                 .stream()
                 .map(ProjectDTO::toDTO)
                 .toList();
-        return new ResponseEntity<>(projectDTOS, HttpStatus.OK);
     }
 
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Обновление пользователя по id")
-    public ResponseEntity<UserDTO> updateUserById(@PathVariable Long id,
+    public UserDTO updateUserById(@PathVariable Long id,
                                                   @RequestBody @Validated UserSaveDTO userSaveDTO) {
         UserEntity userEntity = modelMapper.map(userSaveDTO, UserEntity.class);
         userEntity.setId(id);
         userService.update(userEntity);
-        return new ResponseEntity<>(UserDTO.toDTO(userEntity), HttpStatus.OK);
+        return UserDTO.toDTO(userEntity);
     }
 
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Удаление пользователя по id; пользователь также удаляется у задач и проектов")
-    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
+    public String deleteUserById(@PathVariable Long id) {
         entityRelationService.removeUserFromProjects(id);
         entityRelationService.removeUserFromTasks(id);
         userService.delete(id);
-        return new ResponseEntity<>("User was deleted successfully!", HttpStatus.OK);
+        return "User was deleted successfully!";
     }
 }
