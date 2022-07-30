@@ -11,6 +11,7 @@ import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.dto.UserDTO;
 import ru.task_manager.dto.save.UserSaveDTO;
 import ru.task_manager.entities.UserEntity;
+import ru.task_manager.services.EntityRelationService;
 import ru.task_manager.services.UserService;
 
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final EntityRelationService entityRelationService;
 
     @PostMapping
     public ResponseEntity<String> addUser(@Valid @RequestBody UserSaveDTO userSaveDTO) {
@@ -50,7 +52,8 @@ public class UserController {
 
     @GetMapping("/{id}/tasks")
     public ResponseEntity<List<TaskDTO>> getUserTasks(@PathVariable Long id){
-        List<TaskDTO> taskDTOS = userService.getUserTasks(id)
+        UserEntity userEntity = userService.getUserById(id);
+        List<TaskDTO> taskDTOS = entityRelationService.getUserTasks(userEntity)
                 .stream()
                 .map(TaskDTO::toDTO)
                 .toList();
@@ -59,7 +62,8 @@ public class UserController {
 
     @GetMapping("/{id}/projects")
     public ResponseEntity<List<ProjectDTO>> getUserProjects(@PathVariable Long id){
-        List<ProjectDTO> projectDTOS = userService.getUserProjects(id)
+        UserEntity userEntity = userService.getUserById(id);
+        List<ProjectDTO> projectDTOS = entityRelationService.getUserProjects(userEntity)
                 .stream()
                 .map(ProjectDTO::toDTO)
                 .toList();
@@ -77,6 +81,8 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
+        entityRelationService.removeUserFromProjects(id);
+        entityRelationService.removeUserFromTasks(id);
         userService.delete(id);
         return new ResponseEntity<>("User was deleted successfully!", HttpStatus.OK);
     }

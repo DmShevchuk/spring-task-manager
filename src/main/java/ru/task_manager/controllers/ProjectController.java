@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.task_manager.dto.ProjectDTO;
 import ru.task_manager.dto.save.ProjectSaveDTO;
 import ru.task_manager.entities.ProjectEntity;
+import ru.task_manager.services.EntityRelationService;
 import ru.task_manager.services.ProjectService;
 import ru.task_manager.utils.CustomProjectEntityMapper;
 
@@ -17,8 +18,11 @@ import java.util.List;
 @RequestMapping("/api/v1/projects")
 @RequiredArgsConstructor
 public class ProjectController {
+
     private final ProjectService projectService;
     private final CustomProjectEntityMapper modelMapper;
+    private final EntityRelationService entityRelationService;
+
 
     @PostMapping
     public ResponseEntity<Long> addProject(@Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
@@ -57,6 +61,8 @@ public class ProjectController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProjectById(@PathVariable Long id) {
+        entityRelationService.removeProjectFromUsers(id);
+        entityRelationService.removeProjectFromTasks(id);
         projectService.delete(id);
         return new ResponseEntity<>("Project was deleted successfully!", HttpStatus.OK);
     }

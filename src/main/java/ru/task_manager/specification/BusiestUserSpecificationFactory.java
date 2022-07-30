@@ -18,7 +18,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class UserSpecificationFactory {
+public class BusiestUserSpecificationFactory {
     private final SessionFactory sessionFactory;
 
     public Specification<UserEntity> getSpecificationForBusiestUser(TaskType taskType,

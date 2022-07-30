@@ -3,19 +3,16 @@ package ru.task_manager.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.task_manager.entities.ProjectEntity;
-import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.exceptions.BusiestUserNotFoundException;
 import ru.task_manager.exceptions.EmailAlreadyExistsException;
 import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.factories.TaskType;
 import ru.task_manager.repositories.UserRepo;
-import ru.task_manager.specification.UserSpecificationFactory;
+import ru.task_manager.specification.BusiestUserSpecificationFactory;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -26,9 +23,7 @@ import java.util.Set;
 public class UserService {
 
     private final UserRepo userRepo;
-    private final TaskService taskService;
-    private final UserSpecificationFactory userSpecificationFactory;
-    private final EntityRelationService entityRelationService;
+    private final BusiestUserSpecificationFactory userSpecificationFactory;
 
 
     public Long registration(UserEntity userEntity) {
@@ -59,26 +54,12 @@ public class UserService {
         if (!userRepo.existsById(id)) {
             throw new EntityNotFoundException("User", id);
         }
-        entityRelationService.removeUserFromProjects(id);
-        entityRelationService.removeUserFromTasks(id);
         userRepo.deleteById(id);
     }
 
 
     public void deleteAll() {
         userRepo.deleteAll();
-    }
-
-
-    public List<TaskEntity> getUserTasks(Long id) {
-        return taskService.getTaskEntitiesByUserId(id);
-    }
-
-
-    public Set<ProjectEntity> getUserProjects(Long id) {
-        UserEntity userEntity = userRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User", id));
-        return userEntity.getProjects();
     }
 
 

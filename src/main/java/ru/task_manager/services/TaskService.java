@@ -9,6 +9,7 @@ import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.repositories.ProjectRepo;
 import ru.task_manager.repositories.TaskRepo;
 import ru.task_manager.repositories.UserRepo;
+import ru.task_manager.specification.CommonSpecificationFactory;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class TaskService {
     private final TaskRepo taskRepo;
     private final UserService userService;
     private final ProjectService projectService;
-
+    private final CommonSpecificationFactory specificationFactory;
 
     public Long create(TaskEntity taskEntity, Long userId, Long projectId) {
         UserEntity userEntity = userService.getUserById(userId);
@@ -62,9 +63,10 @@ public class TaskService {
         taskRepo.deleteAll();
     }
 
-    public List<TaskEntity> getTaskEntitiesByUserId(Long id) {
-        return taskRepo.getTaskEntitiesByUserId(id);
+    public List<TaskEntity> getTasksByUser(UserEntity userEntity) {
+        return taskRepo.findAll(specificationFactory.getUserTasks(userEntity));
     }
+
 
     /**
      * Метод, осуществляющий создание задачи. Использовался до введения новых сущностей<br/>

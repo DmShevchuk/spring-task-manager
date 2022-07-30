@@ -6,6 +6,7 @@ import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.repositories.ProjectRepo;
+import ru.task_manager.specification.CommonSpecificationFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +19,7 @@ public class ProjectService {
 
     private final ProjectRepo projectRepo;
     private final UserService userService;
-    private final EntityRelationService entityRelationService;
+    private final CommonSpecificationFactory commonSpecificationFactory;
 
 
     public Long create(ProjectEntity projectEntity, List<Long> usersIdList) {
@@ -49,14 +50,15 @@ public class ProjectService {
 
     public ProjectEntity getProjectById(Long id) {
         return projectRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Project", id));
+    }
 
+    public List<ProjectEntity> getUserProjects(UserEntity userEntity) {
+        return projectRepo.findAll(commonSpecificationFactory.getUserProject(userEntity));
     }
 
 
     public void delete(Long id) {
         if (!projectRepo.existsById(id)) {throw new EntityNotFoundException("Project", id);}
-        entityRelationService.removeProjectFromUsers(id);
-        entityRelationService.removeProjectFromTasks(id);
         projectRepo.deleteById(id);
     }
 }
