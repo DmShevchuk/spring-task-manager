@@ -6,7 +6,6 @@ import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.repositories.ProjectRepo;
-import ru.task_manager.repositories.UserRepo;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,15 +17,14 @@ import java.util.Set;
 public class ProjectService {
 
     private final ProjectRepo projectRepo;
-    private final UserRepo userRepo;
+    private final UserService userService;
     private final EntityRelationService entityRelationService;
 
 
     public Long create(ProjectEntity projectEntity, List<Long> usersIdList) {
         Set<UserEntity> userEntityList = new HashSet<>();
         for (Long userId : usersIdList) {
-            userEntityList.add(userRepo.findById(userId)
-                    .orElseThrow(() -> new EntityNotFoundException("User", userId)));
+            userEntityList.add(userService.getUserById(userId));
         }
         projectEntity.setUsersEntity(userEntityList);
         return projectRepo.save(projectEntity).getId();
@@ -36,8 +34,7 @@ public class ProjectService {
     public ProjectEntity update(ProjectEntity projectEntity, Long id, List<Long> usersIdList) {
         Set<UserEntity> userEntityList = new HashSet<>();
         for (Long userId : usersIdList) {
-            userEntityList.add(userRepo.findById(userId)
-                    .orElseThrow(() -> new EntityNotFoundException("User", userId)));
+            userEntityList.add(userService.getUserById(userId));
         }
         projectEntity.setUsersEntity(userEntityList);
         projectEntity.setId(id);

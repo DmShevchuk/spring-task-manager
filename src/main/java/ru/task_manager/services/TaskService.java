@@ -20,15 +20,13 @@ import java.util.List;
 public class TaskService {
 
     private final TaskRepo taskRepo;
-    private final UserRepo userRepo;
-    private final ProjectRepo projectRepo;
+    private final UserService userService;
+    private final ProjectService projectService;
 
 
     public Long create(TaskEntity taskEntity, Long userId, Long projectId) {
-        UserEntity userEntity = userRepo.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User", userId));
-        ProjectEntity projectEntity = projectRepo.findById(projectId)
-                .orElseThrow(() -> new EntityNotFoundException("Project", projectId));
+        UserEntity userEntity = userService.getUserById(userId);
+        ProjectEntity projectEntity = projectService.getProjectById(projectId);
         taskEntity.setUser(userEntity);
         taskEntity.setProjectEntity(projectEntity);
         return taskRepo.save(taskEntity).getId();
@@ -36,10 +34,8 @@ public class TaskService {
 
 
     public TaskEntity update(TaskEntity taskEntity, Long taskId, Long userId, Long projectId) {
-        UserEntity userEntity = userRepo.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User", userId));
-        ProjectEntity projectEntity = projectRepo.findById(projectId)
-                .orElseThrow(() -> new EntityNotFoundException("Project", projectId));
+        UserEntity userEntity = userService.getUserById(userId);
+        ProjectEntity projectEntity = projectService.getProjectById(projectId);
         taskEntity.setUser(userEntity);
         taskEntity.setProjectEntity(projectEntity);
         taskEntity.setId(taskId);
@@ -66,6 +62,9 @@ public class TaskService {
         taskRepo.deleteAll();
     }
 
+    public List<TaskEntity> getTaskEntitiesByUserId(Long id) {
+        return taskRepo.getTaskEntitiesByUserId(id);
+    }
 
     /**
      * Метод, осуществляющий создание задачи. Использовался до введения новых сущностей<br/>
@@ -73,8 +72,7 @@ public class TaskService {
      * */
     @Deprecated
     public TaskEntity add(TaskEntity task, Long userId){
-        UserEntity userEntity = userRepo.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User", userId));
+        UserEntity userEntity = userService.getUserById(userId);
         task.setUser(userEntity);
         taskRepo.save(task);
         return task;
@@ -87,9 +85,8 @@ public class TaskService {
      * */
     @Deprecated
     public TaskEntity update(TaskEntity task, Long userId) {
-        taskRepo.findById(task.getId()).orElseThrow(() -> new EntityNotFoundException("Task", task.getId()));
-        UserEntity userEntity = userRepo.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User", userId));
+        if (!taskRepo.existsById(task.getId())) {throw new EntityNotFoundException("Task", task.getId());}
+        UserEntity userEntity = userService.getUserById(userId);
         task.setUser(userEntity);
         return taskRepo.save(task);
     }

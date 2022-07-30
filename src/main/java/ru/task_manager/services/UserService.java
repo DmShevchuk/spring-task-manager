@@ -10,8 +10,6 @@ import ru.task_manager.exceptions.BusiestUserNotFoundException;
 import ru.task_manager.exceptions.EmailAlreadyExistsException;
 import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.factories.TaskType;
-import ru.task_manager.repositories.ProjectRepo;
-import ru.task_manager.repositories.TaskRepo;
 import ru.task_manager.repositories.UserRepo;
 import ru.task_manager.specification.UserSpecificationFactory;
 
@@ -26,11 +24,12 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepo userRepo;
-    private final ProjectRepo projectRepo;
-    private final TaskRepo taskRepo;
+    private final TaskService taskService;
     private final UserSpecificationFactory userSpecificationFactory;
     private final EntityRelationService entityRelationService;
+
 
     public Long registration(UserEntity userEntity) {
         if (userRepo.existsByEmail(userEntity.getEmail())) {
@@ -39,18 +38,22 @@ public class UserService {
         return userRepo.save(userEntity).getId();
     }
 
+
     public void update(UserEntity user) throws EntityNotFoundException {
         userRepo.save(user);
     }
+
 
     public List<UserEntity> getAll() {
         return userRepo.findAll();
     }
 
+
     public UserEntity getUserById(Long id) {
         return userRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User", id));
     }
+
 
     public void delete(Long id) {
         if (!userRepo.existsById(id)) {
@@ -61,19 +64,23 @@ public class UserService {
         userRepo.deleteById(id);
     }
 
+
     public void deleteAll() {
         userRepo.deleteAll();
     }
 
+
     public List<TaskEntity> getUserTasks(Long id) {
-        return taskRepo.getTaskEntitiesByUserId(id);
+        return taskService.getTaskEntitiesByUserId(id);
     }
+
 
     public Set<ProjectEntity> getUserProjects(Long id) {
         UserEntity userEntity = userRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User", id));
         return userEntity.getProjects();
     }
+
 
     public UserEntity findBusiestUser(TaskType taskType, Date minDate, Date maxDate) {
         Specification<UserEntity> specification = userSpecificationFactory
