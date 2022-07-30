@@ -1,5 +1,6 @@
 package ru.task_manager.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,9 @@ public class UserController {
     private final ModelMapper modelMapper;
     private final EntityRelationService entityRelationService;
 
+
     @PostMapping
+    @ApiOperation("Добавление нового пользователя")
     public ResponseEntity<String> addUser(@Valid @RequestBody UserSaveDTO userSaveDTO) {
         UserEntity userEntity = modelMapper.map(userSaveDTO, UserEntity.class);
         Long id = userService.registration(userEntity);
@@ -35,7 +38,9 @@ public class UserController {
                         HttpStatus.OK);
     }
 
+
     @GetMapping
+    @ApiOperation("Получение всех пользователей")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> userDTOS = userService.getAll()
                 .stream()
@@ -44,13 +49,17 @@ public class UserController {
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 
+
     @GetMapping("/{id}")
+    @ApiOperation("Получение пользователя по id")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         UserDTO userDTO = UserDTO.toDTO(userService.getUserById(id));
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
+
     @GetMapping("/{id}/tasks")
+    @ApiOperation("Получение всех задач пользователя")
     public ResponseEntity<List<TaskDTO>> getUserTasks(@PathVariable Long id){
         UserEntity userEntity = userService.getUserById(id);
         List<TaskDTO> taskDTOS = entityRelationService.getUserTasks(userEntity)
@@ -60,7 +69,9 @@ public class UserController {
         return new ResponseEntity<>(taskDTOS, HttpStatus.OK);
     }
 
+
     @GetMapping("/{id}/projects")
+    @ApiOperation("Получение всех проектов пользователя")
     public ResponseEntity<List<ProjectDTO>> getUserProjects(@PathVariable Long id){
         UserEntity userEntity = userService.getUserById(id);
         List<ProjectDTO> projectDTOS = entityRelationService.getUserProjects(userEntity)
@@ -70,7 +81,9 @@ public class UserController {
         return new ResponseEntity<>(projectDTOS, HttpStatus.OK);
     }
 
+
     @PutMapping("/{id}")
+    @ApiOperation("Обновление пользователя по id")
     public ResponseEntity<UserDTO> updateUserById(@PathVariable Long id,
                                                   @RequestBody @Validated UserSaveDTO userSaveDTO) {
         UserEntity userEntity = modelMapper.map(userSaveDTO, UserEntity.class);
@@ -79,7 +92,9 @@ public class UserController {
         return new ResponseEntity<>(UserDTO.toDTO(userEntity), HttpStatus.OK);
     }
 
+
     @DeleteMapping("/{id}")
+    @ApiOperation("Удаление пользователя по id; пользователь также удаляется у задач и проектов")
     public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
         entityRelationService.removeUserFromProjects(id);
         entityRelationService.removeUserFromTasks(id);

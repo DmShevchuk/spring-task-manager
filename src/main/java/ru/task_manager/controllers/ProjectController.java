@@ -1,5 +1,6 @@
 package ru.task_manager.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class ProjectController {
 
 
     @PostMapping
+    @ApiOperation("Создание нового проекта")
     public ResponseEntity<Long> addProject(@Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
         List<Long> usersIdList = projectSaveDTO.getUsersIdList();
         ProjectEntity projectEntity = modelMapper.map(projectSaveDTO);
@@ -32,7 +34,9 @@ public class ProjectController {
         return new ResponseEntity<>(createdProjectId, HttpStatus.OK);
     }
 
+
     @GetMapping
+    @ApiOperation("Получение списка всех проектов")
     public ResponseEntity<List<ProjectDTO>> getAllProjects() {
         List<ProjectDTO> projectDTOS = projectService.getAllProjects()
                 .stream()
@@ -41,7 +45,9 @@ public class ProjectController {
         return new ResponseEntity<>(projectDTOS, HttpStatus.OK);
     }
 
+
     @GetMapping("/{id}")
+    @ApiOperation("Получение проекта по id")
     public ResponseEntity<ProjectDTO> getProjectById(@PathVariable Long id) {
         ProjectEntity projectEntity = projectService.getProjectById(id);
         return new ResponseEntity<>(
@@ -50,7 +56,9 @@ public class ProjectController {
         );
     }
 
+
     @PutMapping("/{id}")
+    @ApiOperation("Обновление проекта по id")
     public ResponseEntity<ProjectDTO> updateProjectById(@PathVariable Long id,
                                                         @Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
         List<Long> usersIdList = projectSaveDTO.getUsersIdList();
@@ -59,7 +67,9 @@ public class ProjectController {
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }
 
+
     @DeleteMapping("/{id}")
+    @ApiOperation("Удаление проекта по id; проект также удаляется у пользователей и задач")
     public ResponseEntity<String> deleteProjectById(@PathVariable Long id) {
         entityRelationService.removeProjectFromUsers(id);
         entityRelationService.removeProjectFromTasks(id);
