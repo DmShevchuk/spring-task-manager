@@ -13,8 +13,9 @@ import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.dto.UserDTO;
 import ru.task_manager.dto.save.ProjectSaveDTO;
 import ru.task_manager.entities.ProjectEntity;
-import ru.task_manager.services.EntityRelationService;
 import ru.task_manager.services.ProjectService;
+import ru.task_manager.services.TaskService;
+import ru.task_manager.services.UserService;
 import ru.task_manager.utils.CustomProjectEntityMapper;
 
 import javax.validation.Valid;
@@ -26,8 +27,9 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final TaskService taskService;
+    private final UserService userService;
     private final CustomProjectEntityMapper modelMapper;
-    private final EntityRelationService entityRelationService;
 
 
     @PostMapping
@@ -59,7 +61,7 @@ public class ProjectController {
                                          @PageableDefault Pageable pageable) {
         ProjectEntity projectEntity = projectService.getProjectById(id);
         return new PageImpl<>(
-                entityRelationService.getProjectTasks(projectEntity, pageable)
+                taskService.getProjectTasks(projectEntity, pageable)
                         .stream()
                         .map(TaskDTO::toDTO)
                         .toList());
@@ -73,7 +75,7 @@ public class ProjectController {
                                          @PageableDefault Pageable pageable) {
         ProjectEntity projectEntity = projectService.getProjectById(id);
         return new PageImpl<>(
-                entityRelationService.getProjectUsers(projectEntity, pageable)
+                userService.getProjectUsers(projectEntity, pageable)
                         .stream()
                         .map(UserDTO::toDTO)
                         .toList());

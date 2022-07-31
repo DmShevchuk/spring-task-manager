@@ -50,7 +50,7 @@ public class CommentService {
     }
 
 
-    public Page<CommentEntity> getCommentByTask(TaskEntity taskEntity, Pageable pageable) {
+    public Page<CommentEntity> getCommentsByTask(TaskEntity taskEntity, Pageable pageable) {
         return commentRepo.findAll(specificationFactory.getTaskComments(taskEntity), pageable);
     }
 }

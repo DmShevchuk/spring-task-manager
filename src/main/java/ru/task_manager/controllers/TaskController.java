@@ -12,7 +12,7 @@ import ru.task_manager.dto.CommentDTO;
 import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.dto.save.TaskSaveDTO;
 import ru.task_manager.entities.TaskEntity;
-import ru.task_manager.services.EntityRelationService;
+import ru.task_manager.services.CommentService;
 import ru.task_manager.services.TaskService;
 import ru.task_manager.utils.CustomTaskEntityMapper;
 
@@ -26,8 +26,8 @@ import static java.util.stream.Collectors.toList;
 public class TaskController {
 
     private final TaskService taskService;
+    private final CommentService commentService;
     private final CustomTaskEntityMapper modelMapper;
-    private final EntityRelationService entityRelationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,7 +67,7 @@ public class TaskController {
                                       @PageableDefault Pageable pageable) {
         TaskEntity taskEntity = taskService.getTaskById(id);
         return new PageImpl<>(
-                entityRelationService.getTaskComments(taskEntity, pageable)
+                commentService.getCommentsByTask(taskEntity, pageable)
                         .stream()
                         .map(CommentDTO::toDTO)
                         .toList());
