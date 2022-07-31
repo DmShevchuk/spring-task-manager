@@ -2,8 +2,8 @@ package ru.task_manager.controllers;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,8 @@ import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.dto.UserDTO;
 import ru.task_manager.dto.save.ProjectSaveDTO;
 import ru.task_manager.entities.ProjectEntity;
+import ru.task_manager.entities.TaskEntity;
+import ru.task_manager.entities.UserEntity;
 import ru.task_manager.services.ProjectService;
 import ru.task_manager.services.TaskService;
 import ru.task_manager.services.UserService;
@@ -27,9 +29,11 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final ModelMapper modelMapper;
     private final TaskService taskService;
     private final UserService userService;
-    private final CustomProjectEntityMapper modelMapper;
+    private final CustomProjectEntityMapper customModelMapper;
+
 
 
     @PostMapping
@@ -37,7 +41,7 @@ public class ProjectController {
     @ApiOperation("Создание нового проекта")
     public Long addProject(@Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
         List<Long> usersIdList = projectSaveDTO.getUsersIdList();
-        ProjectEntity projectEntity = modelMapper.map(projectSaveDTO);
+        ProjectEntity projectEntity = customModelMapper.map(projectSaveDTO);
         return projectService.create(projectEntity, usersIdList);
     }
 
@@ -46,11 +50,8 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение списка всех проектов")
     public Page<ProjectDTO> getAllProjects(@PageableDefault Pageable pageable) {
-        return new PageImpl<>(
-                projectService.getAllProjects(pageable)
-                        .stream()
-                        .map(ProjectDTO::toDTO)
-                        .toList());
+        Page<ProjectEntity> projects = projectService.getAllProjects(pageable);
+        return projects.map(p -> modelMapper.map(p, ProjectDTO.class));
     }
 
 
@@ -60,11 +61,8 @@ public class ProjectController {
     public Page<TaskDTO> getProjectTasks(@PathVariable Long id,
                                          @PageableDefault Pageable pageable) {
         ProjectEntity projectEntity = projectService.getProjectById(id);
-        return new PageImpl<>(
-                taskService.getProjectTasks(projectEntity, pageable)
-                        .stream()
-                        .map(TaskDTO::toDTO)
-                        .toList());
+        Page<TaskEntity> tasks = taskService.getProjectTasks(projectEntity, pageable);
+        return tasks.map(t -> modelMapper.map(t, TaskDTO.class));
     }
 
 
@@ -74,11 +72,8 @@ public class ProjectController {
     public Page<UserDTO> getProjectUsers(@PathVariable Long id,
                                          @PageableDefault Pageable pageable) {
         ProjectEntity projectEntity = projectService.getProjectById(id);
-        return new PageImpl<>(
-                userService.getProjectUsers(projectEntity, pageable)
-                        .stream()
-                        .map(UserDTO::toDTO)
-                        .toList());
+        Page<UserEntity> users = userService.getProjectUsers(projectEntity, pageable);
+        return users.map(u -> modelMapper.map(u, UserDTO.class));
     }
 
 
@@ -97,7 +92,7 @@ public class ProjectController {
     public ProjectDTO updateProjectById(@PathVariable Long id,
                                         @Valid @RequestBody ProjectSaveDTO projectSaveDTO) {
         List<Long> usersIdList = projectSaveDTO.getUsersIdList();
-        ProjectEntity projectEntity = modelMapper.map(projectSaveDTO);
+        ProjectEntity projectEntity = customModelMapper.map(projectSaveDTO);
         return ProjectDTO.toDTO(projectService.update(projectEntity, id, usersIdList));
     }
 

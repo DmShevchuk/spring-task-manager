@@ -14,6 +14,8 @@ import ru.task_manager.dto.ProjectDTO;
 import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.dto.UserDTO;
 import ru.task_manager.dto.save.UserSaveDTO;
+import ru.task_manager.entities.ProjectEntity;
+import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.services.ProjectService;
 import ru.task_manager.services.TaskService;
@@ -46,11 +48,8 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение всех пользователей")
     public Page<UserDTO> getAllUsers(@PageableDefault Pageable pageable) {
-        return new PageImpl<>(
-                userService.getAll(pageable)
-                        .stream()
-                        .map(UserDTO::toDTO)
-                        .collect(Collectors.toList()));
+        Page<UserEntity> users = userService.getAll(pageable);
+        return users.map(u -> modelMapper.map(u, UserDTO.class));
     }
 
 
@@ -68,11 +67,8 @@ public class UserController {
     public Page<TaskDTO> getUserTasks(@PathVariable Long id,
                                       @PageableDefault Pageable pageable) {
         UserEntity userEntity = userService.getUserById(id);
-        return new PageImpl<>(
-                taskService.getTasksByUser(userEntity, pageable)
-                        .stream()
-                        .map(TaskDTO::toDTO)
-                        .toList());
+        Page<TaskEntity> tasks = taskService.getTasksByUser(userEntity, pageable);
+        return tasks.map(t -> modelMapper.map(t, TaskDTO.class));
     }
 
 
@@ -82,11 +78,8 @@ public class UserController {
     public Page<ProjectDTO> getUserProjects(@PathVariable Long id,
                                             @PageableDefault Pageable pageable) {
         UserEntity userEntity = userService.getUserById(id);
-        return new PageImpl<>(
-                projectService.getUserProjects(userEntity, pageable)
-                        .stream()
-                        .map(ProjectDTO::toDTO)
-                        .toList());
+        Page<ProjectEntity> projects = projectService.getUserProjects(userEntity, pageable);
+        return projects.map(p -> modelMapper.map(p, ProjectDTO.class));
     }
 
 

@@ -3,14 +3,11 @@ package ru.task_manager.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.entities.TaskEntity;
-import ru.task_manager.entities.UserEntity;
 import ru.task_manager.factories.TaskType;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -21,8 +18,6 @@ public class TaskDTO {
     private String description;
     private Date deadline;
     private TaskType type;
-    private Long ownerId;
-    private Long projectId;
 
     public static TaskDTO toDTO(TaskEntity entity) {
         TaskDTO task = new TaskDTO();
@@ -31,10 +26,6 @@ public class TaskDTO {
         task.setDescription(entity.getDescription());
         task.setDeadline(entity.getDeadline());
         task.setType(entity.getType());
-        UserEntity user = entity.getUser();
-        if(user != null){task.setOwnerId(user.getId());}
-        ProjectEntity project = entity.getProjectEntity();
-        if(project != null){task.setProjectId(project.getId());}
         return task;
     }
 
@@ -48,7 +39,6 @@ public class TaskDTO {
                 ", description='" + description + '\'' +
                 ", deadline=" + sdf.format(deadline) +
                 ", type=" + type +
-                ", ownerId=" + ownerId +
                 '}';
     }
 }

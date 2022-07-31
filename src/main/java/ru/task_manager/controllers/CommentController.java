@@ -2,8 +2,8 @@ package ru.task_manager.controllers;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -22,14 +22,15 @@ import javax.validation.Valid;
 public class CommentController {
 
     private final CommentService commentService;
-    private final CustomCommentEntityMapper modelMapper;
+    private final CustomCommentEntityMapper customModelMapper;
+    private final ModelMapper modelMapper;
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Создание нового комментария")
     public Long addNewComment(@Valid @RequestBody CommentSaveDTO commentSaveDTO) {
-        CommentEntity commentEntity = modelMapper.map(commentSaveDTO);
+        CommentEntity commentEntity = customModelMapper.map(commentSaveDTO);
         Long taskId = commentSaveDTO.getTaskId();
         return commentService.create(commentEntity, taskId);
     }
@@ -39,10 +40,8 @@ public class CommentController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение списка всех комментариев")
     public Page<CommentDTO> getAllComments(@PageableDefault Pageable pageable) {
-        return new PageImpl<>(
-                commentService.getAll(pageable)
-                        .stream()
-                        .map(CommentDTO::toDTO).toList());
+        Page<CommentEntity> comments = commentService.getAll(pageable);
+        return comments.map(c -> modelMapper.map(c, CommentDTO.class));
     }
 
 
@@ -59,7 +58,7 @@ public class CommentController {
     @ApiOperation("Обновление комментария по id")
     public CommentDTO updateTaskById(@PathVariable Long id,
                                      @Valid @RequestBody CommentSaveDTO commentSaveDTO) {
-        CommentEntity commentEntity = modelMapper.map(commentSaveDTO);
+        CommentEntity commentEntity = customModelMapper.map(commentSaveDTO);
         commentEntity.setId(id);
         Long taskId = commentSaveDTO.getTaskId();
         return CommentDTO.toDTO(commentService.update(commentEntity, taskId));
