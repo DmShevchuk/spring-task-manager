@@ -15,4 +15,5 @@ CREATE TABLE if NOT EXISTS tasks
     CONSTRAINT fk_user
         FOREIGN KEY (id_of_user)
             REFERENCES users (user_id)
+                ON DELETE CASCADE
 );

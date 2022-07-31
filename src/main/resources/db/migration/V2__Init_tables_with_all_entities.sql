@@ -20,12 +20,14 @@ CREATE TABLE if NOT EXISTS users_projects
     id_of_user    INTEGER,
     CONSTRAINT fk_user
         FOREIGN KEY (id_of_user)
-            REFERENCES users (user_id),
+            REFERENCES users (user_id)
+                ON DELETE CASCADE,
 
     id_of_project INTEGER,
     CONSTRAINT fk_project
         FOREIGN KEY (id_of_project)
             REFERENCES projects (project_id)
+                ON DELETE CASCADE
 );
 
 
@@ -33,7 +35,8 @@ ALTER TABLE IF EXISTS tasks
     ADD id_of_project INTEGER,
     ADD CONSTRAINT fk_project
             FOREIGN KEY (id_of_project)
-                REFERENCES projects (project_id);
+                REFERENCES projects (project_id)
+                    ON DELETE CASCADE;
 
 
 CREATE TABLE if NOT EXISTS comments

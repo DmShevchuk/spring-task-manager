@@ -104,8 +104,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Удаление пользователя по id; пользователь также удаляется у задач и проектов")
     public String deleteUserById(@PathVariable Long id) {
-        entityRelationService.removeUserFromProjects(id);
-        entityRelationService.removeUserFromTasks(id);
         userService.delete(id);
         return "User was deleted successfully!";
     }

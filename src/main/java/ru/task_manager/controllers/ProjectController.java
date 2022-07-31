@@ -104,8 +104,6 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Удаление проекта по id; проект также удаляется у пользователей и задач")
     public String deleteProjectById(@PathVariable Long id) {
-        entityRelationService.removeProjectFromUsers(id);
-        entityRelationService.removeProjectFromTasks(id);
         projectService.delete(id);
         return "Project was deleted successfully!";
     }
