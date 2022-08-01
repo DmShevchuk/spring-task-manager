@@ -1,9 +1,9 @@
 package ru.task_manager.dto;
 
-import ru.task_manager.entities.TaskEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.factories.TaskType;
 
 import java.text.SimpleDateFormat;
@@ -18,7 +18,6 @@ public class TaskDTO {
     private String description;
     private Date deadline;
     private TaskType type;
-    private Long ownerId;
 
     public static TaskDTO toDTO(TaskEntity entity) {
         TaskDTO task = new TaskDTO();
@@ -27,7 +26,6 @@ public class TaskDTO {
         task.setDescription(entity.getDescription());
         task.setDeadline(entity.getDeadline());
         task.setType(entity.getType());
-        task.setOwnerId(entity.getUser().getId());
         return task;
     }
 
@@ -41,7 +39,6 @@ public class TaskDTO {
                 ", description='" + description + '\'' +
                 ", deadline=" + sdf.format(deadline) +
                 ", type=" + type +
-                ", ownerId=" + ownerId +
                 '}';
     }
 }

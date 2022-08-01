@@ -3,10 +3,14 @@ package ru.task_manager.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import ru.task_manager.factories.TaskType;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -18,19 +22,35 @@ public class TaskEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id")
     private Long id;
-    @Column(name = "title")
+
+    @Column(name = "task_title")
     private String title;
-    @Column(name = "description")
+
+    @Column(name = "task_description")
     private String description;
+
     @Column(name = "deadline")
     private Date deadline;
+
     @Column(name = "task_type")
     @Enumerated(value = EnumType.STRING)
     private TaskType type;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "id_of_user")
     private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "id_of_project")
+    private ProjectEntity projectEntity;
+
+    @OneToMany(mappedBy = "taskEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<CommentEntity> comments = new ArrayList<>();
+
+    public void deleteProject(){
+        this.projectEntity = null;
+    }
 
     private TaskEntity(Long id, String title, String description, Date deadline, TaskType type) {
         this.id = id;

@@ -2,7 +2,7 @@ package ru.task_manager.commands.impl.users;
 
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
-import ru.task_manager.exceptions.UserNotFoundException;
+import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.services.UserService;
 
 /**
@@ -14,7 +14,7 @@ public class DeleteUserById implements Command {
     private final Long id;
 
     @Override
-    public String execute() throws UserNotFoundException {
+    public String execute() throws EntityNotFoundException {
         userService.delete(id);
         return String.format("User with id=%d was deleted successfully!", id);
     }

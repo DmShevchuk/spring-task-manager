@@ -14,31 +14,22 @@ import java.util.stream.Collectors;
 public class UserDTO {
     private Long id;
     private String name;
-    private List<TaskDTO> taskList;
+    private String middleName;
+    private String lastName;
+    private String email;
 
     public static UserDTO toDTO(UserEntity userEntity) {
         UserDTO user = new UserDTO();
         user.setId(userEntity.getId());
         user.setName(userEntity.getName());
-        user.setTaskList(userEntity
-                .getTaskEntityList()
-                .stream()
-                .map(TaskDTO::toDTO)
-                .collect(Collectors.toList()));
+        user.setMiddleName(userEntity.getMiddleName());
+        user.setLastName(userEntity.getLastName());
+        user.setEmail(userEntity.getEmail());
         return user;
     }
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder(String.format("User{id=%d, name=%s}<br/>", id, name));
-
-        if (taskList.size() > 0) {
-            stringBuilder.append("Task list:<br/>");
-            for (TaskDTO task : taskList) {
-                stringBuilder.append(task.toString());
-                stringBuilder.append("<br/>");
-            }
-        }
-        return stringBuilder.toString();
+        return String.format("User{id=%d, name=%s}<br/>", id, name);
     }
 }

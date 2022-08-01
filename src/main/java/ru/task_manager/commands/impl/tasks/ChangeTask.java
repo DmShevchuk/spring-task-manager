@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.dto.TaskDTO;
 import ru.task_manager.entities.TaskEntity;
-import ru.task_manager.exceptions.TaskNotFoundException;
-import ru.task_manager.exceptions.UserNotFoundException;
+import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.services.TaskService;
 
 /**
@@ -18,7 +17,7 @@ public class ChangeTask implements Command {
     private final Long ownerId;
 
     @Override
-    public String execute() throws TaskNotFoundException, UserNotFoundException {
+    public String execute() throws EntityNotFoundException {
         return TaskDTO.toDTO(taskService.update(taskEntity, ownerId)).toString();
     }
 }

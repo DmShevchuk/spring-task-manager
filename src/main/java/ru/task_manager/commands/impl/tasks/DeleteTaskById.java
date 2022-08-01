@@ -2,7 +2,7 @@ package ru.task_manager.commands.impl.tasks;
 
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
-import ru.task_manager.exceptions.TaskNotFoundException;
+import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.services.TaskService;
 
 /**
@@ -14,7 +14,7 @@ public class DeleteTaskById implements Command {
     private final Long id;
 
     @Override
-    public String execute() throws TaskNotFoundException {
+    public String execute() throws EntityNotFoundException {
         taskService.delete(id);
         return String.format("Task with id=%d was deleted successfully!", id);
     }
