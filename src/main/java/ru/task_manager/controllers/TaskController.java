@@ -89,7 +89,7 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN') || @accessChecker.isTaskBelongToUser(principal, #id)")
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Удаление задачи по id")
     public String deleteTaskById(@PathVariable Long id) {
         taskService.delete(id);

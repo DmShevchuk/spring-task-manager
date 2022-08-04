@@ -1,4 +1,4 @@
-package ru.task_manager.config;
+package ru.task_manager.config.security;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
