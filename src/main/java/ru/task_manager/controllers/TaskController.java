@@ -7,10 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.task_manager.dto.CommentDTO;
-import ru.task_manager.dto.TaskDTO;
-import ru.task_manager.dto.save.TaskSaveDTO;
+import ru.task_manager.dto.comment.CommentDTO;
+import ru.task_manager.dto.task.TaskDTO;
+import ru.task_manager.dto.task.TaskSaveDTO;
 import ru.task_manager.entities.CommentEntity;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.services.CommentService;
@@ -29,8 +30,10 @@ public class TaskController {
     private final CommentService commentService;
     private final CustomTaskEntityMapper customModelMapper;
 
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Добавление новой задачи")
     public Long addTask(@Valid @RequestBody TaskSaveDTO taskSaveDTO) {
         Long userId = taskSaveDTO.getUserId();
@@ -42,6 +45,7 @@ public class TaskController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Получение всех задач")
     public Page<TaskDTO> getAllTasks(@PageableDefault Pageable pageable) {
         Page<TaskEntity> tasks = taskService.getAll(pageable);
@@ -51,6 +55,7 @@ public class TaskController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN') || @accessChecker.isTaskBelongToUser(principal, #id)")
     @ApiOperation("Получение задачи по id")
     public TaskDTO getTaskById(@PathVariable Long id) {
         return TaskDTO.toDTO(taskService.getTaskById(id));
@@ -59,9 +64,10 @@ public class TaskController {
 
     @GetMapping("/{id}/comments")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN') || @accessChecker.isTaskBelongToUser(principal, #id)")
     @ApiOperation("Получение всех комментариев задачи")
     public Page<CommentDTO> getTaskComments(@PathVariable Long id,
-                                      @PageableDefault Pageable pageable) {
+                                            @PageableDefault Pageable pageable) {
         TaskEntity taskEntity = taskService.getTaskById(id);
         Page<CommentEntity> comments = commentService.getCommentsByTask(taskEntity, pageable);
         return comments.map(c -> modelMapper.map(c, CommentDTO.class));
@@ -70,6 +76,7 @@ public class TaskController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN') || @accessChecker.isTaskBelongToUser(principal, #id)")
     @ApiOperation("Обновление задачи по id")
     public TaskDTO updateTaskById(@PathVariable Long id,
                                   @Valid @RequestBody TaskSaveDTO taskSaveDTO) {
@@ -82,6 +89,7 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN') || @accessChecker.isTaskBelongToUser(principal, #id)")
     @ApiOperation("Удаление задачи по id")
     public String deleteTaskById(@PathVariable Long id) {
         taskService.delete(id);

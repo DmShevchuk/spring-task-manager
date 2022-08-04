@@ -7,11 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.task_manager.dto.ProjectDTO;
-import ru.task_manager.dto.TaskDTO;
-import ru.task_manager.dto.UserDTO;
-import ru.task_manager.dto.save.ProjectSaveDTO;
+import ru.task_manager.dto.project.ProjectDTO;
+import ru.task_manager.dto.task.TaskDTO;
+import ru.task_manager.dto.user.UserDTO;
+import ru.task_manager.dto.project.ProjectSaveDTO;
 import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.UserEntity;
@@ -26,6 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/projects")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class ProjectController {
 
     private final ProjectService projectService;
@@ -33,7 +35,6 @@ public class ProjectController {
     private final TaskService taskService;
     private final UserService userService;
     private final CustomProjectEntityMapper customModelMapper;
-
 
 
     @PostMapping
@@ -56,7 +57,6 @@ public class ProjectController {
 
 
     @GetMapping("/{id}/tasks")
-    @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Получение всех задач проекта")
     public Page<TaskDTO> getProjectTasks(@PathVariable Long id,
                                          @PageableDefault Pageable pageable) {

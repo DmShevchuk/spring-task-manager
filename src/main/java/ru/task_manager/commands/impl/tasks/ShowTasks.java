@@ -3,7 +3,7 @@ package ru.task_manager.commands.impl.tasks;
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.TaskEntity;
-import ru.task_manager.dto.TaskDTO;
+import ru.task_manager.dto.task.TaskDTO;
 
 import java.util.List;
 

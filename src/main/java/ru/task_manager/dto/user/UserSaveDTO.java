@@ -1,4 +1,4 @@
-package ru.task_manager.dto.save;
+package ru.task_manager.dto.user;
 
 
 import lombok.Getter;

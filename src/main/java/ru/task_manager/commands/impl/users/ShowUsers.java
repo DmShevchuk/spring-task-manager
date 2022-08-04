@@ -3,7 +3,7 @@ package ru.task_manager.commands.impl.users;
 import lombok.RequiredArgsConstructor;
 import ru.task_manager.commands.Command;
 import ru.task_manager.entities.UserEntity;
-import ru.task_manager.dto.UserDTO;
+import ru.task_manager.dto.user.UserDTO;
 
 import java.util.List;
 

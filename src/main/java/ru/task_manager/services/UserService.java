@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.task_manager.dto.user.Role;
 import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.entities.UserEntity;
 import ru.task_manager.exceptions.BusiestUserNotFoundException;
 import ru.task_manager.exceptions.EmailAlreadyExistsException;
+import ru.task_manager.exceptions.EmailNotFoundException;
 import ru.task_manager.exceptions.EntityNotFoundException;
 import ru.task_manager.factories.TaskType;
 import ru.task_manager.repositories.UserRepo;
@@ -29,11 +32,15 @@ public class UserService {
     private final UserRepo userRepo;
     private final BusiestUserSpecificationFactory userSpecificationFactory;
     private final CommonSpecificationFactory specificationFactory;
+    private final PasswordEncoder passwordEncoder;
+
 
     public Long registration(UserEntity userEntity) {
         if (userRepo.existsByEmail(userEntity.getEmail())) {
             throw new EmailAlreadyExistsException(userEntity.getEmail());
         }
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userEntity.setRole(Role.ROLE_USER);
         return userRepo.save(userEntity).getId();
     }
 
@@ -79,5 +86,10 @@ public class UserService {
 
     public Page<UserEntity> getProjectUsers(ProjectEntity projectEntity, Pageable pageable) {
         return userRepo.findAll(specificationFactory.getProjectUsers(projectEntity), pageable);
+    }
+
+    public UserEntity findUserByEmail(String email){
+        return userRepo.findByEmail(email)
+                .orElseThrow(() -> new EmailNotFoundException(email));
     }
 }
