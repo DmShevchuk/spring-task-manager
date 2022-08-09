@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import ru.task_manager.dto.user.Role;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
+    @Column(name="role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "user")
     @Fetch(FetchMode.JOIN)

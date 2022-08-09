@@ -4,16 +4,16 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.task_manager.dto.ProjectDTO;
-import ru.task_manager.dto.TaskDTO;
-import ru.task_manager.dto.UserDTO;
-import ru.task_manager.dto.save.UserSaveDTO;
+import ru.task_manager.dto.project.ProjectDTO;
+import ru.task_manager.dto.task.TaskDTO;
+import ru.task_manager.dto.user.UserDTO;
+import ru.task_manager.dto.user.UserSaveDTO;
 import ru.task_manager.entities.ProjectEntity;
 import ru.task_manager.entities.TaskEntity;
 import ru.task_manager.entities.UserEntity;
@@ -22,7 +22,6 @@ import ru.task_manager.services.TaskService;
 import ru.task_manager.services.UserService;
 
 import javax.validation.Valid;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -46,6 +45,7 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Получение всех пользователей")
     public Page<UserDTO> getAllUsers(@PageableDefault Pageable pageable) {
         Page<UserEntity> users = userService.getAll(pageable);
@@ -55,14 +55,17 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN') || @accessChecker.canWorkWithUser(principal, #id)")
     @ApiOperation("Получение пользователя по id")
     public UserDTO getUserById(@PathVariable Long id) {
         return UserDTO.toDTO(userService.getUserById(id));
     }
 
 
+
     @GetMapping("/{id}/tasks")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN') || @accessChecker.canWorkWithUser(principal, #id)")
     @ApiOperation("Получение всех задач пользователя")
     public Page<TaskDTO> getUserTasks(@PathVariable Long id,
                                       @PageableDefault Pageable pageable) {
@@ -74,6 +77,7 @@ public class UserController {
 
     @GetMapping("/{id}/projects")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN') || @accessChecker.canWorkWithUser(principal, #id)")
     @ApiOperation("Получение всех проектов пользователя")
     public Page<ProjectDTO> getUserProjects(@PathVariable Long id,
                                             @PageableDefault Pageable pageable) {
@@ -85,6 +89,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN') || @accessChecker.canWorkWithUser(principal, #id)")
     @ApiOperation("Обновление пользователя по id")
     public UserDTO updateUserById(@PathVariable Long id,
                                   @RequestBody @Validated UserSaveDTO userSaveDTO) {
@@ -97,6 +102,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN') || @accessChecker.canWorkWithUser(principal, #id)")
     @ApiOperation("Удаление пользователя по id; пользователь также удаляется у задач и проектов")
     public String deleteUserById(@PathVariable Long id) {
         userService.delete(id);

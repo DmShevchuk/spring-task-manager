@@ -7,9 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.task_manager.dto.CommentDTO;
-import ru.task_manager.dto.save.CommentSaveDTO;
+import ru.task_manager.dto.comment.CommentDTO;
+import ru.task_manager.dto.comment.CommentSaveDTO;
 import ru.task_manager.entities.CommentEntity;
 import ru.task_manager.services.CommentService;
 import ru.task_manager.utils.CustomCommentEntityMapper;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class CommentController {
 
     private final CommentService commentService;

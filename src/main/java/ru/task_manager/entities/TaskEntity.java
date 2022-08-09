@@ -48,9 +48,6 @@ public class TaskEntity {
     @Fetch(FetchMode.SUBSELECT)
     private List<CommentEntity> comments = new ArrayList<>();
 
-    public void deleteProject(){
-        this.projectEntity = null;
-    }
 
     private TaskEntity(Long id, String title, String description, Date deadline, TaskType type) {
         this.id = id;

@@ -1,7 +1,7 @@
 package ru.task_manager.utils;
 
 import org.springframework.stereotype.Component;
-import ru.task_manager.dto.save.ProjectSaveDTO;
+import ru.task_manager.dto.project.ProjectSaveDTO;
 import ru.task_manager.entities.ProjectEntity;
 
 @Component

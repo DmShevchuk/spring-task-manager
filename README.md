@@ -1,5 +1,9 @@
 # Shevchuk_DO_Java_2022_Liga
 
+Аккаунт администратора:
+- *email* - admin@admin.ru
+- *пароль* - adminAdmin
+
 ### Чтобы запустить приложение
 
 ```shell
