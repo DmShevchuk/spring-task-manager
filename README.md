@@ -1,4 +1,4 @@
-# Shevchuk_DO_Java_2022_Liga
+# spring-task-manager
 
 Аккаунт администратора:
 - *email* - admin@admin.ru
